@@ -1,23 +1,47 @@
 {
-  "name": "problemmelder",
-  "version": "1.0.0",
-  "main": "index.ts",
-  "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
-  },
-  "dependencies": {
-    "expo": "~52.0.25",
-    "expo-status-bar": "~2.0.1",
-    "react": "18.3.1",
-    "react-native": "0.76.6"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "@types/react": "~18.3.12",
-    "typescript": "^5.3.3"
-  },
-  "private": true
+    "name": "problemmelder",
+    "version": "1.0.0",
+    "main": "index.ts",
+    "contributors": [
+        {
+            "name": "Anna Kohlbecker",
+            "email": "aipskohlbecker@gmail.com"
+        },
+        {
+            "name": "Simon Schmieder",
+            "email": "simon@schmieders.dev"
+        }
+    ],
+    "scripts": {
+        "start": "expo start",
+        "android": "expo start --android",
+        "ios": "expo start --ios",
+        "web": "expo start --web",
+        "postinstall": "patch-package",
+        "prepare": "husky"
+    },
+    "dependencies": {
+        "expo": "52.0.25",
+        "expo-status-bar": "2.0.1",
+        "react": "18.3.1",
+        "react-native": "0.76.6"
+    },
+    "devDependencies": {
+        "@babel/core": "7.26.0",
+        "@eslint/js": "9.18.0",
+        "@types/eslint__js": "8.42.3",
+        "@types/react": "18.3.18",
+        "eslint": "8.57.1",
+        "eslint-plugin-react": "7.37.4",
+        "eslint-plugin-react-hooks": "5.1.0",
+        "eslint-plugin-react-native": "4.1.0",
+        "husky": "9.1.7",
+        "lint-staged": "15.3.0",
+        "patch-package": "^8.0.0",
+        "prettier": "3.4.2",
+        "react-native-dotenv": "3.4.11",
+        "typescript": "5.7.3",
+        "typescript-eslint": "8.20.0"
+    },
+    "private": true
 }
