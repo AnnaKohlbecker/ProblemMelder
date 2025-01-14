@@ -8,5 +8,6 @@
     "arrowParens": "always",
     "useTabs": false,
     "bracketSpacing": true,
-    "singleAttributePerLine": true
+    "singleAttributePerLine": true,
+    "endOfLine": "crlf"
 }
