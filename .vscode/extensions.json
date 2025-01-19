@@ -1,0 +1,11 @@
+{
+    "recommendations": [
+        "dbaeumer.vscode-eslint",
+        "visualstudioexptteam.vscodeintellicode",
+        "visualstudioexptteam.vscodeintellicode-completions",
+        "esbenp.prettier-vscode",
+        "jtr.vscode-position",
+        "expo.vscode-expo-tools",
+        "ms-vscode.vscode-typescript-next"
+    ]
+}
