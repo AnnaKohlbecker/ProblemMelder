@@ -8,6 +8,7 @@ import { globalStyles } from '~/shared/constants/globalStyles'
 import { theme } from '~/shared/constants/theme'
 import AuthProvider from '~/shared/context/AuthContext/AuthProvider'
 import DialogProvider from '~/shared/context/DialogContext/DialogProvider'
+import LocationProvider from '~/shared/context/LocationContext/LocationProvider'
 import SnackbarProvider from '~/shared/context/SnackbarContext/SnackbarProvider'
 
 const App = () => {
@@ -30,11 +31,13 @@ const App = () => {
                             hidden={false}
                             backgroundColor={colors.white}
                         />
-                        <DialogProvider>
-                            <SnackbarProvider>
-                                <Main />
-                            </SnackbarProvider>
-                        </DialogProvider>
+                        <LocationProvider>
+                            <DialogProvider>
+                                <SnackbarProvider>
+                                    <Main />
+                                </SnackbarProvider>
+                            </DialogProvider>
+                        </LocationProvider>
                     </PaperProvider>
                 </AuthProvider>
             </QueryClientProvider>

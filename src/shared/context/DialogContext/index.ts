@@ -3,7 +3,9 @@ import { createContext, useContext } from 'react'
 export type DialogInfo = {
     title: string
     description: string
+    acceptLabel?: string
     onAccept: () => void
+    dismissLabel?: string
     onDismiss?: () => void
 }
 
