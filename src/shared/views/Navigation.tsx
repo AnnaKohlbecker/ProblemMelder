@@ -1,13 +1,9 @@
 import React from 'react'
-import { BottomNavigation, Text } from 'react-native-paper'
-
-const MapRoute = () => <Text>Map</Text>
-
-const ProblemsRoute = () => <Text>Problems</Text>
-
-const AuthoritiesRoute = () => <Text>Authorities</Text>
-
-const ProfileRoute = () => <Text>Profile</Text>
+import { BottomNavigation } from 'react-native-paper'
+import Authorities from '~/views/Authorities'
+import Map from '~/views/Map'
+import Problems from '~/views/Problems'
+import Profile from '~/views/Profile'
 
 const Navigation = () => {
     const [index, setIndex] = React.useState(0)
@@ -39,10 +35,10 @@ const Navigation = () => {
     ])
 
     const renderScene = BottomNavigation.SceneMap({
-        map: MapRoute,
-        problems: ProblemsRoute,
-        authorities: AuthoritiesRoute,
-        profile: ProfileRoute,
+        map: Map,
+        problems: Problems,
+        authorities: Authorities,
+        profile: Profile,
     })
 
     return (
