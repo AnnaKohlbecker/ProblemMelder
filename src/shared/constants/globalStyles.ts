@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
 
 /**
@@ -9,6 +10,13 @@ export const globalStyles = StyleSheet.create({
         backgroundColor: colors.white,
         borderTopColor: colors.secondary,
         borderTopWidth: 1,
+    },
+    container: {
+        alignItems: 'center',
+        flex: 1,
+        gap: 20,
+        justifyContent: 'center',
+        paddingHorizontal: 30,
     },
     dialog: {
         backgroundColor: colors.white,
@@ -21,5 +29,9 @@ export const globalStyles = StyleSheet.create({
     },
     flexBox: {
         flex: 1,
+    },
+    title: {
+        fontSize: RFValue(20),
+        textAlign: 'center',
     },
 })
