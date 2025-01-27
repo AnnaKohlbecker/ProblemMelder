@@ -26,17 +26,6 @@ export const useMapRegionLogic = ({ initialFocus }: Props) => {
         [region],
     )
 
-    const focusCurrentLocation = useCallback(() => {
-        if (isNil(location)) return
-
-        setRegion({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-        })
-    }, [location])
-
     useEffect(() => {
         if (!isNil(initialFocus) || isNil(location) || !isNil(region)) return
 
@@ -51,6 +40,5 @@ export const useMapRegionLogic = ({ initialFocus }: Props) => {
     return {
         region,
         onRegionChange,
-        focusCurrentLocation,
     }
 }

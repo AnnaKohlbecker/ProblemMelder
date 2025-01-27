@@ -27,8 +27,7 @@ const LocationProvider = ({ children }: Props) => {
 
     useEffect(() => {
         getCurrentLocation()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [getCurrentLocation])
 
     return <LocationContext.Provider value={currentLocation}>{children}</LocationContext.Provider>
 }

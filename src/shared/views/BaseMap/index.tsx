@@ -1,63 +1,56 @@
 import { isNil } from 'lodash'
 import { View } from 'react-native'
-import MapView, { Marker, Region } from 'react-native-maps'
+import MapView, { MapPressEvent, Marker, Region } from 'react-native-maps'
 import AnimatedMapRegion from 'react-native-maps/lib/AnimatedRegion'
-import { Appbar, FAB } from 'react-native-paper'
-import { colors } from '~/shared/constants/colors'
+import { FAB } from 'react-native-paper'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useLocation } from '~/shared/context/LocationContext'
 import { useMapRegionLogic } from '~/shared/views/BaseMap/hooks/useMapRegionLogic'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 
 type Props = {
-    title?: string
-    onBackPress?: () => void
-
     onFabPress?: () => void
+
+    onMapPress?: (event: MapPressEvent) => void
 
     initialFocus?: Region | AnimatedMapRegion
     showCurrentLocation?: boolean
+
+    markers?: Region[]
 }
 
-const BaseMap = ({
-    title = '',
-    onBackPress,
-    onFabPress,
-    initialFocus,
-    showCurrentLocation = false,
-}: Props) => {
+const BaseMap = ({ onFabPress, onMapPress, initialFocus, markers }: Props) => {
     const location = useLocation()
 
-    const { region, focusCurrentLocation, onRegionChange } = useMapRegionLogic({ initialFocus })
+    const { region, onRegionChange } = useMapRegionLogic({ initialFocus })
 
     return (
         <View style={globalStyles.flexBox}>
-            <Appbar.Header style={globalStyles.appbar}>
-                {!isNil(onBackPress) && <Appbar.BackAction onPress={onBackPress} />}
-                <Appbar.Content title={title} />
-                <Appbar.Action
-                    icon='map-marker'
-                    iconColor={colors.primary}
-                    onPress={focusCurrentLocation}
-                />
-            </Appbar.Header>
             {isNil(location) || isNil(region) ? (
                 <LoadingSpinner />
             ) : (
                 <View style={globalStyles.flexBox}>
                     <MapView
                         style={globalStyles.flexBox}
+                        showsUserLocation
+                        showsMyLocationButton
                         region={region}
+                        onPress={onMapPress}
+                        onMarkerPress={() => {
+                            //
+                        }}
+                        onMarkerSelect={() => {
+                            //
+                        }}
+                        moveOnMarkerPress={false}
                         onRegionChangeComplete={onRegionChange}
                     >
-                        {showCurrentLocation && (
+                        {markers?.map((marker) => (
                             <Marker
-                                coordinate={{
-                                    latitude: location.coords.latitude,
-                                    longitude: location.coords.longitude,
-                                }}
+                                key={`${marker.latitude},${marker.longitude}`}
+                                coordinate={marker}
                             />
-                        )}
+                        ))}
                     </MapView>
                     {!isNil(onFabPress) && (
                         <FAB
