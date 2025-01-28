@@ -4,6 +4,7 @@ import { Button, Text } from 'react-native-paper'
 import { useDeleteProblemMutation } from '~/queries/Problems/useDeleteProblemMutation'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { useUserByIdQuery } from '~/queries/Users/useUserByIdQuery'
+import Header from '~/shared/components/Header'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { useDialog } from '~/shared/context/DialogContext'
@@ -64,17 +65,53 @@ const Profile = () => {
     if (userLoading || problemsLoading || isDeletingProblem) return <LoadingSpinner />
 
     return (
-        <View style={globalStyles.container}>
-            <Text style={globalStyles.title}>Profil</Text>
-            <Text>
-                Rolle: {role} ({user?.role})
-            </Text>
-            <Text>Punkte: {user?.points}</Text>
-            {problems && problems.length > 0 && (
-                <Button onPress={() => onDelete(problems[0])}>
-                    Problem "{problems[0].title}" mit der Id "{problems[0].id}" löschen
-                </Button>
-            )}
+        <View style={globalStyles.flexBox}>
+            <Header />
+            <View style={globalStyles.container}>
+                <Text style={globalStyles.title}>Profil</Text>
+                <Text>
+                    Rolle: {role} ({user?.role})
+                </Text>
+                <Text>Punkte: {user?.points}</Text>
+                {problems && problems.length > 0 && (
+                    <Button onPress={() => onDelete(problems[0])}>
+                        Problem "{problems[0].title}" mit der Id "{problems[0].id}" löschen
+                    </Button>
+                )}
+            </View>
+            {/* <View>
+                {showButton && (
+                    <SegmentedButtons
+                        value={lectureView}
+                        onValueChange={(value) => setLectureView(value as LectureType)}
+                        buttons={buttons}
+                        style={globalStyles.segmentedButtons}
+                        theme={theme}
+                    />
+                )}
+                <Searchbar
+                    style={globalStyles.searchbar}
+                    value={search}
+                    onChangeText={setSearch}
+                    placeholder={intl.formatMessage(translations.search)}
+                />
+            </View>
+            {searchedLectures.length === 0 ? (
+                <View style={globalStyles.noDataContainer}>
+                    <Text style={globalStyles.noDataText}>
+                        {intl.formatMessage(translations.noData)}
+                    </Text>
+                </View>
+            ) : (
+                <FlatList
+                    data={searchedLectures}
+                    keyExtractor={(lecture) => lecture.id.toString()}
+                    renderItem={renderItem}
+                    contentContainerStyle={
+                        showButton ? globalStyles.listSection : styles.listSection
+                    }
+                />
+            )} */}
         </View>
     )
 }
