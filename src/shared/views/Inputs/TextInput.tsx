@@ -1,6 +1,5 @@
-import { useMemo } from 'react'
 import { useController, UseControllerProps } from 'react-hook-form'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 // eslint-disable-next-line no-restricted-imports
 import { TextInput as BaseInput, HelperText } from 'react-native-paper'
 
@@ -24,12 +23,6 @@ type Props = {
     multiline?: boolean
 }
 
-const styles = StyleSheet.create({
-    multiline: {
-        minHeight: 140,
-    },
-})
-
 const TextInput = ({
     label,
     helperText,
@@ -44,13 +37,10 @@ const TextInput = ({
         fieldState: { error },
     } = useController({ name, rules })
 
-    const style = useMemo(() => (multiline ? styles.multiline : undefined), [multiline])
-
     return (
         <View>
             <BaseInput
                 value={value}
-                style={style}
                 label={label}
                 mode='outlined'
                 error={!!error}

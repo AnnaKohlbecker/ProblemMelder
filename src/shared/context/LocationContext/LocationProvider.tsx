@@ -22,13 +22,18 @@ const LocationProvider = ({ children }: Props) => {
             return
         }
 
-        setCurrentLocation(await getCurrentPositionAsync())
+        await getCurrentPositionAsync()
+            .then((location) => {
+                setCurrentLocation(location)
+            })
+            .catch(() => {
+                Alert.alert('Standort konnte nicht ermittelt werden.')
+            })
     }, [])
 
     useEffect(() => {
         getCurrentLocation()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [getCurrentLocation])
 
     return <LocationContext.Provider value={currentLocation}>{children}</LocationContext.Provider>
 }

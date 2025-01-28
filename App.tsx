@@ -12,10 +12,20 @@ import LocationProvider from '~/shared/context/LocationContext/LocationProvider'
 import SnackbarProvider from '~/shared/context/SnackbarContext/SnackbarProvider'
 
 const App = () => {
+    const throwOnError = (error: Error) => {
+        console.error(error)
+
+        return false
+    }
+
     const queryClient = new QueryClient({
         defaultOptions: {
             queries: {
                 refetchOnWindowFocus: true,
+                throwOnError,
+            },
+            mutations: {
+                throwOnError,
             },
         },
     })
