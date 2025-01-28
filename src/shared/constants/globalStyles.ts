@@ -30,6 +30,9 @@ export const globalStyles = StyleSheet.create({
     flexBox: {
         flex: 1,
     },
+    mb: {
+        marginBottom: 10,
+    },
     title: {
         fontSize: RFValue(20),
         textAlign: 'center',
