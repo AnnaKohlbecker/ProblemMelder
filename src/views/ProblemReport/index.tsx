@@ -185,7 +185,7 @@ const ProblemReport = ({ onClose: onCloseProp }: Props) => {
                                 rules={{
                                     required: 'Bitte gebe einen Titel ein.',
                                 }}
-                                helperText='Kurze Problem-Beschreibung'
+                                helperText='Kurze Problembeschreibung'
                             />
                             <TextInput
                                 name='description'
@@ -194,7 +194,7 @@ const ProblemReport = ({ onClose: onCloseProp }: Props) => {
                                 rules={{
                                     required: 'Bitte gebe eine Beschreibung ein.',
                                 }}
-                                helperText='Problem-Beschreibung mit allen relevanten Informationen'
+                                helperText='Problembeschreibung mit allen relevanten Informationen'
                             />
                         </View>
                     )}
