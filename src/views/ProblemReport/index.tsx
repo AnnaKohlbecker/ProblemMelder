@@ -48,7 +48,7 @@ const REPORT_STEPS = [
     },
     {
         serial: 2,
-        title: 'Bilder des Problems',
+        title: 'Bild des Problems',
     },
     {
         serial: 3,
@@ -181,11 +181,11 @@ const ProblemReport = ({ onClose: onCloseProp }: Props) => {
                         <View style={[globalStyles.flexBox, styles.formWrapper]}>
                             <TextInput
                                 name='title'
-                                label='Problemtitel'
+                                label='Titel'
                                 rules={{
                                     required: 'Bitte gebe einen Titel ein.',
                                 }}
-                                helperText='Gib eine kurze und prägnante Beschreibung des Problems ein.'
+                                helperText='Kurze Problembeschreibung'
                             />
                             <TextInput
                                 name='description'
@@ -194,7 +194,7 @@ const ProblemReport = ({ onClose: onCloseProp }: Props) => {
                                 rules={{
                                     required: 'Bitte gebe eine Beschreibung ein.',
                                 }}
-                                helperText='Beschreibe das Problem so genau wie möglich, gib hier alle Informationen an, die notwendig sein könnten, um das Problem zu verstehen und zu beheben.'
+                                helperText='Problembeschreibung mit allen relevanten Informationen'
                             />
                         </View>
                     )}

@@ -5,26 +5,26 @@ import { Role } from '~/shared/enums/Role'
 import { Table } from '~/shared/enums/Table'
 
 type Props = {
-    userID: string | undefined
+    userId: string | undefined
 }
 
-export const useRoleByUserQuery = ({ userID }: Props) => {
+export const useRoleByUserQuery = ({ userId }: Props) => {
     const queryFn = useCallback(async () => {
         const response = await supabase
             .from(Table.Users)
             .select('role(name)')
-            .eq('userID', userID)
+            .eq('userId', userId)
             .single()
             .throwOnError()
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore because supabase typings are incorrect
         return response.data?.role.name as Role
-    }, [userID])
+    }, [userId])
 
     return useQuery<Role>({
-        queryKey: ['roleByUserQuery', userID],
+        queryKey: ['roleByUserQuery', userId],
         queryFn,
-        enabled: !!userID,
+        enabled: !!userId,
     })
 }
