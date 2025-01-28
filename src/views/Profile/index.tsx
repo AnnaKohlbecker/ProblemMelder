@@ -27,21 +27,21 @@ const Profile = () => {
         refetch: refetchProblems,
     } = useProblemsQuery()
 
-    const deleteProblem = useDeleteProblemMutation() as ReturnType<typeof useDeleteProblemMutation>
+    const { mutate: deleteProblem, isPending: isDeletingProblem } = useDeleteProblemMutation()
 
     const onDelete = useCallback(
         (problem: Problem) => {
             showDialog({
                 title: problem.title,
                 description: problem.id.toString(),
-                onAccept: async () => {
+                onAccept: () => {
                     try {
-                        await deleteProblem(problem.id)
-                        refetchProblems()
+                        deleteProblem(problem)
                         Alert.alert(
                             'Success',
                             `Problem with id ${problem.id} has been deleted successfully.`,
                         )
+                        refetchProblems()
                     } catch (error) {
                         if (error instanceof Error) {
                             Alert.alert('Error', error.message)
@@ -52,7 +52,7 @@ const Profile = () => {
                 },
             })
         },
-        [showDialog, deleteProblem, refetchProblems],
+        [deleteProblem, refetchProblems, showDialog],
     )
 
     useEffect(() => {
@@ -61,12 +61,14 @@ const Profile = () => {
         Alert.alert('Error')
     }, [userError, problemsError])
 
-    if (userLoading || problemsLoading) return <LoadingSpinner />
+    if (userLoading || problemsLoading || isDeletingProblem) return <LoadingSpinner />
 
     return (
         <View style={globalStyles.container}>
             <Text style={globalStyles.title}>Profil</Text>
-            <Text>Rolle: {role}</Text>
+            <Text>
+                Rolle: {role} ({user?.role})
+            </Text>
             <Text>Punkte: {user?.points}</Text>
             {problems && problems.length > 0 && (
                 <Button onPress={() => onDelete(problems[0])}>

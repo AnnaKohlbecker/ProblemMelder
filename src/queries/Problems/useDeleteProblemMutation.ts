@@ -1,18 +1,16 @@
+import { useMutation } from '@tanstack/react-query'
 import { useCallback } from 'react'
-
 import { supabase } from '~/services/supabase'
 import { Table } from '~/shared/enums/Table'
-
+import { Problem } from '~/shared/types/Problem'
+type Payload = Problem
 export const useDeleteProblemMutation = () => {
-    return useCallback(async (problemId: number) => {
-        const { error, status } = await supabase.from(Table.Problems).delete().eq('id', problemId)
-        if (error) {
-            // eslint-disable-next-line no-console
-            console.error('Deletion Error:', error)
-            throw error // Ensure the error is passed back to the caller
-        }
-        if (status !== 200) {
-            throw new Error('Failed to delete problem, status: ' + status)
-        }
+    const mutationFn = useCallback(async (data: Payload) => {
+        return await supabase.from(Table.Problems).delete().eq('id', data.id).throwOnError()
     }, [])
+
+    return useMutation({
+        mutationKey: ['upsertProblemMutation'],
+        mutationFn,
+    })
 }
