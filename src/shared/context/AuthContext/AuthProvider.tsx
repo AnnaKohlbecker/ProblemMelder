@@ -42,7 +42,7 @@ const AuthProvider = ({ children }: Props) => {
         data: role,
         error: roleError,
         isLoading: roleLoading,
-    } = useRoleByUserQuery({ userID: session?.user.id })
+    } = useRoleByUserQuery({ userId: session?.user.id })
 
     /**
      * Fetches the user's session from the database and ensures that session changes are propagated correctly.

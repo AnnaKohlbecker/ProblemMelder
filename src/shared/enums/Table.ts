@@ -5,5 +5,6 @@
  */
 export enum Table {
     Roles = 'Roles',
-    UserRoles = 'UserRoles',
+    Users = 'Users',
+    Problems = 'Problems',
 }
