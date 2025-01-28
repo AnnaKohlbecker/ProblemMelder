@@ -16,6 +16,18 @@ const App = () => {
         defaultOptions: {
             queries: {
                 refetchOnWindowFocus: true,
+                throwOnError: (error) => {
+                    console.error(error)
+
+                    return false
+                },
+            },
+            mutations: {
+                throwOnError: (error) => {
+                    console.error(error)
+
+                    return false
+                },
             },
         },
     })

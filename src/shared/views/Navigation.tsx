@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { useCallback, useState } from 'react'
 import { BottomNavigation } from 'react-native-paper'
 import { RouteKeys, ROUTES } from '~/shared/constants/routes'
 import Authorities from '~/views/Authorities'
@@ -7,20 +8,26 @@ import Problems from '~/views/Problems'
 import Profile from '~/views/Profile'
 
 const Navigation = () => {
+    const queryClient = useQueryClient()
+
     const [index, setIndex] = useState(0)
 
-    const renderScene = BottomNavigation.SceneMap({
-        [RouteKeys.MAP]: Map,
-        [RouteKeys.PROBLEMS]: Problems,
-        [RouteKeys.AUTHORITIES]: Authorities,
-        [RouteKeys.PROFILE]: Profile,
-    })
+    const renderScene = useCallback(() => {
+        queryClient.invalidateQueries()
+
+        return BottomNavigation.SceneMap({
+            [RouteKeys.MAP]: Map,
+            [RouteKeys.PROBLEMS]: Problems,
+            [RouteKeys.AUTHORITIES]: Authorities,
+            [RouteKeys.PROFILE]: Profile,
+        })
+    }, [queryClient])
 
     return (
         <BottomNavigation
             navigationState={{ index, routes: ROUTES }}
             onIndexChange={setIndex}
-            renderScene={renderScene}
+            renderScene={renderScene()}
         />
     )
 }

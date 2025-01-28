@@ -3,11 +3,13 @@ import isNil from 'lodash/isNil'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useController, useForm } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
-import { MapPressEvent, Region } from 'react-native-maps'
+import { MapPressEvent } from 'react-native-maps'
 import { Text } from 'react-native-paper'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useLocation } from '~/shared/context/LocationContext'
+import { ProblemStatus } from '~/shared/enums/ProblemStatus'
+import { Marker } from '~/shared/types/Marker'
 import BaseMap from '~/shared/views/BaseMap'
 
 type Props = {
@@ -47,16 +49,17 @@ const LocationSelection = ({ name }: Props) => {
     /**
      * Parse the current value to a valid Region object
      */
-    const location = useMemo((): Region | undefined => {
+    const location = useMemo((): Marker | undefined => {
         if (isNil(value)) return undefined
 
         const [latitude, longitude] = value.split(',')
 
         return {
+            id: -1,
+            status: ProblemStatus.ToDo,
+            title: 'Ausgewählter Standort',
             latitude: parseFloat(latitude),
             longitude: parseFloat(longitude),
-            latitudeDelta: 0.009,
-            longitudeDelta: 0.004,
         }
     }, [value])
 
@@ -77,10 +80,10 @@ const LocationSelection = ({ name }: Props) => {
      */
     const currentLocation = useLocation()
     useEffect(() => {
-        if (isNil(currentLocation)) return undefined
+        if (isNil(currentLocation) || !isNil(location)) return undefined
 
         onChange(`${currentLocation.coords.latitude},${currentLocation.coords.longitude}`)
-    }, [currentLocation, onChange])
+    }, [currentLocation, location, onChange])
 
     /**
      * On location change update the address

@@ -7,6 +7,7 @@ import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Button, IconButton, Text } from 'react-native-paper'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import LoadingSpinner from '~/shared/views/LoadingSpinner'
 
 type Props = {
     name: string
@@ -37,6 +38,7 @@ const styles = StyleSheet.create({
 
 const PictureSelection = ({ name }: Props) => {
     const cameraRef = useRef<CameraView>(null)
+    const [imageLoading, setImageLoading] = useState(false)
 
     const [enableTorch, setEnableTorch] = useState(false)
 
@@ -67,6 +69,7 @@ const PictureSelection = ({ name }: Props) => {
 
                 onChange(data.uri)
                 trigger()
+                setImageLoading(false)
             })
     }, [onChange, trigger])
 
@@ -123,12 +126,19 @@ const PictureSelection = ({ name }: Props) => {
                     </TouchableOpacity>
                     <View style={[globalStyles.flexBox, styles.buttonContainer]}>
                         <TouchableOpacity>
-                            <IconButton
-                                mode='contained-tonal'
-                                icon='camera'
-                                size={40}
-                                onPress={takePicture}
-                            />
+                            {imageLoading ? (
+                                <LoadingSpinner />
+                            ) : (
+                                <IconButton
+                                    mode='contained-tonal'
+                                    icon='camera'
+                                    size={40}
+                                    onPress={() => {
+                                        setImageLoading(true)
+                                        takePicture()
+                                    }}
+                                />
+                            )}
                         </TouchableOpacity>
                     </View>
                 </CameraView>

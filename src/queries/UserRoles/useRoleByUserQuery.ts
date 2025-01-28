@@ -11,9 +11,9 @@ type Props = {
 export const useRoleByUserQuery = ({ userID }: Props) => {
     const queryFn = useCallback(async () => {
         const response = await supabase
-            .from(Table.UserRoles)
+            .from(Table.Users)
             .select('role(name)')
-            .eq('user', userID)
+            .eq('userID', userID)
             .single()
             .throwOnError()
 

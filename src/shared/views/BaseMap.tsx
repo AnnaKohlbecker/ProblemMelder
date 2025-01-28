@@ -6,13 +6,15 @@ import AnimatedMapRegion from 'react-native-maps/lib/AnimatedRegion'
 import { FAB } from 'react-native-paper'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useLocation } from '~/shared/context/LocationContext'
+import { problemStatusToColor } from '~/shared/helpers/ProblemStatusToColor'
+import { Marker as TMarker } from '~/shared/types/Marker'
 
 type Props = {
     onFabPress?: () => void
 
     onMapPress?: (event: MapPressEvent) => void
 
-    markers?: Region[]
+    markers?: TMarker[]
 }
 
 const BaseMap = ({ onFabPress, onMapPress, markers }: Props) => {
@@ -31,9 +33,7 @@ const BaseMap = ({ onFabPress, onMapPress, markers }: Props) => {
         }
     }, [location])
 
-    const visibleRegion = useMemo(() => {
-        return region ?? currentLocation
-    }, [currentLocation, region])
+    const visibleRegion = useMemo(() => region ?? currentLocation, [currentLocation, region])
 
     const onRegionChange = useCallback(
         (newRegion: Region) => {
@@ -51,6 +51,7 @@ const BaseMap = ({ onFabPress, onMapPress, markers }: Props) => {
     return (
         <View style={globalStyles.flexBox}>
             <MapView
+                key={location?.timestamp}
                 style={globalStyles.flexBox}
                 region={visibleRegion}
                 onPress={onMapPress}
@@ -67,7 +68,10 @@ const BaseMap = ({ onFabPress, onMapPress, markers }: Props) => {
             >
                 {markers?.map((marker) => (
                     <Marker
-                        key={`${marker.latitude},${marker.longitude}`}
+                        key={marker.id}
+                        pinColor={problemStatusToColor(marker.status)}
+                        title={marker.title}
+                        titleVisibility='visible'
                         coordinate={marker}
                     />
                 ))}

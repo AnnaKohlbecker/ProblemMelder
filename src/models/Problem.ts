@@ -6,7 +6,7 @@ export type Problem = {
     location: string
     description: string
     image: string
-    userId: string
-    authorityId: string
     status: ProblemStatus
+    authorityId: number
+    userId: string
 }

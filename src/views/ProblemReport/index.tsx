@@ -1,13 +1,22 @@
+import * as FileSystem from 'expo-file-system'
 import { isNil } from 'lodash'
 import { useCallback, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
 import { Appbar, Button, ProgressBar, Text } from 'react-native-paper'
+import { v4 } from 'react-native-uuid/dist/v4'
+import { Problem } from '~/models/Problem'
+import { useUploadImageMutation } from '~/queries/Problems/useUploadImageMutation'
+import { useUpsertProblemMutation } from '~/queries/Problems/useUpsertProblemMutation'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import { useAuth } from '~/shared/context/AuthContext'
 import { useDialog } from '~/shared/context/DialogContext'
+import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import LocationSelection from '~/shared/views/Inputs/LocationSelection'
 import PictureSelection from '~/shared/views/Inputs/PictureSelection'
+import LoadingSpinner from '~/shared/views/LoadingSpinner'
+import TextInput from '~/shared/views/TextInput'
 
 type Props = {
     onClose: () => void
@@ -18,6 +27,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 10,
+    },
+    formWrapper: {
+        gap: 10,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
     },
     progress: {
         backgroundColor: colors.secondary,
@@ -51,12 +65,19 @@ const REPORT_STEPS = [
 ]
 
 const ProblemReport = ({ onClose: onCloseProp }: Props) => {
+    const { session } = useAuth()
+    const [currentStepSerial, setCurrentStepSerial] = useState(1)
+
     const showDialog = useDialog()
 
-    const form = useForm()
+    const form = useForm<Problem>({
+        defaultValues: {
+            status: ProblemStatus.ToDo,
+            authorityId: 1,
+            userId: session?.user.id,
+        },
+    })
     const { handleSubmit, reset, trigger } = form
-
-    const [currentStepSerial, setCurrentStepSerial] = useState(1)
 
     const currentStep = useMemo(() => {
         const step = REPORT_STEPS.find((x) => x.serial === currentStepSerial)
@@ -84,15 +105,14 @@ const ProblemReport = ({ onClose: onCloseProp }: Props) => {
     }, [onCloseProp, reset, showDialog])
 
     const onPrev = useCallback(() => {
-        trigger().then((isValid) => {
-            if (!isValid) return
+        setCurrentStepSerial((cur) => cur - 1)
+    }, [])
 
-            setCurrentStepSerial((cur) => cur - 1)
-        })
-    }, [trigger])
+    const { mutate: uploadImage, isPending: isUploadingImage } = useUploadImageMutation()
+    const { mutate: upsertProblem, isPending: isUpsertingProblem } = useUpsertProblemMutation()
 
     const onNext = useCallback(() => {
-        if (currentStepSerial !== REPORT_STEPS.length - 1) {
+        if (currentStepSerial !== REPORT_STEPS.length) {
             trigger().then((isValid) => {
                 if (!isValid) return
                 setCurrentStepSerial((cur) => cur + 1)
@@ -103,11 +123,36 @@ const ProblemReport = ({ onClose: onCloseProp }: Props) => {
         trigger().then((isValid) => {
             if (!isValid) return
 
-            handleSubmit((data) => {
-                console.log(data)
+            handleSubmit(async (data) => {
+                const imageId = v4()
+
+                const image = await FileSystem.readAsStringAsync(data.image, {
+                    encoding: FileSystem.EncodingType.Base64,
+                })
+
+                uploadImage(
+                    {
+                        file: image,
+                        path: imageId,
+                    },
+                    {
+                        onSuccess: () =>
+                            upsertProblem(
+                                {
+                                    ...data,
+                                    image: imageId,
+                                },
+                                {
+                                    onSuccess: () => {
+                                        onCloseProp()
+                                    },
+                                },
+                            ),
+                    },
+                )
             })()
         })
-    }, [currentStepSerial, handleSubmit, trigger])
+    }, [currentStepSerial, handleSubmit, onCloseProp, trigger, uploadImage, upsertProblem])
 
     return (
         <FormProvider {...form}>
@@ -131,7 +176,41 @@ const ProblemReport = ({ onClose: onCloseProp }: Props) => {
                 </View>
                 <View style={globalStyles.flexBox}>
                     {currentStep.serial === 1 && <LocationSelection name='location' />}
-                    {currentStep.serial === 2 && <PictureSelection name='pictures' />}
+                    {currentStep.serial === 2 && <PictureSelection name='image' />}
+                    {currentStep.serial === 3 && (
+                        <View style={[globalStyles.flexBox, styles.formWrapper]}>
+                            <TextInput
+                                name='title'
+                                label='Problemtitel'
+                                rules={{
+                                    required: 'Bitte gebe einen Titel ein.',
+                                }}
+                                helperText='Gib eine kurze und prägnante Beschreibung des Problems ein.'
+                            />
+                            <TextInput
+                                name='description'
+                                label='Beschreibung'
+                                multiline
+                                rules={{
+                                    required: 'Bitte gebe eine Beschreibung ein.',
+                                }}
+                                helperText='Beschreibe das Problem so genau wie möglich, gib hier alle Informationen an, die notwendig sein könnten, um das Problem zu verstehen und zu beheben.'
+                            />
+                        </View>
+                    )}
+                    {currentStep.serial === 4 && (
+                        <View style={globalStyles.flexBox}>
+                            <Text>
+                                Hier kommt ne coole Auswahl hin, jetzt ist es erstmal immer 1 lol.
+                            </Text>
+                        </View>
+                    )}
+                    {currentStep.serial === 5 && (
+                        <View style={globalStyles.flexBox}>
+                            {(isUploadingImage || isUpsertingProblem) && <LoadingSpinner />}
+                            <Text>Hier kommt ne coole Zusammenfassung hin.</Text>
+                        </View>
+                    )}
                 </View>
                 <View style={styles.buttons}>
                     <Button
@@ -145,7 +224,7 @@ const ProblemReport = ({ onClose: onCloseProp }: Props) => {
                         mode='contained'
                         onPress={onNext}
                     >
-                        {currentStepSerial === REPORT_STEPS.length - 1 ? 'Absenden' : 'Weiter'}
+                        {currentStepSerial === REPORT_STEPS.length ? 'Absenden' : 'Weiter'}
                     </Button>
                 </View>
             </View>
