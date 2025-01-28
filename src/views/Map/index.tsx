@@ -22,10 +22,7 @@ const Map = () => {
 
     return (
         <View style={[{ marginTop: insets.top }, globalStyles.flexBox]}>
-            <BaseMap
-                showCurrentLocation
-                onFabPress={onReportProblem}
-            />
+            <BaseMap onFabPress={onReportProblem} />
         </View>
     )
 }

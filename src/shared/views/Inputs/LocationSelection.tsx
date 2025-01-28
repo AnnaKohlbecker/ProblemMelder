@@ -1,7 +1,7 @@
 import { reverseGeocodeAsync } from 'expo-location'
 import isNil from 'lodash/isNil'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useController } from 'react-hook-form'
+import { useController, useForm } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
 import { MapPressEvent, Region } from 'react-native-maps'
 import { Text } from 'react-native-paper'
@@ -15,6 +15,9 @@ type Props = {
 }
 
 const styles = StyleSheet.create({
+    error: {
+        color: colors.primary,
+    },
     header: {
         margin: 10,
     },
@@ -29,22 +32,21 @@ const styles = StyleSheet.create({
 const LocationSelection = ({ name }: Props) => {
     const [currentAddress, setCurrentAddress] = useState<string>()
 
+    const { trigger } = useForm()
+
     const {
         field: { value, onChange },
-    } = useController({ name })
+        fieldState: { error },
+    } = useController({
+        name,
+        rules: {
+            required: 'Bitte wähle einen Standort.',
+        },
+    })
 
-    const currentLocation = useLocation()
-    const currentRegion = useMemo(() => {
-        if (isNil(currentLocation)) return undefined
-
-        return {
-            latitude: currentLocation.coords.latitude,
-            longitude: currentLocation.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-        }
-    }, [currentLocation])
-
+    /**
+     * Parse the current value to a valid Region object
+     */
     const location = useMemo((): Region | undefined => {
         if (isNil(value)) return undefined
 
@@ -53,11 +55,14 @@ const LocationSelection = ({ name }: Props) => {
         return {
             latitude: parseFloat(latitude),
             longitude: parseFloat(longitude),
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitudeDelta: 0.009,
+            longitudeDelta: 0.004,
         }
     }, [value])
 
+    /**
+     * Change the location if the user presses the map
+     */
     const onMapPress = useCallback(
         (event: MapPressEvent) => {
             const { latitude, longitude } = event.nativeEvent.coordinate
@@ -67,13 +72,27 @@ const LocationSelection = ({ name }: Props) => {
         [onChange],
     )
 
+    /**
+     * Automatically recognize location if possible
+     */
+    const currentLocation = useLocation()
+    useEffect(() => {
+        if (isNil(currentLocation)) return undefined
+
+        onChange(`${currentLocation.coords.latitude},${currentLocation.coords.longitude}`)
+    }, [currentLocation, onChange])
+
+    /**
+     * On location change update the address
+     */
     useEffect(() => {
         if (isNil(location)) return
 
         reverseGeocodeAsync(location).then(([address]) => {
+            trigger()
             setCurrentAddress(address.formattedAddress ?? undefined)
         })
-    }, [location])
+    }, [location, trigger])
 
     return (
         <View style={globalStyles.flexBox}>
@@ -85,14 +104,18 @@ const LocationSelection = ({ name }: Props) => {
                     Klicke auf die Karte um einen Standort auszuwählen.
                 </Text>
                 <Text variant='titleMedium'>Ausgewählter Standort:</Text>
-                <Text variant='bodyMedium'>
-                    {currentAddress ?? (currentRegion ? 'Automatisch erkannt' : 'Unbekannt')}
+                <Text
+                    variant='bodyMedium'
+                    style={globalStyles.mb}
+                >
+                    {currentAddress ?? 'Unbekannt'}
                 </Text>
+                {error && <Text style={styles.error}>{error.message}</Text>}
             </View>
             <View style={[styles.map, globalStyles.flexBox]}>
                 <BaseMap
                     onMapPress={onMapPress}
-                    markers={location ? [location] : currentRegion ? [currentRegion] : undefined}
+                    markers={location ? [location] : undefined}
                 />
             </View>
         </View>

@@ -1,65 +1,83 @@
 import { isNil } from 'lodash'
+import { useCallback, useMemo, useState } from 'react'
 import { View } from 'react-native'
 import MapView, { MapPressEvent, Marker, Region } from 'react-native-maps'
 import AnimatedMapRegion from 'react-native-maps/lib/AnimatedRegion'
 import { FAB } from 'react-native-paper'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useLocation } from '~/shared/context/LocationContext'
-import { useMapRegionLogic } from '~/shared/views/BaseMap/hooks/useMapRegionLogic'
-import LoadingSpinner from '~/shared/views/LoadingSpinner'
 
 type Props = {
     onFabPress?: () => void
 
     onMapPress?: (event: MapPressEvent) => void
 
-    initialFocus?: Region | AnimatedMapRegion
-    showCurrentLocation?: boolean
-
     markers?: Region[]
 }
 
-const BaseMap = ({ onFabPress, onMapPress, initialFocus, markers }: Props) => {
+const BaseMap = ({ onFabPress, onMapPress, markers }: Props) => {
     const location = useLocation()
 
-    const { region, onRegionChange } = useMapRegionLogic({ initialFocus })
+    const [region, setRegion] = useState<Region | AnimatedMapRegion>()
+
+    const currentLocation = useMemo(() => {
+        if (isNil(location)) return undefined
+
+        return {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: 0.009,
+            longitudeDelta: 0.004,
+        }
+    }, [location])
+
+    const visibleRegion = useMemo(() => {
+        return region ?? currentLocation
+    }, [currentLocation, region])
+
+    const onRegionChange = useCallback(
+        (newRegion: Region) => {
+            if (
+                Math.abs(newRegion.latitude - region?.latitude) <= 0.0001 ||
+                Math.abs(newRegion.longitude - region?.longitude) <= 0.0001
+            )
+                return
+
+            setRegion(newRegion)
+        },
+        [region],
+    )
 
     return (
         <View style={globalStyles.flexBox}>
-            {isNil(location) || isNil(region) ? (
-                <LoadingSpinner />
-            ) : (
-                <View style={globalStyles.flexBox}>
-                    <MapView
-                        style={globalStyles.flexBox}
-                        showsUserLocation
-                        showsMyLocationButton
-                        region={region}
-                        onPress={onMapPress}
-                        onMarkerPress={() => {
-                            //
-                        }}
-                        onMarkerSelect={() => {
-                            //
-                        }}
-                        moveOnMarkerPress={false}
-                        onRegionChangeComplete={onRegionChange}
-                    >
-                        {markers?.map((marker) => (
-                            <Marker
-                                key={`${marker.latitude},${marker.longitude}`}
-                                coordinate={marker}
-                            />
-                        ))}
-                    </MapView>
-                    {!isNil(onFabPress) && (
-                        <FAB
-                            icon='plus'
-                            onPress={onFabPress}
-                            style={globalStyles.fab}
-                        />
-                    )}
-                </View>
+            <MapView
+                style={globalStyles.flexBox}
+                region={visibleRegion}
+                onPress={onMapPress}
+                onMarkerPress={() => {
+                    //
+                }}
+                onMarkerSelect={() => {
+                    //
+                }}
+                showsUserLocation={true}
+                moveOnMarkerPress={false}
+                showsMyLocationButton={true}
+                onRegionChangeComplete={onRegionChange}
+            >
+                {markers?.map((marker) => (
+                    <Marker
+                        key={`${marker.latitude},${marker.longitude}`}
+                        coordinate={marker}
+                    />
+                ))}
+            </MapView>
+            {!isNil(onFabPress) && (
+                <FAB
+                    icon='plus'
+                    onPress={onFabPress}
+                    style={globalStyles.fab}
+                />
             )}
         </View>
     )

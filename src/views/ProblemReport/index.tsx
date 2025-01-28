@@ -2,11 +2,12 @@ import { isNil } from 'lodash'
 import { useCallback, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
-import { Appbar, Button, Portal, ProgressBar, Text } from 'react-native-paper'
+import { Appbar, Button, ProgressBar, Text } from 'react-native-paper'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useDialog } from '~/shared/context/DialogContext'
 import LocationSelection from '~/shared/views/Inputs/LocationSelection'
+import PictureSelection from '~/shared/views/Inputs/PictureSelection'
 
 type Props = {
     onClose: () => void
@@ -83,65 +84,72 @@ const ProblemReport = ({ onClose: onCloseProp }: Props) => {
     }, [onCloseProp, reset, showDialog])
 
     const onPrev = useCallback(() => {
-        setCurrentStepSerial((cur) => cur - 1)
-    }, [])
+        trigger().then((isValid) => {
+            if (!isValid) return
+
+            setCurrentStepSerial((cur) => cur - 1)
+        })
+    }, [trigger])
 
     const onNext = useCallback(() => {
         if (currentStepSerial !== REPORT_STEPS.length - 1) {
-            setCurrentStepSerial((cur) => cur + 1)
+            trigger().then((isValid) => {
+                if (!isValid) return
+                setCurrentStepSerial((cur) => cur + 1)
+            })
             return
         }
 
         trigger().then((isValid) => {
             if (!isValid) return
 
-            handleSubmit((data) => {})()
+            handleSubmit((data) => {
+                console.log(data)
+            })()
         })
     }, [currentStepSerial, handleSubmit, trigger])
 
     return (
-        <Portal>
-            <FormProvider {...form}>
-                <View style={[globalStyles.flexBox, { backgroundColor: colors.white }]}>
-                    <View>
-                        <Appbar.Header style={globalStyles.appbar}>
-                            <Appbar.BackAction onPress={onClose} />
-                            <Appbar.Content title='Problem melden' />
-                        </Appbar.Header>
-                        <ProgressBar
-                            progress={progress}
-                            color={colors.primary}
-                            style={styles.progress}
-                        />
-                        <Text
-                            variant='titleMedium'
-                            style={styles.stepTitle}
-                        >
-                            Schritt {currentStep.serial} von {REPORT_STEPS.length}:{' '}
-                            {currentStep.title}
-                        </Text>
-                    </View>
-                    <View style={globalStyles.flexBox}>
-                        {currentStep.serial === 1 && <LocationSelection name='location' />}
-                    </View>
-                    <View style={styles.buttons}>
-                        <Button
-                            mode='contained'
-                            onPress={onPrev}
-                            disabled={currentStepSerial === 1}
-                        >
-                            Zurück
-                        </Button>
-                        <Button
-                            mode='contained'
-                            onPress={onNext}
-                        >
-                            {currentStepSerial === REPORT_STEPS.length - 1 ? 'Absenden' : 'Weiter'}
-                        </Button>
-                    </View>
+        <FormProvider {...form}>
+            <View style={globalStyles.flexBox}>
+                <View>
+                    <Appbar.Header style={globalStyles.appbar}>
+                        <Appbar.BackAction onPress={onClose} />
+                        <Appbar.Content title='Problem melden' />
+                    </Appbar.Header>
+                    <ProgressBar
+                        progress={progress}
+                        color={colors.primary}
+                        style={styles.progress}
+                    />
+                    <Text
+                        variant='titleMedium'
+                        style={styles.stepTitle}
+                    >
+                        Schritt {currentStep.serial} von {REPORT_STEPS.length}: {currentStep.title}
+                    </Text>
                 </View>
-            </FormProvider>
-        </Portal>
+                <View style={globalStyles.flexBox}>
+                    {currentStep.serial === 1 && <LocationSelection name='location' />}
+                    {currentStep.serial === 2 && <PictureSelection name='pictures' />}
+                </View>
+                <View style={styles.buttons}>
+                    <Button
+                        mode='contained'
+                        onPress={onPrev}
+                        disabled={currentStepSerial === 1}
+                    >
+                        Zurück
+                    </Button>
+                    <Button
+                        mode='contained'
+                        onPress={onNext}
+                    >
+                        {currentStepSerial === REPORT_STEPS.length - 1 ? 'Absenden' : 'Weiter'}
+                    </Button>
+                </View>
+            </View>
+        </FormProvider>
     )
 }
 
