@@ -1,8 +1,8 @@
 import { useCallback, useEffect } from 'react'
 import { Alert, View } from 'react-native'
 import { Button, Text } from 'react-native-paper'
-import { useDeleteProblemMutation } from '~/queries/Problem/useDeleteProblemMutation'
-import { useProblemsQuery } from '~/queries/Problem/useProblemsQuery'
+import { useDeleteProblemMutation } from '~/queries/Problems/useDeleteProblemMutation'
+import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { useUserByIdQuery } from '~/queries/Users/useUserByIdQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
@@ -27,26 +27,32 @@ const Profile = () => {
         refetch: refetchProblems,
     } = useProblemsQuery()
 
-    const { mutate: deleteProblem } = useDeleteProblemMutation()
+    const deleteProblem = useDeleteProblemMutation() as ReturnType<typeof useDeleteProblemMutation>
 
     const onDelete = useCallback(
         (problem: Problem) => {
             showDialog({
-                title: 'Problem Löschen',
-                description: 'Problem Titel: ' + problem.title,
-                onAccept: () =>
-                    deleteProblem(problem.id, {
-                        onSuccess: () => {
-                            refetchProblems()
-                            Alert.alert('Erfolg', 'Das Problem wurde erfolgreich gelöscht.')
-                        },
-                        onError: (error) => {
-                            Alert.alert('Fehler', error.message)
-                        },
-                    }),
+                title: problem.title,
+                description: problem.id.toString(),
+                onAccept: async () => {
+                    try {
+                        await deleteProblem(problem.id)
+                        refetchProblems()
+                        Alert.alert(
+                            'Success',
+                            `Problem with id ${problem.id} has been deleted successfully.`,
+                        )
+                    } catch (error) {
+                        if (error instanceof Error) {
+                            Alert.alert('Error', error.message)
+                        } else {
+                            Alert.alert('Error', 'An unknown error occurred')
+                        }
+                    }
+                },
             })
         },
-        [deleteProblem, refetchProblems, showDialog],
+        [showDialog, deleteProblem, refetchProblems],
     )
 
     useEffect(() => {
@@ -63,7 +69,9 @@ const Profile = () => {
             <Text>Rolle: {role}</Text>
             <Text>Punkte: {user?.points}</Text>
             {problems && problems.length > 0 && (
-                <Button onPress={() => onDelete(problems[0])}>Problem Löschen</Button>
+                <Button onPress={() => onDelete(problems[0])}>
+                    Problem "{problems[0].title}" mit der Id "{problems[0].id}" löschen
+                </Button>
             )}
         </View>
     )

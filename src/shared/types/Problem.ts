@@ -5,6 +5,6 @@ export type Problem = {
     description: string
     image: string
     status: number
-    userId: number
+    userId: string
     authorityId: number
 }
