@@ -52,7 +52,7 @@ const PictureSelection = ({ name }: Props) => {
     } = useController({
         name,
         rules: {
-            required: 'Bitte nehme ein Bild auf',
+            required: 'Bitte mache ein Bild.',
         },
     })
 
@@ -90,7 +90,7 @@ const PictureSelection = ({ name }: Props) => {
                     variant='bodyMedium'
                     style={globalStyles.mb}
                 >
-                    Nehme ein Bild deines Problems auf.
+                    Mache ein Bild des Problems.
                 </Text>
                 {error && <Text style={styles.error}>{error.message}</Text>}
             </View>

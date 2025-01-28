@@ -104,7 +104,7 @@ const LocationSelection = ({ name }: Props) => {
                     variant='bodyMedium'
                     style={globalStyles.mb}
                 >
-                    Klicke auf die Karte um einen Standort auszuwählen.
+                    Klicke auf die Karte.
                 </Text>
                 <Text variant='titleMedium'>Ausgewählter Standort:</Text>
                 <Text
