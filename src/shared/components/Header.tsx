@@ -1,11 +1,12 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Appbar } from 'react-native-paper'
 import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
 import { RFValue } from 'react-native-responsive-fontsize'
-import LogoutDialog from '~/shared/components/LogoutDialog'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import { useAuth } from '~/shared/context/AuthContext'
+import { useDialog } from '~/shared/context/DialogContext'
 
 export const styles = StyleSheet.create({
     title: {
@@ -19,11 +20,18 @@ type Props = {
 }
 
 const Header = ({ route }: Props) => {
-    const [logoutVisible, setLogoutVisible] = useState(false)
+    const showDialog = useDialog()
+    const { signOut } = useAuth()
 
     const onLogout = useCallback(() => {
-        setLogoutVisible(true) // Show the logout dialog
-    }, [])
+        showDialog({
+            title: 'Abmelden?',
+            description: '',
+            onAccept: () => {
+                signOut()
+            },
+        })
+    }, [showDialog, signOut])
 
     return (
         <View>
@@ -39,12 +47,6 @@ const Header = ({ route }: Props) => {
                 />
             </Appbar.Header>
             <View style={globalStyles.separator} />
-
-            {/* Full-screen logout dialog */}
-            <LogoutDialog
-                visible={logoutVisible}
-                onDismiss={() => setLogoutVisible(false)}
-            />
         </View>
     )
 }
