@@ -43,16 +43,13 @@ const Profile = ({ route }: Props) => {
                 onAccept: () => {
                     try {
                         deleteProblem(problem)
-                        Alert.alert(
-                            'Success',
-                            `Problem with id ${problem.id} has been deleted successfully.`,
-                        )
+                        Alert.alert(`Problem mit der Id ${problem.id} wurde erfolgreich gelöscht.`)
                         refetchProblems()
                     } catch (error) {
                         if (error instanceof Error) {
                             Alert.alert('Error', error.message)
                         } else {
-                            Alert.alert('Error', 'An unknown error occurred')
+                            Alert.alert('Error', 'Ein unerwarteter Fehler ist aufgetreten.')
                         }
                     }
                 },
@@ -61,23 +58,18 @@ const Profile = ({ route }: Props) => {
         [deleteProblem, refetchProblems, showDialog],
     )
 
-    const deleteButton = useMemo(() => {
-        return problems && problems.length > 0 ? (
-            <Button onPress={() => onDelete(problems[0])}>
-                Problem "{problems[0].title}" mit der Id "{problems[0].id}" löschen
-            </Button>
-        ) : (
-            <Text>Erstelle ein Problem, um es hier zu löschen</Text>
-        )
-    }, [problems, onDelete])
+    const deleteButtonText = useMemo(() => {
+        return problems && problems.length > 0
+            ? `Problem "${problems[0].title}" mit der Id "${problems[0].id}" löschen`
+            : 'Keine Probleme vorhanden.'
+    }, [problems])
 
     useEffect(() => {
         if (!userError && !problemsError) return
 
-        Alert.alert(
-            'Error: ',
-            userError?.message ?? problemsError?.message ?? 'An unknown error occurred',
-        )
+        Alert.alert('Fehler', 'Ein unerwarteter Fehler ist aufgetreten.')
+        // eslint-disable-next-line no-console
+        console.error(userError ?? problemsError)
     }, [userError, problemsError])
 
     if (userLoading || problemsLoading || isDeletingProblem) return <LoadingSpinner />
@@ -98,7 +90,11 @@ const Profile = ({ route }: Props) => {
                         <Text variant='bodyLarge'>{user?.points}</Text>
                     </Card.Content>
                 </Card>
-                {deleteButton}
+                {problems && problems.length > 0 ? (
+                    <Button onPress={() => onDelete(problems[0])}>{deleteButtonText}</Button>
+                ) : (
+                    <Text>{deleteButtonText}</Text>
+                )}
             </View>
         </View>
     )
