@@ -9,6 +9,10 @@ export type Problem = {
     status: ProblemStatus
     authorityId: number
     userId: string
-    rating: number
     date: Date
+    resolved: boolean
+    satisfactionVotesCount: number
+    satisfactionRating: number
+    priorityVotesCount: number
+    priorityRating: number
 }

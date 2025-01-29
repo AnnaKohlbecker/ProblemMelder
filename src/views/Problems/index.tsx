@@ -74,31 +74,48 @@ const Problems = ({ route }: Props) => {
                                 />
                                 <Text>{problem.date.toString()}</Text>
                             </View>
-                            <View style={globalStyles.ratingRow}>
-                                {[...Array(5)].map((_, index) => (
-                                    <IconButton
-                                        key={index}
-                                        icon={index < problem.rating ? 'star' : 'star-outline'}
-                                        size={18}
-                                        iconColor={colors.yellow}
-                                    />
-                                ))}
-                                {/* <Text>{problem.votes}</Text> */}
-                            </View>
+                        </Card.Content>
+                        <Card.Content>
+                            {problem.resolved ? (
+                                <View style={globalStyles.ratingRow}>
+                                    {[...Array(3)].map((_, index) => (
+                                        <IconButton
+                                            key={index}
+                                            icon={
+                                                index < problem.priorityRating
+                                                    ? 'alert-circle'
+                                                    : 'alert-circle-outline'
+                                            }
+                                            iconColor={colors.red}
+                                            size={18}
+                                        />
+                                    ))}
+                                    <Text>{problem.priorityVotesCount}</Text>
+                                </View>
+                            ) : (
+                                <View style={globalStyles.ratingRow}>
+                                    {[...Array(5)].map((_, index) => (
+                                        <IconButton
+                                            key={index}
+                                            icon={
+                                                index < problem.satisfactionRating
+                                                    ? 'star'
+                                                    : 'star-outline'
+                                            }
+                                            size={18}
+                                            iconColor={colors.yellow}
+                                        />
+                                    ))}
+                                    <Text>{problem.satisfactionVotesCount}</Text>
+                                </View>
+                            )}
                         </Card.Content>
                         <Card.Actions>
                             <IconButton
                                 icon='comment'
                                 size={18}
                             />
-                            {/* <Text>{problem.comments}</Text>
-                            {!problem.resolved && (
-                                <IconButton
-                                    icon='alert-circle'
-                                    color={colors.red}
-                                    size={18}
-                                />
-                            )} */}
+                            {/* <Text>{problem.comments}</Text> */}
                         </Card.Actions>
                     </Card>
                 )}
