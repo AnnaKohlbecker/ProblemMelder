@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from 'react'
 import { Alert, View } from 'react-native'
-import { Button, Text } from 'react-native-paper'
+import { Button, Card, Text } from 'react-native-paper'
+import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
 import { useDeleteProblemMutation } from '~/queries/Problems/useDeleteProblemMutation'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { useUserByIdQuery } from '~/queries/Users/useUserByIdQuery'
@@ -11,8 +12,12 @@ import { useDialog } from '~/shared/context/DialogContext'
 import { Problem } from '~/shared/types/Problem'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 
-const Profile = () => {
-    const { session, role } = useAuth()
+type Props = {
+    route: BaseRoute
+}
+
+const Profile = ({ route }: Props) => {
+    const { session } = useAuth()
     const showDialog = useDialog()
 
     const {
@@ -66,52 +71,26 @@ const Profile = () => {
 
     return (
         <View style={globalStyles.flexBox}>
-            <Header />
-            <View style={globalStyles.container}>
-                <Text style={globalStyles.title}>Profil</Text>
-                <Text>
-                    Rolle: {role} ({user?.role})
-                </Text>
-                <Text>Punkte: {user?.points}</Text>
-                {problems && problems.length > 0 && (
+            <Header route={route} />
+            <View style={globalStyles.card}>
+                <Card>
+                    <Card.Title title='Rolle' />
+                    <Card.Content>
+                        <Text variant='bodyLarge'>{user?.role}</Text>
+                    </Card.Content>
+                </Card>
+                <Card>
+                    <Card.Title title='Punkte' />
+                    <Card.Content>
+                        <Text variant='bodyLarge'>{user?.points}</Text>
+                    </Card.Content>
+                </Card>
+                {(problems && problems.length > 0 && (
                     <Button onPress={() => onDelete(problems[0])}>
                         Problem "{problems[0].title}" mit der Id "{problems[0].id}" löschen
                     </Button>
-                )}
+                )) || <Text>Erstelle ein Problem, um es hier zu löschen</Text>}
             </View>
-            {/* <View>
-                {showButton && (
-                    <SegmentedButtons
-                        value={lectureView}
-                        onValueChange={(value) => setLectureView(value as LectureType)}
-                        buttons={buttons}
-                        style={globalStyles.segmentedButtons}
-                        theme={theme}
-                    />
-                )}
-                <Searchbar
-                    style={globalStyles.searchbar}
-                    value={search}
-                    onChangeText={setSearch}
-                    placeholder={intl.formatMessage(translations.search)}
-                />
-            </View>
-            {searchedLectures.length === 0 ? (
-                <View style={globalStyles.noDataContainer}>
-                    <Text style={globalStyles.noDataText}>
-                        {intl.formatMessage(translations.noData)}
-                    </Text>
-                </View>
-            ) : (
-                <FlatList
-                    data={searchedLectures}
-                    keyExtractor={(lecture) => lecture.id.toString()}
-                    renderItem={renderItem}
-                    contentContainerStyle={
-                        showButton ? globalStyles.listSection : styles.listSection
-                    }
-                />
-            )} */}
         </View>
     )
 }

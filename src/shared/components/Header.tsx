@@ -1,74 +1,48 @@
-import { useCallback, useMemo } from 'react'
-import { ImageBackground, StyleSheet, View } from 'react-native'
-import { Text } from 'react-native-paper'
+import { StyleSheet, View } from 'react-native'
+import { Appbar } from 'react-native-paper'
+import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
 import { RFValue } from 'react-native-responsive-fontsize'
-import HeaderImage from '~/../assets/header.png'
-import SelectButton from '~/shared/components/SelectButton'
 import { colors } from '~/shared/constants/colors'
 import { useAuth } from '~/shared/context/AuthContext'
 
 const styles = StyleSheet.create({
-    element: {
-        alignItems: 'center',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: 15,
-        paddingTop: 20,
+    header: {
+        backgroundColor: colors.white,
     },
-    headerImage: {
-        height: 130,
+    separator: {
+        backgroundColor: colors.gray,
+        height: 1,
+        width: '100%',
     },
-    headerText: {
-        color: colors.white,
-        fontSize: RFValue(24),
-        fontWeight: 'bold',
-        height: 60,
-        textAlignVertical: 'center',
-    },
-    overlay: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: `${colors.black}50`,
+    title: {
+        color: colors.primary,
+        fontSize: RFValue(20),
     },
 })
 
-const Header = () => {
+type Props = {
+    route: BaseRoute
+}
+
+const Header = ({ route }: Props) => {
     const { signOut } = useAuth()
 
-    const options = useMemo(
-        () => [
-            {
-                label: 'Abmelden',
-                iconSource: 'logout',
-            },
-        ],
-        [],
-    )
-
-    const onOptionChange = useCallback(
-        (selectedOption: string) => {
-            if (selectedOption === 'Abmelden') signOut()
-        },
-        [signOut],
-    )
+    const _handleLogout = () => signOut()
 
     return (
         <View>
-            <ImageBackground
-                style={styles.headerImage}
-                source={HeaderImage}
-                resizeMode='cover'
-            >
-                <View style={styles.overlay} />
-                <View style={styles.element}>
-                    <Text style={styles.headerText}>Header</Text>
-
-                    <SelectButton
-                        icon='account'
-                        options={options}
-                        onChange={onOptionChange}
-                    ></SelectButton>
-                </View>
-            </ImageBackground>
+            <Appbar.Header style={styles.header}>
+                <Appbar.Content
+                    title={route.title || ''}
+                    titleStyle={styles.title}
+                />
+                <Appbar.Action
+                    icon='logout'
+                    onPress={_handleLogout}
+                    color={colors.primary}
+                />
+            </Appbar.Header>
+            <View style={styles.separator} />
         </View>
     )
 }

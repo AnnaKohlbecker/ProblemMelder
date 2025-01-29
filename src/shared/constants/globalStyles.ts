@@ -8,15 +8,12 @@ import { colors } from '~/shared/constants/colors'
 export const globalStyles = StyleSheet.create({
     appbar: {
         backgroundColor: colors.white,
-        borderTopColor: colors.secondary,
-        borderTopWidth: 1,
     },
-    container: {
-        alignItems: 'center',
+    card: {
         flex: 1,
         gap: 20,
-        justifyContent: 'center',
-        paddingHorizontal: 30,
+        paddingHorizontal: 20,
+        paddingVertical: 20,
     },
     dialog: {
         backgroundColor: colors.white,

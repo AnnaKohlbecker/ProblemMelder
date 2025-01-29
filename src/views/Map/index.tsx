@@ -1,15 +1,18 @@
 import { useCallback, useMemo, useState } from 'react'
 import { View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
+import Header from '~/shared/components/Header'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { Marker } from '~/shared/types/Marker'
 import BaseMap from '~/shared/views/BaseMap'
 import ProblemReport from '~/views/ProblemReport'
 
-const Map = () => {
-    const insets = useSafeAreaInsets()
+type Props = {
+    route: BaseRoute
+}
 
+const Map = ({ route }: Props) => {
     const [reportProblem, setReportProblem] = useState(false)
 
     const { data: problems } = useProblemsQuery()
@@ -39,12 +42,15 @@ const Map = () => {
     if (reportProblem) return <ProblemReport onClose={onClose} />
 
     return (
-        <View style={[{ marginTop: insets.top }, globalStyles.flexBox]}>
-            <BaseMap
-                markers={markers}
-                onFabPress={onReportProblem}
-            />
-        </View>
+        <>
+            <Header route={route} />
+            <View style={globalStyles.flexBox}>
+                <BaseMap
+                    markers={markers}
+                    onFabPress={onReportProblem}
+                />
+            </View>
+        </>
     )
 }
 export default Map
