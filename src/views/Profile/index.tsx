@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { Alert, View } from 'react-native'
 import { Button, Card, Text } from 'react-native-paper'
 import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
@@ -9,7 +9,7 @@ import Header from '~/shared/components/Header'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { useDialog } from '~/shared/context/DialogContext'
-import { Problem } from '~/shared/types/Problem'
+import { Problem } from '~/shared/models/Problem'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 
 type Props = {
@@ -61,10 +61,23 @@ const Profile = ({ route }: Props) => {
         [deleteProblem, refetchProblems, showDialog],
     )
 
+    const deleteButton = useMemo(() => {
+        return problems && problems.length > 0 ? (
+            <Button onPress={() => onDelete(problems[0])}>
+                Problem "{problems[0].title}" mit der Id "{problems[0].id}" löschen
+            </Button>
+        ) : (
+            <Text>Erstelle ein Problem, um es hier zu löschen</Text>
+        )
+    }, [problems, onDelete])
+
     useEffect(() => {
         if (!userError && !problemsError) return
 
-        Alert.alert('Error')
+        Alert.alert(
+            'Error: ',
+            userError?.message ?? problemsError?.message ?? 'An unknown error occurred',
+        )
     }, [userError, problemsError])
 
     if (userLoading || problemsLoading || isDeletingProblem) return <LoadingSpinner />
@@ -85,11 +98,7 @@ const Profile = ({ route }: Props) => {
                         <Text variant='bodyLarge'>{user?.points}</Text>
                     </Card.Content>
                 </Card>
-                {(problems && problems.length > 0 && (
-                    <Button onPress={() => onDelete(problems[0])}>
-                        Problem "{problems[0].title}" mit der Id "{problems[0].id}" löschen
-                    </Button>
-                )) || <Text>Erstelle ein Problem, um es hier zu löschen</Text>}
+                {deleteButton}
             </View>
         </View>
     )

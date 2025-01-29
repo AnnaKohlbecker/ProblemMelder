@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { supabase } from '~/services/supabase'
 import { Table } from '~/shared/enums/Table'
-import { Problem } from '~/shared/types/Problem'
+import { Problem } from '~/shared/models/Problem'
 
 export const useProblemsQuery = () => {
     const queryFn = useCallback(async () => {

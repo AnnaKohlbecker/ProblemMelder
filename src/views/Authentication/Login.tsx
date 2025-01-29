@@ -1,9 +1,8 @@
 import { useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { Alert, ImageBackground, ScrollView, StyleSheet, View } from 'react-native'
-import { Button, Card, Text } from 'react-native-paper'
+import { Alert, StyleSheet, View } from 'react-native'
+import { Appbar, Button, Card, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
-import HeaderImage from '~/../assets/header.png'
 import { supabase } from '~/services/supabase'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
@@ -37,21 +36,13 @@ export const loginStyles = StyleSheet.create({
         justifyContent: 'center',
     },
     headerText: {
-        color: colors.white,
+        color: colors.primary,
         fontSize: RFValue(28),
-        fontWeight: 'bold',
     },
     main: {
         flex: 1,
         gap: 25,
         padding: 30,
-    },
-    overlay: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: `${colors.black}60`,
-    },
-    scrollContent: {
-        flexGrow: 1,
     },
     wrapper: {
         flex: 1,
@@ -92,54 +83,49 @@ const Login = () => {
 
     return (
         <View style={globalStyles.flexBox}>
-            <ScrollView contentContainerStyle={loginStyles.scrollContent}>
-                <ImageBackground
-                    style={loginStyles.header}
-                    source={HeaderImage}
-                >
-                    <View style={loginStyles.overlay} />
-                    <Text style={loginStyles.headerText}>Anmelden</Text>
-                </ImageBackground>
-                <View style={loginStyles.wrapper}>
-                    <View style={loginStyles.main}>
-                        <FormProvider {...form}>
-                            <TextInput
-                                name='email'
-                                label='E-Mail Adresse'
-                                rules={{
-                                    required: 'Bitte gebe eine E-Mail Adresse ein',
-                                    validate,
-                                }}
-                            />
-                            <TextInput
-                                name='password'
-                                label='Passwort'
-                                secureTextEntry
-                                rules={{ required: 'Bitte gebe ein Passwort ein.' }}
-                            />
-                            <View style={loginStyles.buttonContainer}>
-                                <Button
-                                    mode='contained'
-                                    onPress={handleSubmit(login)}
-                                    disabled={!isDirty}
-                                >
-                                    Anmelden
-                                </Button>
-                            </View>
-                        </FormProvider>
+            <Appbar.Header style={globalStyles.header}>{null}</Appbar.Header>
+            <View style={loginStyles.wrapper}>
+                <View style={loginStyles.main}>
+                    <View style={loginStyles.header}>
+                        <Text style={loginStyles.headerText}>Anmelden</Text>
                     </View>
-                    <View style={loginStyles.footer}>
-                        <Card
-                            contentStyle={loginStyles.card}
-                            mode='contained'
-                        >
-                            <Link href='https://dhbw-loerrach.de/impressum'>Impressum</Link>
-                            <Text>|</Text>
-                            <Link href='https://dhbw-loerrach.de/datenschutz'>Datenschutz</Link>
-                        </Card>
-                    </View>
+                    <FormProvider {...form}>
+                        <TextInput
+                            name='email'
+                            label='E-Mail Adresse'
+                            rules={{
+                                required: 'Bitte gebe eine E-Mail Adresse ein',
+                                validate,
+                            }}
+                        />
+                        <TextInput
+                            name='password'
+                            label='Passwort'
+                            secureTextEntry
+                            rules={{ required: 'Bitte gebe ein Passwort ein.' }}
+                        />
+                        <View style={loginStyles.buttonContainer}>
+                            <Button
+                                mode='contained'
+                                onPress={handleSubmit(login)}
+                                disabled={!isDirty}
+                            >
+                                Anmelden
+                            </Button>
+                        </View>
+                    </FormProvider>
                 </View>
-            </ScrollView>
+                <View style={loginStyles.footer}>
+                    <Card
+                        contentStyle={loginStyles.card}
+                        mode='contained'
+                    >
+                        <Link href='https://dhbw-loerrach.de/impressum'>Impressum</Link>
+                        <Text>|</Text>
+                        <Link href='https://dhbw-loerrach.de/datenschutz'>Datenschutz</Link>
+                    </Card>
+                </View>
+            </View>
         </View>
     )
 }

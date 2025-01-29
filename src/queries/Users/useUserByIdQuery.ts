@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
+import { isNil } from 'lodash'
 import { useCallback } from 'react'
 import { supabase } from '~/services/supabase'
 import { Table } from '~/shared/enums/Table'
-import { User } from '~/shared/types/User'
+import { User } from '~/shared/models/User'
 
 type Props = {
     userId: string | undefined
@@ -25,6 +26,6 @@ export const useUserByIdQuery = ({ userId }: Props) => {
     return useQuery<User>({
         queryKey: ['userByIdQuery', userId],
         queryFn,
-        enabled: !!userId,
+        enabled: !isNil(userId),
     })
 }

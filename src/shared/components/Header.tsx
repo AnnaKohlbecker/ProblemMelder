@@ -1,19 +1,13 @@
+import { useCallback, useMemo, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Appbar } from 'react-native-paper'
 import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
 import { RFValue } from 'react-native-responsive-fontsize'
+import LogoutDialog from '~/shared/components/LogoutDialog'
 import { colors } from '~/shared/constants/colors'
-import { useAuth } from '~/shared/context/AuthContext'
+import { globalStyles } from '~/shared/constants/globalStyles'
 
-const styles = StyleSheet.create({
-    header: {
-        backgroundColor: colors.white,
-    },
-    separator: {
-        backgroundColor: colors.gray,
-        height: 1,
-        width: '100%',
-    },
+export const styles = StyleSheet.create({
     title: {
         color: colors.primary,
         fontSize: RFValue(20),
@@ -25,24 +19,32 @@ type Props = {
 }
 
 const Header = ({ route }: Props) => {
-    const { signOut } = useAuth()
+    const [logoutVisible, setLogoutVisible] = useState(false)
 
-    const _handleLogout = () => signOut()
+    const onLogout = useCallback(() => {
+        setLogoutVisible(true) // Show the logout dialog
+    }, [])
 
     return (
         <View>
-            <Appbar.Header style={styles.header}>
+            <Appbar.Header style={globalStyles.header}>
                 <Appbar.Content
-                    title={route.title || ''}
+                    title={useMemo(() => route.title ?? '', [route.title])}
                     titleStyle={styles.title}
                 />
                 <Appbar.Action
                     icon='logout'
-                    onPress={_handleLogout}
+                    onPress={onLogout}
                     color={colors.primary}
                 />
             </Appbar.Header>
-            <View style={styles.separator} />
+            <View style={globalStyles.separator} />
+
+            {/* Full-screen logout dialog */}
+            <LogoutDialog
+                visible={logoutVisible}
+                onDismiss={() => setLogoutVisible(false)}
+            />
         </View>
     )
 }
