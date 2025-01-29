@@ -1,11 +1,11 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Appbar } from 'react-native-paper'
 import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
 import { RFValue } from 'react-native-responsive-fontsize'
+import LogoutDialog from '~/shared/components/LogoutDialog'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
-import { useAuth } from '~/shared/context/AuthContext'
 
 export const styles = StyleSheet.create({
     title: {
@@ -19,9 +19,11 @@ type Props = {
 }
 
 const Header = ({ route }: Props) => {
-    const { signOut } = useAuth()
+    const [logoutVisible, setLogoutVisible] = useState(false)
 
-    const onLogout = useCallback(() => signOut(), [signOut])
+    const onLogout = useCallback(() => {
+        setLogoutVisible(true) // Show the logout dialog
+    }, [])
 
     return (
         <View>
@@ -37,6 +39,12 @@ const Header = ({ route }: Props) => {
                 />
             </Appbar.Header>
             <View style={globalStyles.separator} />
+
+            {/* Full-screen logout dialog */}
+            <LogoutDialog
+                visible={logoutVisible}
+                onDismiss={() => setLogoutVisible(false)}
+            />
         </View>
     )
 }

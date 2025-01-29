@@ -12,14 +12,14 @@ export const useRoleByUserQuery = ({ userId }: Props) => {
     const queryFn = useCallback(async () => {
         const response = await supabase
             .from(Table.Users)
-            .select('role(name)')
+            .select('role(displayName)')
             .eq('userId', userId)
             .single()
             .throwOnError()
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore because supabase typings are incorrect
-        return response.data?.role.name as Role
+        return response.data?.role.displayName as Role
     }, [userId])
 
     return useQuery<Role>({
