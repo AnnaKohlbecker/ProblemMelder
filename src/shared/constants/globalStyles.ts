@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native'
-import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
 
 /**
@@ -27,11 +26,15 @@ export const globalStyles = StyleSheet.create({
     flexBox: {
         flex: 1,
     },
+    header: {
+        backgroundColor: colors.white,
+    },
     mb: {
         marginBottom: 10,
     },
-    title: {
-        fontSize: RFValue(20),
-        textAlign: 'center',
+    separator: {
+        backgroundColor: colors.gray,
+        height: 1,
+        width: '100%',
     },
 })

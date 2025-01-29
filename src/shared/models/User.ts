@@ -1,4 +1,4 @@
-import { Role } from 'react-native'
+import { Role } from '~/shared/enums/Role'
 
 export type User = {
     id: number
