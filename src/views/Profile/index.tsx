@@ -72,14 +72,14 @@ const Profile = ({ route }: Props) => {
     return (
         <View style={globalStyles.flexBox}>
             <Header route={route} />
-            <View style={globalStyles.card}>
-                <Card>
+            <View style={globalStyles.cardsView}>
+                <Card style={globalStyles.card}>
                     <Card.Title title='Rolle' />
                     <Card.Content>
                         <Text variant='bodyLarge'>{role}</Text>
                     </Card.Content>
                 </Card>
-                <Card>
+                <Card style={globalStyles.card}>
                     <Card.Title title='Punkte' />
                     <Card.Content>
                         <Text variant='bodyLarge'>{user?.points}</Text>

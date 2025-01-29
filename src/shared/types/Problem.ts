@@ -9,4 +9,6 @@ export type Problem = {
     status: ProblemStatus
     authorityId: number
     userId: string
+    rating: number
+    date: Date
 }

@@ -10,6 +10,9 @@ export const globalStyles = StyleSheet.create({
         backgroundColor: colors.white,
     },
     card: {
+        backgroundColor: colors.white,
+    },
+    cardsView: {
         flex: 1,
         gap: 20,
         paddingHorizontal: 20,
@@ -24,11 +27,32 @@ export const globalStyles = StyleSheet.create({
         position: 'absolute',
         right: 0,
     },
+    flatList: {
+        flex: 1,
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+    },
     flexBox: {
         flex: 1,
     },
+    image: {
+        borderRadius: 8,
+        height: 150,
+    },
+    infoRow: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        gap: 5,
+        marginVertical: 2,
+    },
     mb: {
         marginBottom: 10,
+    },
+    ratingRow: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        gap: 3,
+        marginTop: 5,
     },
     title: {
         fontSize: RFValue(20),
