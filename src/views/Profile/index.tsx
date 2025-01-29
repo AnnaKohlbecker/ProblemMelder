@@ -17,7 +17,7 @@ type Props = {
 }
 
 const Profile = ({ route }: Props) => {
-    const { session } = useAuth()
+    const { session, role } = useAuth()
     const showDialog = useDialog()
 
     const {
@@ -76,7 +76,7 @@ const Profile = ({ route }: Props) => {
                 <Card>
                     <Card.Title title='Rolle' />
                     <Card.Content>
-                        <Text variant='bodyLarge'>{user?.role}</Text>
+                        <Text variant='bodyLarge'>{role}</Text>
                     </Card.Content>
                 </Card>
                 <Card>
