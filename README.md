@@ -15,11 +15,11 @@ Für die Entwicklung sollte VSCode genutzt werden. Einige grundlegende Einstellu
 
 1. Repository klonen:
     ```bash
-    git clone https://github.com/schmieders/VorlesungsBewertung.git
+    git clone https://github.com/AnnaKohlbecker/ProblemMelder
     ```
 2. Navigiere in das Projektverzeichnis:
     ```bash
-    cd VorlesungsBewertung
+    cd ProblemMelder
     ```
 3. Abhängigkeiten installieren:
 

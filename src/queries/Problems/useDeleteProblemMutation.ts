@@ -6,13 +6,13 @@ import { Problem } from '~/shared/models/Problem'
 
 type Payload = Problem
 
-export const useUpsertProblemMutation = () => {
+export const useDeleteProblemMutation = () => {
     const mutationFn = useCallback(async (data: Payload) => {
-        return await supabase.from(Table.Problems).upsert(data).throwOnError()
+        return await supabase.from(Table.Problems).delete().eq('id', data.id).throwOnError()
     }, [])
 
     return useMutation({
-        mutationKey: ['upsertProblemMutation'],
+        mutationKey: ['deleteProblemMutation'],
         mutationFn,
     })
 }
