@@ -41,17 +41,14 @@ const Profile = ({ route }: Props) => {
                 title: problem.title,
                 description: problem.id.toString(),
                 onAccept: () => {
-                    try {
-                        deleteProblem(problem)
-                        Alert.alert(`Problem mit der Id ${problem.id} wurde erfolgreich gelöscht.`)
-                        refetchProblems()
-                    } catch (error) {
-                        if (error instanceof Error) {
-                            Alert.alert('Error', error.message)
-                        } else {
-                            Alert.alert('Error', 'Ein unerwarteter Fehler ist aufgetreten.')
-                        }
-                    }
+                    deleteProblem(problem, {
+                        onSuccess: () => {
+                            Alert.alert(
+                                `Problem mit der Id ${problem.id} wurde erfolgreich gelöscht.`,
+                            )
+                            refetchProblems()
+                        },
+                    })
                 },
             })
         },
@@ -72,9 +69,9 @@ const Profile = ({ route }: Props) => {
         console.error(userError ?? problemsError)
     }, [userError, problemsError])
 
-    if (userLoading || problemsLoading || isDeletingProblem) return <LoadingSpinner />
-
-    return (
+    return userLoading || problemsLoading || isDeletingProblem ? (
+        <LoadingSpinner />
+    ) : (
         <View style={globalStyles.flexBox}>
             <Header route={route} />
             <View style={globalStyles.card}>
