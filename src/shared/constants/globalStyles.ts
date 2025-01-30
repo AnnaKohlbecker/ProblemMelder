@@ -10,10 +10,10 @@ export const globalStyles = StyleSheet.create({
     },
     card: {
         backgroundColor: colors.white,
+        marginVertical: 10,
     },
     cardsView: {
         flex: 1,
-        gap: 20,
         paddingHorizontal: 20,
         paddingVertical: 20,
     },
@@ -27,9 +27,7 @@ export const globalStyles = StyleSheet.create({
         right: 0,
     },
     flatList: {
-        flex: 1,
         paddingHorizontal: 20,
-        paddingVertical: 20,
     },
     flexBox: {
         flex: 1,
