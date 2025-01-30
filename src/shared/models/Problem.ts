@@ -11,8 +11,9 @@ export type Problem = {
     userId: string
     date: Date
     resolved: boolean
-    satisfactionVotesCount: number
-    satisfactionRating: number
+    starsVotesCount: number
+    stars: number | null
     priorityVotesCount: number
-    priorityRating: number
+    priority: number | null
+    commentsCount: number
 }
