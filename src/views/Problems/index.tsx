@@ -1,35 +1,21 @@
 import * as Location from 'expo-location'
 import { useEffect, useState } from 'react'
 import { Alert, FlatList, View } from 'react-native'
-import { Card, FAB, IconButton, Text } from 'react-native-paper'
+import { FAB, Searchbar } from 'react-native-paper'
 import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
 import { useImageByNameQuery } from '~/queries/Problems/useImageByNameQuery'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { useUserByIdQuery } from '~/queries/Users/useUserByIdQuery'
 import Header from '~/shared/components/Header'
-import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
-import { ProblemStatus } from '~/shared/enums/ProblemStatus'
+import { DisplayedProblem } from '~/shared/models/DisplayedProblems'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
+import ProblemCard from '~/views/Problems/components/ProblemCard'
+import { useProblemsSearchLogic } from '~/views/Problems/hooks/useProblemsSearchLogic'
 
 type Props = {
     route: BaseRoute
-}
-
-type Problem = {
-    id: number
-    title: string
-    location: string
-    description: string
-    image: string
-    status: ProblemStatus
-    authorityId: number
-    userId: string
-    date: Date
-    address?: string
-    priorityRating: number
-    imageUri?: string
 }
 
 const Problems = ({ route }: Props) => {
@@ -40,13 +26,20 @@ const Problems = ({ route }: Props) => {
 
     const { data: problems, isLoading: problemsLoading, error: problemsError } = useProblemsQuery()
     const { data: imageUris } = useImageByNameQuery({ problems })
+    const [displayedProblems, setDisplayedProblems] = useState<DisplayedProblem[]>([])
 
-    const [cardProblems, setCardProblems] = useState<Problem[]>([])
+    // const { filteredDetails, filter, setFilter } = useProblemsFilterLogic({
+    //     questions: questions ?? [],
+    // })
+
+    const { searchedProblems, search, setSearch } = useProblemsSearchLogic({
+        problems: displayedProblems ?? [],
+    })
 
     useEffect(() => {
         if (!problems) return
 
-        const fetchAddressesAndImages = async () => {
+        const fetch = async () => {
             const updatedProblems = await Promise.all(
                 problems.map(async (problem) => {
                     let address = 'Unknown Location'
@@ -68,14 +61,15 @@ const Problems = ({ route }: Props) => {
                             imageUris?.find(
                                 (imageUri) => Object.keys(imageUri)[0] === problem.image,
                             )?.[problem.image] || '',
+                        formattedDate: new Date(problem.date).toLocaleDateString('de-DE'),
                     }
                 }),
             )
 
-            setCardProblems(updatedProblems)
+            setDisplayedProblems(updatedProblems)
         }
 
-        fetchAddressesAndImages()
+        fetch()
     }, [problems, imageUris])
 
     useEffect(() => {
@@ -89,49 +83,19 @@ const Problems = ({ route }: Props) => {
     return (
         <View style={globalStyles.flexBox}>
             <Header route={route} />
+            <View>
+                <Searchbar
+                    style={globalStyles.searchbar}
+                    value={search}
+                    onChangeText={setSearch}
+                    placeholder='Suche'
+                />
+                {/* <Filter/> */}
+            </View>
             <FlatList
-                data={cardProblems}
+                data={searchedProblems}
                 style={globalStyles.flatList}
-                renderItem={({ item: problem }) => (
-                    <Card
-                        key={problem.id}
-                        style={globalStyles.card}
-                    >
-                        <Card.Title
-                            title={problem.title}
-                            left={(props) => (
-                                <IconButton
-                                    {...props}
-                                    icon={problem.status ? 'check-circle' : 'clock'}
-                                    iconColor={problem.status ? colors.green : colors.orange}
-                                />
-                            )}
-                        />
-                        {problem.imageUri && <Card.Cover source={{ uri: problem.imageUri }} />}
-                        <Card.Content>
-                            <View style={globalStyles.infoRow}>
-                                <IconButton
-                                    icon='map-marker'
-                                    size={18}
-                                />
-                                <Text>{problem.address}</Text>
-                            </View>
-                            <View style={globalStyles.infoRow}>
-                                <IconButton
-                                    icon='calendar'
-                                    size={18}
-                                />
-                                <Text>{problem.date.toString()}</Text>
-                            </View>
-                        </Card.Content>
-                        <Card.Actions>
-                            <IconButton
-                                icon='comment'
-                                size={18}
-                            />
-                        </Card.Actions>
-                    </Card>
-                )}
+                renderItem={({ item: problem }) => <ProblemCard problem={problem} />}
             />
             <FAB
                 icon='plus'

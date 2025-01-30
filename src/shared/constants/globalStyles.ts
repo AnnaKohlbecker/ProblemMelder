@@ -56,6 +56,11 @@ export const globalStyles = StyleSheet.create({
         gap: 3,
         marginTop: 5,
     },
+    searchbar: {
+        backgroundColor: colors.gray,
+        marginBottom: 10,
+        margin: 20,
+    },
     separator: {
         backgroundColor: colors.gray,
         height: 1,
