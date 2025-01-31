@@ -5,22 +5,19 @@ import { colors } from '~/shared/constants/colors'
 import { DisplayedProblem } from '~/shared/models/DisplayedProblems'
 
 const styles = StyleSheet.create({
-    actionsRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10,
-    },
     card: {
         borderRadius: 10,
         margin: 10,
         padding: 10,
     },
-    container: {
-        alignItems: 'center',
-        flexDirection: 'row',
-    },
-    detailsContainer: {
+    column: {
         flex: 1,
+        padding: 10,
+    },
+    container: {
+        flex: 1,
+        flexDirection: 'row',
+        gap: 20,
     },
     headerRow: {
         alignItems: 'center',
@@ -31,9 +28,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     image: {
+        alignSelf: 'center',
         borderRadius: 8,
         height: 120,
-        marginRight: 10,
         width: 120,
     },
     infoRow: {
@@ -92,7 +89,7 @@ const ProblemCard = ({ problem }: Props) => {
                 <Text style={styles.title}>{problem.title}</Text>
             </View>
             <View style={styles.container}>
-                <View style={styles.detailsContainer}>
+                <View style={styles.column}>
                     <View style={styles.infoRow}>
                         <IconButton
                             icon='map-marker'
@@ -108,33 +105,39 @@ const ProblemCard = ({ problem }: Props) => {
                         <Text>{problem.formattedDate}</Text>
                     </View>
                 </View>
-                {problem.imageUri && (
-                    <Image
-                        source={{ uri: problem.imageUri }}
-                        style={styles.image}
-                    />
-                )}
-            </View>
-            <View style={styles.actionsRow}>
-                <View style={styles.iconGroup}>
-                    <IconButton
-                        icon='comment'
-                        size={18}
-                    />
-                    <Text>{problem.commentsCount}</Text>
-                </View>
-                <View style={styles.ratingContainer}>
-                    {problem.status === 2 ? (
-                        <>
-                            {getRating(problem.stars ?? 0)}
-                            <Text>{problem.starsVotesCount}</Text>
-                        </>
-                    ) : (
-                        <>
-                            {getRating(problem.priority ?? 0)}
-                            <Text>{problem.priorityVotesCount}</Text>
-                        </>
+                <View style={styles.column}>
+                    {problem.imageUri && (
+                        <Image
+                            source={{ uri: problem.imageUri }}
+                            style={styles.image}
+                        />
                     )}
+                </View>
+            </View>
+            <View style={styles.container}>
+                <View style={styles.column}>
+                    <View style={styles.iconGroup}>
+                        <IconButton
+                            icon='comment'
+                            size={18}
+                        />
+                        <Text>{problem.commentsCount}</Text>
+                    </View>
+                </View>
+                <View style={styles.column}>
+                    <View style={styles.ratingContainer}>
+                        {problem.status === 2 ? (
+                            <>
+                                {getRating(problem.stars ?? 0)}
+                                <Text>{problem.starsVotesCount}</Text>
+                            </>
+                        ) : (
+                            <>
+                                {getRating(problem.priority ?? 0)}
+                                <Text>{problem.priorityVotesCount}</Text>
+                            </>
+                        )}
+                    </View>
                 </View>
             </View>
         </Card>

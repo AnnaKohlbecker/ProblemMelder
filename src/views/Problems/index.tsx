@@ -20,6 +20,7 @@ type Props = {
 
 const Problems = ({ route }: Props) => {
     const { session } = useAuth()
+
     const { isLoading: userLoading, error: userError } = useUserByIdQuery({
         userId: session?.user.id,
     })
@@ -27,10 +28,7 @@ const Problems = ({ route }: Props) => {
     const { data: problems, isLoading: problemsLoading, error: problemsError } = useProblemsQuery()
     const { data: imageUris } = useImageByNameQuery({ problems })
     const [displayedProblems, setDisplayedProblems] = useState<DisplayedProblem[]>([])
-
-    // const { filteredDetails, filter, setFilter } = useProblemsFilterLogic({
-    //     questions: questions ?? [],
-    // })
+    const [displayedProblemsLoading, setDisplayedProblemsLoading] = useState<boolean>(true)
 
     const { searchedProblems, search, setSearch } = useProblemsSearchLogic({
         problems: displayedProblems ?? [],
@@ -70,6 +68,7 @@ const Problems = ({ route }: Props) => {
         }
 
         fetch()
+        setDisplayedProblemsLoading(false)
     }, [problems, imageUris])
 
     useEffect(() => {
@@ -78,7 +77,7 @@ const Problems = ({ route }: Props) => {
         }
     }, [userError, problemsError])
 
-    if (userLoading || problemsLoading) return <LoadingSpinner />
+    if (userLoading || problemsLoading || displayedProblemsLoading) return <LoadingSpinner />
 
     return (
         <View style={globalStyles.flexBox}>
@@ -90,7 +89,6 @@ const Problems = ({ route }: Props) => {
                     onChangeText={setSearch}
                     placeholder='Suche'
                 />
-                {/* <Filter/> */}
             </View>
             <FlatList
                 data={searchedProblems}
