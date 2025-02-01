@@ -10,7 +10,6 @@ export type Problem = {
     authorityId: number
     userId: string
     date: Date
-    resolved: boolean
     starsVotesCount: number
     stars: number | null
     priorityVotesCount: number

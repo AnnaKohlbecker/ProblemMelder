@@ -6,18 +6,20 @@ import { DisplayedProblem } from '~/shared/models/DisplayedProblems'
 
 const styles = StyleSheet.create({
     card: {
+        backgroundColor: colors.white,
         borderRadius: 10,
-        margin: 10,
+        marginVertical: 10,
         padding: 10,
     },
     column: {
         flex: 1,
-        padding: 10,
     },
     container: {
         flex: 1,
         flexDirection: 'row',
-        gap: 20,
+    },
+    gap: {
+        width: RFValue(40),
     },
     headerRow: {
         alignItems: 'center',
@@ -56,7 +58,7 @@ const getRating = (count: number) => {
             <IconButton
                 key={i}
                 icon={i < fullStars ? 'star' : 'star-outline'}
-                size={16}
+                size={RFValue(20)}
                 iconColor={colors.yellow}
             />
         ))
@@ -93,18 +95,21 @@ const ProblemCard = ({ problem }: Props) => {
                     <View style={styles.infoRow}>
                         <IconButton
                             icon='map-marker'
-                            size={18}
+                            size={RFValue(20)}
+                            iconColor={colors.primary}
                         />
                         <Text>{problem.address}</Text>
                     </View>
                     <View style={styles.infoRow}>
                         <IconButton
                             icon='calendar'
-                            size={18}
+                            size={RFValue(20)}
+                            iconColor={colors.primary}
                         />
                         <Text>{problem.formattedDate}</Text>
                     </View>
                 </View>
+                <View style={styles.gap}></View>
                 <View style={styles.column}>
                     {problem.imageUri && (
                         <Image
@@ -119,7 +124,8 @@ const ProblemCard = ({ problem }: Props) => {
                     <View style={styles.iconGroup}>
                         <IconButton
                             icon='comment'
-                            size={18}
+                            size={RFValue(20)}
+                            iconColor={colors.primary}
                         />
                         <Text>{problem.commentsCount}</Text>
                     </View>
@@ -127,15 +133,15 @@ const ProblemCard = ({ problem }: Props) => {
                 <View style={styles.column}>
                     <View style={styles.ratingContainer}>
                         {problem.status === 2 ? (
-                            <>
+                            <View style={styles.iconGroup}>
                                 {getRating(problem.stars ?? 0)}
                                 <Text>{problem.starsVotesCount}</Text>
-                            </>
+                            </View>
                         ) : (
-                            <>
+                            <View style={styles.iconGroup}>
                                 {getRating(problem.priority ?? 0)}
                                 <Text>{problem.priorityVotesCount}</Text>
-                            </>
+                            </View>
                         )}
                     </View>
                 </View>
