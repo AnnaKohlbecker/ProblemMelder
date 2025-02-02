@@ -1,5 +1,5 @@
 import * as Location from 'expo-location'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Alert, FlatList, StyleSheet, View } from 'react-native'
 import { FAB, Searchbar } from 'react-native-paper'
 import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
@@ -11,6 +11,7 @@ import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { DisplayedProblem } from '~/shared/models/DisplayedProblems'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
+import ProblemReport from '~/views/ProblemReport'
 import ProblemCard from '~/views/Problems/components/ProblemCard'
 import { useProblemsSearchLogic } from '~/views/Problems/hooks/useProblemsSearchLogic'
 
@@ -26,11 +27,13 @@ const style = StyleSheet.create({
 
 const Problems = ({ route }: Props) => {
     const { session } = useAuth()
+    const [displayedProblems, setDisplayedProblems] = useState<DisplayedProblem[]>([])
+    const [displayedProblemsLoading, setDisplayedProblemsLoading] = useState<boolean>(true)
+    const [reportProblem, setReportProblem] = useState(false)
 
     const { isLoading: userLoading, error: userError } = useUserByIdQuery({
         userId: session?.user.id,
     })
-
     const {
         data: problems,
         isLoading: problemsLoading,
@@ -38,12 +41,18 @@ const Problems = ({ route }: Props) => {
         refetch: refetchProblems,
     } = useProblemsQuery()
     const { data: imageUris } = useImageByNameQuery({ problems })
-    const [displayedProblems, setDisplayedProblems] = useState<DisplayedProblem[]>([])
-    const [displayedProblemsLoading, setDisplayedProblemsLoading] = useState<boolean>(true)
 
     const { searchedProblems, search, setSearch } = useProblemsSearchLogic({
         problems: displayedProblems ?? [],
     })
+
+    const onReportProblem = useCallback(() => {
+        setReportProblem(true)
+    }, [])
+
+    const onClose = useCallback(() => {
+        setReportProblem(false)
+    }, [])
 
     useEffect(() => {
         if (!problems) return
@@ -88,6 +97,8 @@ const Problems = ({ route }: Props) => {
         }
     }, [userError, problemsError])
 
+    if (reportProblem) return <ProblemReport onClose={onClose} />
+
     if (userLoading || problemsLoading || displayedProblemsLoading) return <LoadingSpinner />
 
     return (
@@ -114,10 +125,7 @@ const Problems = ({ route }: Props) => {
             />
             <FAB
                 icon='plus'
-                onPress={() => {
-                    // eslint-disable-next-line no-console
-                    console.log('FAB pressed')
-                }}
+                onPress={onReportProblem}
                 style={globalStyles.fab}
             />
         </View>
