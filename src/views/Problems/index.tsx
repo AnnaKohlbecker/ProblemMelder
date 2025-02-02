@@ -6,22 +6,36 @@ import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNa
 import { useImageByNameQuery } from '~/queries/Problems/useImageByNameQuery'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { useUserByIdQuery } from '~/queries/Users/useUserByIdQuery'
+import Filter from '~/shared/components/Filter'
 import Header from '~/shared/components/Header'
+import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { DisplayedProblem } from '~/shared/models/DisplayedProblems'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import ProblemReport from '~/views/ProblemReport'
 import ProblemCard from '~/views/Problems/components/ProblemCard'
+import { useProblemsFilterLogic } from '~/views/Problems/hooks/useProblemFilterLogic'
 import { useProblemsSearchLogic } from '~/views/Problems/hooks/useProblemsSearchLogic'
 
 type Props = {
     route: BaseRoute
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     listFooterComponent: {
         padding: 35,
+    },
+    searchAndFilterContainer: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        gap: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+    },
+    searchBar: {
+        backgroundColor: colors.gray,
+        flex: 1,
     },
 })
 
@@ -45,6 +59,14 @@ const Problems = ({ route }: Props) => {
     const { searchedProblems, search, setSearch } = useProblemsSearchLogic({
         problems: displayedProblems ?? [],
     })
+
+    const { filteredProblems, filter, setFilter } = useProblemsFilterLogic({
+        problems: displayedProblems ?? [],
+    })
+
+    const searchedAndFilteredProblems = filteredProblems.filter((problem) =>
+        searchedProblems.some((searchedProblem) => searchedProblem.id === problem.id),
+    )
 
     const onReportProblem = useCallback(() => {
         setReportProblem(true)
@@ -104,19 +126,23 @@ const Problems = ({ route }: Props) => {
     return (
         <View style={globalStyles.flexBox}>
             <Header route={route} />
-            <View>
+            <View style={styles.searchAndFilterContainer}>
                 <Searchbar
-                    style={globalStyles.searchbar}
+                    style={styles.searchBar}
                     value={search}
                     onChangeText={setSearch}
                     placeholder='Suche'
                 />
+                <Filter
+                    value={filter}
+                    onChangeFilter={setFilter}
+                />
             </View>
             <FlatList
-                data={searchedProblems}
+                data={searchedAndFilteredProblems}
                 style={globalStyles.flatList}
                 renderItem={({ item: problem }) => <ProblemCard problem={problem} />}
-                ListFooterComponent={<View style={style.listFooterComponent} />}
+                ListFooterComponent={<View style={styles.listFooterComponent} />}
                 onEndReached={() => {
                     if (!problemsLoading) {
                         refetchProblems()
