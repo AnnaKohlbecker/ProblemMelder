@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     iconGroup: {
         alignItems: 'center',
         flexDirection: 'row',
+        paddingRight: 20,
     },
     image: {
         alignSelf: 'center',
@@ -40,9 +41,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginVertical: 2,
     },
-    ratingContainer: {
-        alignItems: 'center',
-        flexDirection: 'row',
+    ratingIcon: {
+        marginHorizontal: 0,
+        padding: 0,
     },
     title: {
         fontSize: RFValue(16),
@@ -50,18 +51,31 @@ const styles = StyleSheet.create({
     },
 })
 
-const getRating = (count: number) => {
-    const fullStars = Math.round(count / 5) // Assuming a rating scale of 0-25 maps to 5 stars
-    return Array(5)
-        .fill(0)
-        .map((_, i) => (
+const getRating = (status: number, rating: number) => {
+    const maxRating = status === 2 ? 5 : 3
+    const filledCount = Math.floor(rating)
+
+    return Array.from({ length: maxRating }, (_, i) => {
+        const isFilled = i < filledCount
+        const iconName =
+            status === 2
+                ? isFilled
+                    ? 'star'
+                    : 'star-outline'
+                : isFilled
+                  ? 'alert-circle'
+                  : 'alert-circle-outline'
+
+        return (
             <IconButton
                 key={i}
-                icon={i < fullStars ? 'star' : 'star-outline'}
-                size={RFValue(20)}
-                iconColor={colors.yellow}
+                icon={iconName}
+                size={RFValue(18)}
+                iconColor={status === 2 ? colors.yellow : colors.red}
+                style={styles.ratingIcon}
             />
-        ))
+        )
+    })
 }
 
 type Props = {
@@ -87,6 +101,7 @@ const ProblemCard = ({ problem }: Props) => {
                               ? colors.orange
                               : colors.green
                     }
+                    size={RFValue(30)}
                 />
                 <Text style={styles.title}>{problem.title}</Text>
             </View>
@@ -95,7 +110,7 @@ const ProblemCard = ({ problem }: Props) => {
                     <View style={styles.infoRow}>
                         <IconButton
                             icon='map-marker'
-                            size={RFValue(20)}
+                            size={RFValue(18)}
                             iconColor={colors.primary}
                         />
                         <Text>{problem.address}</Text>
@@ -103,7 +118,7 @@ const ProblemCard = ({ problem }: Props) => {
                     <View style={styles.infoRow}>
                         <IconButton
                             icon='calendar'
-                            size={RFValue(20)}
+                            size={RFValue(18)}
                             iconColor={colors.primary}
                         />
                         <Text>{problem.formattedDate}</Text>
@@ -124,24 +139,19 @@ const ProblemCard = ({ problem }: Props) => {
                     <View style={styles.iconGroup}>
                         <IconButton
                             icon='comment'
-                            size={RFValue(20)}
+                            size={RFValue(18)}
                             iconColor={colors.primary}
                         />
                         <Text>{problem.commentsCount}</Text>
                     </View>
                 </View>
-                <View style={styles.column}>
-                    <View style={styles.ratingContainer}>
+                <View>
+                    <View style={styles.iconGroup}>
+                        {getRating(problem.status, problem.stars ?? 0)}
                         {problem.status === 2 ? (
-                            <View style={styles.iconGroup}>
-                                {getRating(problem.stars ?? 0)}
-                                <Text>{problem.starsVotesCount}</Text>
-                            </View>
+                            <Text>{problem.starsVotesCount}</Text>
                         ) : (
-                            <View style={styles.iconGroup}>
-                                {getRating(problem.priority ?? 0)}
-                                <Text>{problem.priorityVotesCount}</Text>
-                            </View>
+                            <Text>{problem.priorityVotesCount}</Text>
                         )}
                     </View>
                 </View>

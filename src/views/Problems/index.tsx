@@ -1,6 +1,6 @@
 import * as Location from 'expo-location'
 import { useEffect, useState } from 'react'
-import { Alert, FlatList, View } from 'react-native'
+import { Alert, FlatList, StyleSheet, View } from 'react-native'
 import { FAB, Searchbar } from 'react-native-paper'
 import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
 import { useImageByNameQuery } from '~/queries/Problems/useImageByNameQuery'
@@ -18,6 +18,12 @@ type Props = {
     route: BaseRoute
 }
 
+const style = StyleSheet.create({
+    listFooterComponent: {
+        padding: 35,
+    },
+})
+
 const Problems = ({ route }: Props) => {
     const { session } = useAuth()
 
@@ -25,7 +31,12 @@ const Problems = ({ route }: Props) => {
         userId: session?.user.id,
     })
 
-    const { data: problems, isLoading: problemsLoading, error: problemsError } = useProblemsQuery()
+    const {
+        data: problems,
+        isLoading: problemsLoading,
+        error: problemsError,
+        refetch: refetchProblems,
+    } = useProblemsQuery()
     const { data: imageUris } = useImageByNameQuery({ problems })
     const [displayedProblems, setDisplayedProblems] = useState<DisplayedProblem[]>([])
     const [displayedProblemsLoading, setDisplayedProblemsLoading] = useState<boolean>(true)
@@ -94,6 +105,12 @@ const Problems = ({ route }: Props) => {
                 data={searchedProblems}
                 style={globalStyles.flatList}
                 renderItem={({ item: problem }) => <ProblemCard problem={problem} />}
+                ListFooterComponent={<View style={style.listFooterComponent} />}
+                onEndReached={() => {
+                    if (!problemsLoading) {
+                        refetchProblems()
+                    }
+                }}
             />
             <FAB
                 icon='plus'
