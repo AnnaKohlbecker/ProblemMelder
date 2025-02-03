@@ -1,6 +1,6 @@
 import * as Location from 'expo-location'
 import { useCallback, useEffect, useState } from 'react'
-import { Alert, FlatList, StyleSheet, View } from 'react-native'
+import { Alert, FlatList, View } from 'react-native'
 import { FAB, Searchbar } from 'react-native-paper'
 import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
 import { useImageByNameQuery } from '~/queries/Problems/useImageByNameQuery'
@@ -8,7 +8,6 @@ import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { useUserByIdQuery } from '~/queries/Users/useUserByIdQuery'
 import Filter from '~/shared/components/Filter'
 import Header from '~/shared/components/Header'
-import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { DisplayedProblem } from '~/shared/models/DisplayedProblems'
@@ -21,23 +20,6 @@ import { useProblemsSearchLogic } from '~/views/Problems/hooks/useProblemsSearch
 type Props = {
     route: BaseRoute
 }
-
-const styles = StyleSheet.create({
-    listFooterComponent: {
-        padding: 35,
-    },
-    searchAndFilterContainer: {
-        alignItems: 'center',
-        flexDirection: 'row',
-        gap: 20,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-    },
-    searchBar: {
-        backgroundColor: colors.gray,
-        flex: 1,
-    },
-})
 
 const Problems = ({ route }: Props) => {
     const { session } = useAuth()
@@ -126,9 +108,9 @@ const Problems = ({ route }: Props) => {
     return (
         <View style={globalStyles.flexBox}>
             <Header route={route} />
-            <View style={styles.searchAndFilterContainer}>
+            <View style={globalStyles.searchAndFilterContainer}>
                 <Searchbar
-                    style={styles.searchBar}
+                    style={globalStyles.searchBar}
                     value={search}
                     onChangeText={setSearch}
                     placeholder='Suche'
@@ -142,7 +124,7 @@ const Problems = ({ route }: Props) => {
                 data={searchedAndFilteredProblems}
                 style={globalStyles.flatList}
                 renderItem={({ item: problem }) => <ProblemCard problem={problem} />}
-                ListFooterComponent={<View style={styles.listFooterComponent} />}
+                ListFooterComponent={<View style={globalStyles.flatListFooterComponent} />}
                 onEndReached={() => {
                     if (!problemsLoading) {
                         refetchProblems()

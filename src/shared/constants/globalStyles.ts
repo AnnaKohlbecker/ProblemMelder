@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
 
 /**
@@ -10,12 +11,21 @@ export const globalStyles = StyleSheet.create({
     },
     card: {
         backgroundColor: colors.white,
+        borderRadius: 10,
         marginVertical: 10,
+        padding: 10,
     },
     cardsView: {
         flex: 1,
         paddingHorizontal: 20,
         paddingVertical: 20,
+    },
+    column: {
+        flex: 1,
+    },
+    container: {
+        flex: 1,
+        flexDirection: 'row',
     },
     dialog: {
         backgroundColor: colors.white,
@@ -29,11 +39,23 @@ export const globalStyles = StyleSheet.create({
     flatList: {
         paddingHorizontal: 20,
     },
+    flatListFooterComponent: {
+        padding: 35,
+    },
     flexBox: {
         flex: 1,
     },
     header: {
         backgroundColor: colors.white,
+    },
+    headerRow: {
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+    iconGroup: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        paddingRight: 20,
     },
     image: {
         borderRadius: 8,
@@ -48,20 +70,24 @@ export const globalStyles = StyleSheet.create({
     mb: {
         marginBottom: 10,
     },
-    ratingRow: {
+    searchAndFilterContainer: {
         alignItems: 'center',
         flexDirection: 'row',
-        gap: 3,
-        marginTop: 5,
+        gap: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
     },
-    searchbar: {
+    searchBar: {
         backgroundColor: colors.gray,
-        marginBottom: 10,
-        margin: 20,
+        flex: 1,
     },
     separator: {
         backgroundColor: colors.gray,
         height: 1,
         width: '100%',
+    },
+    title: {
+        fontSize: RFValue(16),
+        fontWeight: 'bold',
     },
 })

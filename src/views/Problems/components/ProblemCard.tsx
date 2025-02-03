@@ -2,33 +2,12 @@ import { Image, StyleSheet, View } from 'react-native'
 import { Card, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
+import { globalStyles } from '~/shared/constants/globalStyles'
 import { DisplayedProblem } from '~/shared/models/DisplayedProblems'
 
 const styles = StyleSheet.create({
-    card: {
-        backgroundColor: colors.white,
-        borderRadius: 10,
-        marginVertical: 10,
-        padding: 10,
-    },
-    column: {
-        flex: 1,
-    },
-    container: {
-        flex: 1,
-        flexDirection: 'row',
-    },
-    gap: {
+    columnGap: {
         width: RFValue(40),
-    },
-    headerRow: {
-        alignItems: 'center',
-        flexDirection: 'row',
-    },
-    iconGroup: {
-        alignItems: 'center',
-        flexDirection: 'row',
-        paddingRight: 20,
     },
     image: {
         alignSelf: 'center',
@@ -36,18 +15,9 @@ const styles = StyleSheet.create({
         height: 120,
         width: 120,
     },
-    infoRow: {
-        alignItems: 'center',
-        flexDirection: 'row',
-        marginVertical: 2,
-    },
     ratingIcon: {
         marginHorizontal: 0,
         padding: 0,
-    },
-    title: {
-        fontSize: RFValue(16),
-        fontWeight: 'bold',
     },
 })
 
@@ -84,8 +54,8 @@ type Props = {
 
 const ProblemCard = ({ problem }: Props) => {
     return (
-        <Card style={styles.card}>
-            <View style={styles.headerRow}>
+        <Card style={globalStyles.card}>
+            <View style={globalStyles.headerRow}>
                 <IconButton
                     icon={
                         problem.status === 0
@@ -103,11 +73,11 @@ const ProblemCard = ({ problem }: Props) => {
                     }
                     size={RFValue(30)}
                 />
-                <Text style={styles.title}>{problem.title}</Text>
+                <Text style={globalStyles.title}>{problem.title}</Text>
             </View>
-            <View style={styles.container}>
-                <View style={styles.column}>
-                    <View style={styles.infoRow}>
+            <View style={globalStyles.container}>
+                <View style={globalStyles.column}>
+                    <View style={globalStyles.infoRow}>
                         <IconButton
                             icon='map-marker'
                             size={RFValue(18)}
@@ -115,7 +85,7 @@ const ProblemCard = ({ problem }: Props) => {
                         />
                         <Text>{problem.address}</Text>
                     </View>
-                    <View style={styles.infoRow}>
+                    <View style={globalStyles.infoRow}>
                         <IconButton
                             icon='calendar'
                             size={RFValue(18)}
@@ -124,8 +94,8 @@ const ProblemCard = ({ problem }: Props) => {
                         <Text>{problem.formattedDate}</Text>
                     </View>
                 </View>
-                <View style={styles.gap}></View>
-                <View style={styles.column}>
+                <View style={styles.columnGap}></View>
+                <View style={globalStyles.column}>
                     {problem.imageUri && (
                         <Image
                             source={{ uri: problem.imageUri }}
@@ -134,9 +104,9 @@ const ProblemCard = ({ problem }: Props) => {
                     )}
                 </View>
             </View>
-            <View style={styles.container}>
-                <View style={styles.column}>
-                    <View style={styles.iconGroup}>
+            <View style={globalStyles.container}>
+                <View style={globalStyles.column}>
+                    <View style={globalStyles.iconGroup}>
                         <IconButton
                             icon='comment'
                             size={RFValue(18)}
@@ -146,7 +116,7 @@ const ProblemCard = ({ problem }: Props) => {
                     </View>
                 </View>
                 <View>
-                    <View style={styles.iconGroup}>
+                    <View style={globalStyles.iconGroup}>
                         {getRating(problem.status, problem.stars ?? 0)}
                         {problem.status === 2 ? (
                             <Text>{problem.starsVotesCount}</Text>
