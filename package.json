@@ -27,9 +27,9 @@
         "@tanstack/react-query": "5.64.2",
         "@types/lodash": "4.17.14",
         "base64-arraybuffer": "^1.0.2",
-        "expo": "~52.0.28",
+        "expo": "^52.0.28",
         "expo-camera": "~16.0.14",
-        "expo-file-system": "~18.0.8",
+        "expo-file-system": "~18.0.9",
         "expo-location": "18.0.5",
         "expo-status-bar": "2.0.1",
         "lodash": "4.17.21",
@@ -61,3 +61,4 @@
     },
     "private": true
 }
+
