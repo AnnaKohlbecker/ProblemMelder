@@ -9,9 +9,9 @@ export type Problem = {
     status: ProblemStatus
     authorityId: number
     userId: string
+    stars: number | null
     date: Date
     starsVotesCount: number
-    stars: number | null
     priorityVotesCount: number
     priority: number | null
     commentsCount: number
