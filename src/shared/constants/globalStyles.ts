@@ -51,15 +51,19 @@ export const globalStyles = StyleSheet.create({
     headerRow: {
         alignItems: 'center',
         flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    headerRowLeft: {
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+    headerRowRight: {
+        alignItems: 'center',
     },
     iconGroup: {
         alignItems: 'center',
         flexDirection: 'row',
         paddingRight: 20,
-    },
-    image: {
-        borderRadius: 8,
-        height: 150,
     },
     infoRow: {
         alignItems: 'center',
