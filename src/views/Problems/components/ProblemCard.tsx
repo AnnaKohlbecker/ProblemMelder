@@ -117,11 +117,16 @@ const ProblemCard = ({ problem }: Props) => {
                 </View>
                 <View>
                     <View style={globalStyles.iconGroup}>
-                        {getRating(problem.status, problem.stars ?? 0)}
                         {problem.status === 2 ? (
-                            <Text>{problem.starsVotesCount}</Text>
+                            <>
+                                {getRating(problem.status, problem.stars ?? 0)}
+                                <Text>{problem.starsVotesCount}</Text>
+                            </>
                         ) : (
-                            <Text>{problem.priorityVotesCount}</Text>
+                            <>
+                                {getRating(problem.status, problem.priority ?? 0)}
+                                <Text>{problem.priorityVotesCount}</Text>
+                            </>
                         )}
                     </View>
                 </View>

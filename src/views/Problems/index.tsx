@@ -1,5 +1,5 @@
 import * as Location from 'expo-location'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Alert, FlatList, View } from 'react-native'
 import { FAB, Searchbar } from 'react-native-paper'
 import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
@@ -46,9 +46,11 @@ const Problems = ({ route }: Props) => {
         problems: displayedProblems ?? [],
     })
 
-    const searchedAndFilteredProblems = filteredProblems.filter((problem) =>
-        searchedProblems.some((searchedProblem) => searchedProblem.id === problem.id),
-    )
+    const searchedAndFilteredProblems = useMemo(() => {
+        return filteredProblems.filter((problem) =>
+            searchedProblems.some((searchedProblem) => searchedProblem.id === problem.id),
+        )
+    }, [filteredProblems, searchedProblems])
 
     const onReportProblem = useCallback(() => {
         setReportProblem(true)
