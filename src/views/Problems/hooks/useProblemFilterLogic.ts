@@ -1,6 +1,6 @@
 import { useDeferredValue, useMemo, useState } from 'react'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
-import { DisplayedProblem } from '~/shared/models/DisplayedProblems'
+import { DisplayedProblem } from '~/shared/types/DisplayedProblems'
 
 type Props = {
     problems: DisplayedProblem[]

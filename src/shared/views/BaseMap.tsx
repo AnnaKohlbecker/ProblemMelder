@@ -6,7 +6,7 @@ import AnimatedMapRegion from 'react-native-maps/lib/AnimatedRegion'
 import { FAB } from 'react-native-paper'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useLocation } from '~/shared/context/LocationContext'
-import { problemStatusToColor } from '~/shared/helpers/ProblemStatusToColor'
+import { problemStatusToIconAndColor } from '~/shared/helpers/ProblemStatusToIconAndColor'
 import { Marker as TMarker } from '~/shared/types/Marker'
 
 type Props = {
@@ -69,7 +69,7 @@ const BaseMap = ({ onFabPress, onMapPress, markers }: Props) => {
                 {markers?.map((marker) => (
                     <Marker
                         key={marker.id}
-                        pinColor={problemStatusToColor(marker.status)}
+                        pinColor={problemStatusToIconAndColor(marker.status).color}
                         title={marker.title}
                         titleVisibility='visible'
                         coordinate={marker}

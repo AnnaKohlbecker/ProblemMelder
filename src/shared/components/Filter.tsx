@@ -1,13 +1,9 @@
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { IconButton, Menu } from 'react-native-paper'
 import { colors } from '~/shared/constants/colors'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
-
-type FilterProps = {
-    value: ProblemStatus | null
-    onChangeFilter: (filter: ProblemStatus | null) => void
-}
+import { problemStatusToIconAndColor } from '~/shared/helpers/ProblemStatusToIconAndColor'
 
 const styles = StyleSheet.create({
     container: {
@@ -22,33 +18,44 @@ const styles = StyleSheet.create({
     },
 })
 
-const getFilterIcon = (filter: ProblemStatus | null) => {
-    switch (filter) {
-        case null:
-            return 'filter-remove'
-        case -1:
-            return 'cancel'
-        case 0:
-            return 'alert-circle'
-        case 1:
-            return 'progress-wrench'
-        case 2:
-            return 'check-circle'
-        default:
-            return 'filter'
-    }
+type FilterProps = {
+    value: ProblemStatus | null
+    onChangeFilter: (filter: ProblemStatus | null) => void
 }
 
 const Filter = ({ value, onChangeFilter }: FilterProps) => {
     const [menuVisible, setMenuVisible] = useState(false)
 
-    const openMenu = () => setMenuVisible(true)
-    const closeMenu = () => setMenuVisible(false)
+    const openMenu = useCallback(() => setMenuVisible(true), [])
+    const closeMenu = useCallback(() => setMenuVisible(false), [])
 
-    const handleFilterSelect = (filter: ProblemStatus | null) => {
-        onChangeFilter(filter)
-        closeMenu()
-    }
+    const handleFilterSelect = useCallback(
+        (filter: ProblemStatus | null) => {
+            onChangeFilter(filter)
+            closeMenu()
+        },
+        [onChangeFilter, closeMenu],
+    )
+
+    const currentIconAndColor = useMemo(() => problemStatusToIconAndColor(value), [value])
+
+    const renderedMenuItems = useMemo(() => {
+        const menuItems = [
+            { filter: null, title: 'Kein Filter' },
+            { filter: -1, title: 'Deaktiviert' },
+            { filter: 0, title: 'Zu Erledigen' },
+            { filter: 1, title: 'In Bearbeitung' },
+            { filter: 2, title: 'Erledigt' },
+        ]
+        return menuItems.map(({ filter, title }) => (
+            <Menu.Item
+                key={title}
+                onPress={() => handleFilterSelect(filter)}
+                title={title}
+                leadingIcon={problemStatusToIconAndColor(filter).icon}
+            />
+        ))
+    }, [handleFilterSelect])
 
     return (
         <View style={styles.container}>
@@ -57,33 +64,15 @@ const Filter = ({ value, onChangeFilter }: FilterProps) => {
                 onDismiss={closeMenu}
                 anchor={
                     <IconButton
-                        icon={getFilterIcon(value)}
+                        icon={currentIconAndColor.icon}
                         onPress={openMenu}
                         size={24}
+                        iconColor={colors.black}
                     />
                 }
                 contentStyle={styles.menuContent}
             >
-                <Menu.Item
-                    onPress={() => handleFilterSelect(null)}
-                    title='Kein Filter'
-                    leadingIcon={getFilterIcon(null)}
-                />
-                <Menu.Item
-                    onPress={() => handleFilterSelect(0)}
-                    title='Zu Erledigen'
-                    leadingIcon={getFilterIcon(0)}
-                />
-                <Menu.Item
-                    onPress={() => handleFilterSelect(1)}
-                    title='In Bearbeitung'
-                    leadingIcon={getFilterIcon(1)}
-                />
-                <Menu.Item
-                    onPress={() => handleFilterSelect(2)}
-                    title='Erledigt'
-                    leadingIcon={getFilterIcon(2)}
-                />
+                {renderedMenuItems}
             </Menu>
         </View>
     )

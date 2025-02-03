@@ -10,7 +10,7 @@ import Filter from '~/shared/components/Filter'
 import Header from '~/shared/components/Header'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
-import { DisplayedProblem } from '~/shared/models/DisplayedProblems'
+import { DisplayedProblem } from '~/shared/types/DisplayedProblems'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import ProblemReport from '~/views/ProblemReport'
 import ProblemCard from '~/views/Problems/components/ProblemCard'
@@ -66,7 +66,7 @@ const Problems = ({ route }: Props) => {
         const fetch = async () => {
             const updatedProblems = await Promise.all(
                 problems.map(async (problem) => {
-                    let address = 'Unknown Location'
+                    let address = 'Unbekannte Adresse'
                     if (problem.location) {
                         const [latitude, longitude] = problem.location.split(',').map(Number)
                         const [location] = await Location.reverseGeocodeAsync({
@@ -99,7 +99,7 @@ const Problems = ({ route }: Props) => {
 
     useEffect(() => {
         if (userError || problemsError) {
-            Alert.alert('Error', 'An error occurred while fetching data.')
+            Alert.alert('Fehler', 'Ein unerwarteter Fehler ist aufgetreten.')
         }
     }, [userError, problemsError])
 

@@ -47,6 +47,7 @@ export const globalStyles = StyleSheet.create({
     },
     header: {
         backgroundColor: colors.white,
+        color: colors.black,
     },
     headerRow: {
         alignItems: 'center',
@@ -83,6 +84,7 @@ export const globalStyles = StyleSheet.create({
     },
     searchBar: {
         backgroundColor: colors.gray,
+        color: colors.black,
         flex: 1,
     },
     separator: {
@@ -91,6 +93,7 @@ export const globalStyles = StyleSheet.create({
         width: '100%',
     },
     title: {
+        color: colors.black,
         fontSize: RFValue(16),
         fontWeight: 'bold',
     },
