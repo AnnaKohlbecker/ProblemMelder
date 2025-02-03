@@ -9,11 +9,14 @@ const styles = StyleSheet.create({
     columnGap: {
         width: RFValue(40),
     },
+    headerButton: {
+        backgroundColor: colors.gray,
+    },
     image: {
         alignSelf: 'center',
         borderRadius: 8,
-        height: 120,
-        width: 120,
+        height: 100,
+        width: 100,
     },
     ratingIcon: {
         marginHorizontal: 0,
@@ -56,24 +59,34 @@ const ProblemCard = ({ problem }: Props) => {
     return (
         <Card style={globalStyles.card}>
             <View style={globalStyles.headerRow}>
-                <IconButton
-                    icon={
-                        problem.status === 0
-                            ? 'alert-circle'
-                            : problem.status === 1
-                              ? 'progress-wrench'
-                              : 'check-circle'
-                    }
-                    iconColor={
-                        problem.status === 0
-                            ? colors.red
-                            : problem.status === 1
-                              ? colors.orange
-                              : colors.green
-                    }
-                    size={RFValue(30)}
-                />
-                <Text style={globalStyles.title}>{problem.title}</Text>
+                <View style={globalStyles.headerRowLeft}>
+                    <IconButton
+                        icon={
+                            problem.status === 0
+                                ? 'alert-circle'
+                                : problem.status === 1
+                                  ? 'progress-wrench'
+                                  : 'check-circle'
+                        }
+                        iconColor={
+                            problem.status === 0
+                                ? colors.red
+                                : problem.status === 1
+                                  ? colors.orange
+                                  : colors.green
+                        }
+                        size={RFValue(30)}
+                    />
+                    <Text style={globalStyles.title}>{problem.title}</Text>
+                </View>
+                <View style={globalStyles.headerRowRight}>
+                    <IconButton
+                        icon={problem.status === -1 ? 'replay' : 'delete'}
+                        size={RFValue(20)}
+                        iconColor={colors.black}
+                        style={styles.headerButton}
+                    />
+                </View>
             </View>
             <View style={globalStyles.container}>
                 <View style={globalStyles.column}>
@@ -81,7 +94,7 @@ const ProblemCard = ({ problem }: Props) => {
                         <IconButton
                             icon='map-marker'
                             size={RFValue(18)}
-                            iconColor={colors.primary}
+                            iconColor={colors.black}
                         />
                         <Text>{problem.address}</Text>
                     </View>
@@ -89,7 +102,7 @@ const ProblemCard = ({ problem }: Props) => {
                         <IconButton
                             icon='calendar'
                             size={RFValue(18)}
-                            iconColor={colors.primary}
+                            iconColor={colors.black}
                         />
                         <Text>{problem.formattedDate}</Text>
                     </View>
