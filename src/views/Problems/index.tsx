@@ -10,7 +10,6 @@ import Filter from '~/shared/components/Filter'
 import Header from '~/shared/components/Header'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
-import { getImagePath } from '~/shared/helpers/getImagePath'
 import { DisplayedProblem } from '~/shared/models/DisplayedProblems'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import ProblemReport from '~/views/ProblemReport'
@@ -85,7 +84,6 @@ const Problems = ({ route }: Props) => {
                         {
                             ...problem,
                             address,
-                            imageUri: getImagePath(problem.image),
                             formattedDate: new Date(problem.date).toLocaleDateString('de-DE'),
                         },
                     ]
