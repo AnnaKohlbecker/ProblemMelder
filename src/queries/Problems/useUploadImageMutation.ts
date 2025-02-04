@@ -10,12 +10,12 @@ type Payload = {
 
 export const useUploadImageMutation = () => {
     const mutationFn = useCallback(async ({ file, path }: Payload) => {
-        const response = await supabase.storage
-            .from('images')
-            .upload(`public/${path}.jpg`, decode(file), {
-                contentType: 'image/jpeg',
-                upsert: true,
-            })
+        const response = await supabase.storage.from('images').upload(`${path}.jpg`, decode(file), {
+            contentType: 'image/jpeg',
+            upsert: true,
+        })
+
+        if (response.error) throw new Error(response.error.message)
         return response
     }, [])
 

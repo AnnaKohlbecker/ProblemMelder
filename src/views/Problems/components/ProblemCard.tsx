@@ -4,6 +4,7 @@ import { Card, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import { getImagePath } from '~/shared/helpers/getImagePath'
 import getRatingIcons from '~/shared/helpers/getRatingIcons'
 import { problemStatusToIconAndColor } from '~/shared/helpers/ProblemStatusToIconAndColor'
 import { DisplayedProblem } from '~/shared/types/DisplayedProblems'
@@ -78,9 +79,11 @@ const ProblemCard = ({ problem }: Props) => {
                 </View>
                 <View style={styles.columnGap}></View>
                 <View style={globalStyles.column}>
-                    {problem.imageUri && (
+                    {problem.image && (
                         <Image
-                            source={{ uri: problem.imageUri }}
+                            source={{
+                                uri: getImagePath(problem.image),
+                            }}
                             style={styles.image}
                         />
                     )}
