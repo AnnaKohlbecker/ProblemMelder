@@ -1,7 +1,7 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Alert, StyleSheet, View } from 'react-native'
-import { Appbar, Button, Card, Text } from 'react-native-paper'
+import { Button, Card, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { supabase } from '~/services/supabase'
 import { colors } from '~/shared/constants/colors'
@@ -32,7 +32,7 @@ export const loginStyles = StyleSheet.create({
     },
     header: {
         alignItems: 'center',
-        height: 200,
+        flex: 1,
         justifyContent: 'center',
     },
     headerText: {
@@ -44,13 +44,11 @@ export const loginStyles = StyleSheet.create({
         gap: 25,
         padding: 30,
     },
-    wrapper: {
-        flex: 1,
-        justifyContent: 'space-between',
-    },
 })
 
 const Login = () => {
+    const [loggingIn, setLoggingIn] = useState(false)
+
     const form = useForm<LoginModel>()
     const {
         handleSubmit,
@@ -61,10 +59,14 @@ const Login = () => {
         async ({ email, password }: LoginModel) => {
             if (!isDirty) return
 
+            setLoggingIn(true)
+
             const { error } = await supabase.auth.signInWithPassword({
                 email,
                 password,
             })
+
+            setLoggingIn(false)
 
             if (!error) return
 
@@ -83,48 +85,46 @@ const Login = () => {
 
     return (
         <View style={globalStyles.flexBox}>
-            <Appbar.Header style={globalStyles.header}>{null}</Appbar.Header>
-            <View style={loginStyles.wrapper}>
-                <View style={loginStyles.main}>
-                    <View style={loginStyles.header}>
-                        <Text style={loginStyles.headerText}>Anmelden</Text>
+            <View style={loginStyles.header}>
+                <Text style={loginStyles.headerText}>Anmelden</Text>
+            </View>
+            <View style={loginStyles.main}>
+                <FormProvider {...form}>
+                    <TextInput
+                        name='email'
+                        label='E-Mail Adresse'
+                        rules={{
+                            required: 'Bitte gebe eine E-Mail Adresse ein',
+                            validate,
+                        }}
+                    />
+                    <TextInput
+                        name='password'
+                        label='Passwort'
+                        secureTextEntry
+                        rules={{ required: 'Bitte gebe ein Passwort ein.' }}
+                    />
+                    <View style={loginStyles.buttonContainer}>
+                        <Button
+                            mode='contained'
+                            onPress={handleSubmit(login)}
+                            disabled={!isDirty || loggingIn}
+                            loading={loggingIn}
+                        >
+                            Anmelden
+                        </Button>
                     </View>
-                    <FormProvider {...form}>
-                        <TextInput
-                            name='email'
-                            label='E-Mail Adresse'
-                            rules={{
-                                required: 'Bitte gebe eine E-Mail Adresse ein',
-                                validate,
-                            }}
-                        />
-                        <TextInput
-                            name='password'
-                            label='Passwort'
-                            secureTextEntry
-                            rules={{ required: 'Bitte gebe ein Passwort ein.' }}
-                        />
-                        <View style={loginStyles.buttonContainer}>
-                            <Button
-                                mode='contained'
-                                onPress={handleSubmit(login)}
-                                disabled={!isDirty}
-                            >
-                                Anmelden
-                            </Button>
-                        </View>
-                    </FormProvider>
-                </View>
-                <View style={loginStyles.footer}>
-                    <Card
-                        contentStyle={loginStyles.card}
-                        mode='contained'
-                    >
-                        <Link href='https://dhbw-loerrach.de/impressum'>Impressum</Link>
-                        <Text>|</Text>
-                        <Link href='https://dhbw-loerrach.de/datenschutz'>Datenschutz</Link>
-                    </Card>
-                </View>
+                </FormProvider>
+            </View>
+            <View style={loginStyles.footer}>
+                <Card
+                    contentStyle={loginStyles.card}
+                    mode='contained'
+                >
+                    <Link href='https://dhbw-loerrach.de/impressum'>Impressum</Link>
+                    <Text>|</Text>
+                    <Link href='https://dhbw-loerrach.de/datenschutz'>Datenschutz</Link>
+                </Card>
             </View>
         </View>
     )

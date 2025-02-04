@@ -9,4 +9,5 @@ export enum Table {
     Problems = 'Problems',
     Roles = 'Roles',
     Users = 'Users',
+    ProblemComments = 'ProblemComments',
 }
