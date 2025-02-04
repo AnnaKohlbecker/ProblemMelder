@@ -14,5 +14,4 @@ export type Problem = {
     starsVotesCount: number
     priorityVotesCount: number
     priority: number | null
-    commentsCount: number
 }
