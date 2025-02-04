@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Image, StyleSheet, View } from 'react-native'
+import { BackHandler, Image, StyleSheet, View } from 'react-native'
 import { Appbar, Card, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
@@ -46,6 +46,11 @@ const ProblemDetails = ({ problem, onClose }: Props) => {
         () => problemStatusToIconAndColor(problem.status),
         [problem.status],
     )
+
+    BackHandler.addEventListener('hardwareBackPress', () => {
+        onClose()
+        return true
+    })
 
     return (
         <View>

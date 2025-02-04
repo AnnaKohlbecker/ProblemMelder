@@ -170,9 +170,9 @@ const Problems = ({ route }: Props) => {
                 <FlatList
                     data={searchedAndFilteredProblems}
                     style={globalStyles.flatList}
-                    keyExtractor={(problem) => problem.id.toString()}
-                    renderItem={({ item: problem }) => (
+                    renderItem={({ item: problem, index }) => (
                         <ProblemCard
+                            key={index}
                             problem={problem}
                             onCardPress={() => onShowProblemDetails(problem)}
                         />
