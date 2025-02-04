@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import { Dictionary } from 'lodash'
 import { useCallback } from 'react'
 import { supabase } from '~/services/supabase'
 import { Table } from '~/shared/enums/Table'
@@ -12,31 +11,27 @@ type Props = {
 
 export const useProblemCommentsByProblemsQuery = ({ problems }: Props) => {
     const queryFn = useCallback(async () => {
-        const problemCommentsByProblemId: Record<string, ProblemComment[]> = {}
+        if (problems?.length === 0) return {}
 
-        const commentsPromises = (problems ?? []).map(async (problem) => {
-            const { data: comments, error } = await supabase
-                .from(Table.ProblemComments)
-                .select('*')
-                .eq('problemId', problem.id)
+        const problemIds = (problems ?? []).map((problem) => problem.id.toString())
 
-            if (error) {
-                throw error
-            }
+        const { data: comments } = await supabase
+            .from(Table.ProblemComments)
+            .select('*')
+            .in('problemId', problemIds)
+            .throwOnError()
 
-            return { problemId: problem.id.toString(), comments: comments || [] }
+        const commentsByProblem: Record<number, ProblemComment[]> = {}
+        comments.forEach((comment) => {
+            const comments = commentsByProblem[comment.problemId] ?? []
+
+            commentsByProblem[comment.problemId] = [...comments, comment]
         })
 
-        const commentsResults = await Promise.all(commentsPromises)
-
-        commentsResults.forEach(({ problemId, comments }) => {
-            problemCommentsByProblemId[problemId] = comments
-        })
-
-        return problemCommentsByProblemId as Dictionary<ProblemComment[]>
+        return commentsByProblem
     }, [problems])
 
-    return useQuery<Dictionary<ProblemComment[]>>({
+    return useQuery<Record<number, ProblemComment[]>>({
         queryKey: ['problemCommentsByProblemQuery', problems],
         queryFn,
     })
