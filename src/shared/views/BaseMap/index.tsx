@@ -32,7 +32,6 @@ const BaseMap = ({ onFabPress, onMapPress, markers }: Props) => {
     const [region, setRegion] = useState<Region>()
 
     const currentLocation = useMemo(() => {
-        // Default to DHBW Lörrach
         if (isNil(location)) return undefined
 
         return {
