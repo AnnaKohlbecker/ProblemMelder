@@ -9,6 +9,6 @@ export const colors = {
     white: '#ffffff',
     black: '#000000',
     gray: '#dedede',
-    backdrop: '#00000099',
+    backdrop: '#00000044',
     transparent: 'transparent',
 }

@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native'
-import { Button, Dialog, Text } from 'react-native-paper'
+import { Card, IconButton, Text } from 'react-native-paper'
+import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { Marker } from '~/shared/types/Marker'
 
@@ -9,8 +10,26 @@ type Props = {
 }
 
 const styles = StyleSheet.create({
+    card: {
+        padding: 20,
+        width: '90%',
+    },
+    closeButton: {
+        position: 'absolute',
+        right: -20,
+        top: -20,
+    },
+    content: {
+        paddingVertical: 10,
+    },
+    title: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
     wrapper: {
         alignItems: 'center',
+        backgroundColor: colors.backdrop,
         justifyContent: 'center',
     },
 })
@@ -18,20 +37,19 @@ const styles = StyleSheet.create({
 const DetailPopup = ({ marker, onClose }: Props) => {
     return (
         <View style={[globalStyles.flexBox, styles.wrapper]}>
-            <Dialog
-                visible={true}
-                dismissable={true}
-                onDismiss={onClose}
-                style={globalStyles.dialog}
-            >
-                <Dialog.Title>{marker.title}</Dialog.Title>
-                <Dialog.Content>
-                    <Text>Hier kommt der Inhalt</Text>
-                </Dialog.Content>
-                <Dialog.Actions>
-                    <Button onPress={onClose}>Ok</Button>
-                </Dialog.Actions>
-            </Dialog>
+            <Card style={[globalStyles.dialog, styles.card]}>
+                <View style={styles.title}>
+                    <Text variant='headlineSmall'>{marker.title}</Text>
+                </View>
+                <IconButton
+                    icon='close'
+                    onPress={onClose}
+                    style={styles.closeButton}
+                />
+                <View style={styles.content}>
+                    <Text>Hire kommt der Inhalt</Text>
+                </View>
+            </Card>
         </View>
     )
 }
