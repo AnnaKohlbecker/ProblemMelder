@@ -1,7 +1,7 @@
 import * as Location from 'expo-location'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Alert, FlatList, View } from 'react-native'
-import { FAB, Searchbar } from 'react-native-paper'
+import { FAB, Searchbar, Text } from 'react-native-paper'
 import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
 import { useImageByNameQuery } from '~/queries/Problems/useImageByNameQuery'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
@@ -26,6 +26,7 @@ const Problems = ({ route }: Props) => {
     const [displayedProblems, setDisplayedProblems] = useState<DisplayedProblem[]>([])
     const [displayedProblemsLoading, setDisplayedProblemsLoading] = useState<boolean>(true)
     const [reportProblem, setReportProblem] = useState(false)
+    const [isFetching, setIsFetching] = useState(false)
 
     const { isLoading: userLoading, error: userError } = useUserByIdQuery({
         userId: session?.user.id,
@@ -59,6 +60,17 @@ const Problems = ({ route }: Props) => {
     const onClose = useCallback(() => {
         setReportProblem(false)
     }, [])
+
+    const handleEndReached = useCallback(() => {
+        if (isFetching || problemsLoading) return
+
+        setIsFetching(true)
+        refetchProblems()
+
+        setTimeout(() => {
+            setIsFetching(false)
+        }, 3000)
+    }, [isFetching, problemsLoading, refetchProblems])
 
     useEffect(() => {
         if (!problems) return
@@ -122,17 +134,24 @@ const Problems = ({ route }: Props) => {
                     onChangeFilter={setFilter}
                 />
             </View>
-            <FlatList
-                data={searchedAndFilteredProblems}
-                style={globalStyles.flatList}
-                renderItem={({ item: problem }) => <ProblemCard problem={problem} />}
-                ListFooterComponent={<View style={globalStyles.flatListFooterComponent} />}
-                onEndReached={() => {
-                    if (!problemsLoading) {
-                        refetchProblems()
-                    }
-                }}
-            />
+            {searchedAndFilteredProblems.length === 0 ? (
+                <View style={globalStyles.centerContainer}>
+                    <Text style={globalStyles.noDataText}>
+                        {problems?.length === 0
+                            ? 'Keine Probleme vorhanden.'
+                            : 'Kein Problem gefunden.'}
+                    </Text>
+                </View>
+            ) : (
+                <FlatList
+                    data={searchedAndFilteredProblems}
+                    style={globalStyles.flatList}
+                    renderItem={({ item: problem }) => <ProblemCard problem={problem} />}
+                    ListFooterComponent={<View style={globalStyles.flatListFooterComponent} />}
+                    onEndReached={handleEndReached}
+                    onEndReachedThreshold={0.5}
+                />
+            )}
             <FAB
                 icon='plus'
                 onPress={onReportProblem}

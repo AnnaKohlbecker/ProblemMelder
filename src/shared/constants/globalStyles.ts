@@ -20,6 +20,11 @@ export const globalStyles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 20,
     },
+    centerContainer: {
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center',
+    },
     column: {
         flex: 1,
     },
@@ -74,6 +79,11 @@ export const globalStyles = StyleSheet.create({
     },
     mb: {
         marginBottom: 10,
+    },
+    noDataText: {
+        color: colors.gray,
+        fontSize: RFValue(16),
+        textAlign: 'center',
     },
     searchAndFilterContainer: {
         alignItems: 'center',
