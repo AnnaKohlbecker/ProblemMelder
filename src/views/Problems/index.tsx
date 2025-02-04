@@ -13,6 +13,7 @@ import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { DisplayedProblem } from '~/shared/types/DisplayedProblems'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
+import ProblemDetails from '~/views/ProblemDetails'
 import ProblemReport from '~/views/ProblemReport'
 import ProblemCard from '~/views/Problems/components/ProblemCard'
 import { useProblemsFilterLogic } from '~/views/Problems/hooks/useProblemFilterLogic'
@@ -26,6 +27,10 @@ const Problems = ({ route }: Props) => {
     const { session } = useAuth()
     const [displayedProblems, setDisplayedProblems] = useState<DisplayedProblem[]>([])
     const [reportProblem, setReportProblem] = useState(false)
+    const [showProblemDetails, setShowProblemDetails] = useState(false)
+    const [selectedProblemDetails, setSelectedProblemDetails] = useState<DisplayedProblem | null>(
+        null,
+    )
     const [isFetching, setIsFetching] = useState(false)
 
     const { isLoading: userLoading, error: userError } = useUserByIdQuery({
@@ -62,8 +67,18 @@ const Problems = ({ route }: Props) => {
         setReportProblem(true)
     }, [])
 
-    const onClose = useCallback(() => {
+    const onCloseProblemReport = useCallback(() => {
         setReportProblem(false)
+    }, [])
+
+    const onShowProblemDetails = useCallback((problem: DisplayedProblem) => {
+        setSelectedProblemDetails(problem)
+        setShowProblemDetails(true)
+    }, [])
+
+    const onCloseProblemDetails = useCallback(() => {
+        setSelectedProblemDetails(null)
+        setShowProblemDetails(false)
     }, [])
 
     const handleEndReached = useCallback(() => {
@@ -116,7 +131,15 @@ const Problems = ({ route }: Props) => {
         }
     }, [userError, problemsError, commentsError])
 
-    if (reportProblem) return <ProblemReport onClose={onClose} />
+    if (showProblemDetails && selectedProblemDetails)
+        return (
+            <ProblemDetails
+                problem={selectedProblemDetails}
+                onClose={onCloseProblemDetails}
+            />
+        )
+
+    if (reportProblem) return <ProblemReport onClose={onCloseProblemReport} />
 
     if (userLoading || problemsLoading || commentsLoading) return <LoadingSpinner />
 
@@ -148,7 +171,12 @@ const Problems = ({ route }: Props) => {
                     data={searchedAndFilteredProblems}
                     style={globalStyles.flatList}
                     keyExtractor={(problem) => problem.id.toString()}
-                    renderItem={({ item: problem }) => <ProblemCard problem={problem} />}
+                    renderItem={({ item: problem }) => (
+                        <ProblemCard
+                            problem={problem}
+                            onCardPress={() => onShowProblemDetails(problem)}
+                        />
+                    )}
                     ListFooterComponent={<View style={globalStyles.flatListFooterComponent} />}
                     onEndReached={handleEndReached}
                     onEndReachedThreshold={0.5}

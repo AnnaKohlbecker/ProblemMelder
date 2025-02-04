@@ -13,10 +13,9 @@ export const globalStyles = StyleSheet.create({
         backgroundColor: colors.white,
         borderRadius: 10,
         marginVertical: 10,
-        padding: 10,
+        padding: 5,
     },
     cardsView: {
-        flex: 1,
         paddingHorizontal: 20,
         paddingVertical: 20,
     },
@@ -50,21 +49,18 @@ export const globalStyles = StyleSheet.create({
     flexBox: {
         flex: 1,
     },
-    header: {
-        backgroundColor: colors.white,
-        color: colors.black,
+    flexRow: {
+        alignItems: 'center',
+        flexDirection: 'row',
     },
-    headerRow: {
+    flexRowWithSpace: {
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
-    headerRowLeft: {
-        alignItems: 'center',
-        flexDirection: 'row',
-    },
-    headerRowRight: {
-        alignItems: 'center',
+    header: {
+        backgroundColor: colors.white,
+        color: colors.black,
     },
     iconGroup: {
         alignItems: 'center',
@@ -81,7 +77,7 @@ export const globalStyles = StyleSheet.create({
         marginBottom: 10,
     },
     noDataText: {
-        color: colors.gray,
+        color: colors.darkGray,
         fontSize: RFValue(16),
         textAlign: 'center',
     },

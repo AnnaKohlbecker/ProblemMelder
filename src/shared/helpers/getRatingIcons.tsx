@@ -29,7 +29,7 @@ const getRating = (status: number, rating: number) => {
             <IconButton
                 key={i}
                 icon={iconName}
-                size={RFValue(18)}
+                size={RFValue(25)}
                 iconColor={status === 2 ? colors.yellow : colors.red}
                 style={styles.ratingIcon}
             />

@@ -9,6 +9,7 @@ export const colors = {
     white: '#ffffff',
     black: '#000000',
     gray: '#e9e9e9',
+    darkGray: '#a9a9a9',
     transparent: 'transparent',
     green: '#2fc52a',
     orange: '#ffa500',
