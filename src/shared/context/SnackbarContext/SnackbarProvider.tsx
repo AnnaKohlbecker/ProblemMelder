@@ -32,7 +32,7 @@ const SnackbarProvider = ({ children }: Props) => {
             <Portal>
                 {snackbarInfo && (
                     <Snackbar
-                        visible
+                        visible={true}
                         duration={4000}
                         onDismiss={onDismiss}
                         action={{

@@ -4,13 +4,13 @@ import { never } from '~/shared/helpers/never'
 export const problemStatusToColor = (status: ProblemStatus) => {
     switch (status) {
         case ProblemStatus.Cancelled:
-            return 'gray'
+            return '#979797'
         case ProblemStatus.ToDo:
-            return 'red'
+            return '#ec0505'
         case ProblemStatus.InProgress:
-            return 'yellow'
+            return '#ffdd00'
         case ProblemStatus.Done:
-            return 'green'
+            return '#0ead0e'
         default:
             return never(status, `Unexpeced ProblemStatus ${status}. This should never happen.`)
     }

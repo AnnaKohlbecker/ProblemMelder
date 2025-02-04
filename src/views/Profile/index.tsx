@@ -1,19 +1,20 @@
+import { Route } from '@react-navigation/native'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Alert, View } from 'react-native'
 import { Button, Card, Text } from 'react-native-paper'
-import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
 import { useDeleteProblemMutation } from '~/queries/Problems/useDeleteProblemMutation'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { useUserByIdQuery } from '~/queries/Users/useUserByIdQuery'
-import Header from '~/shared/components/Header'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { useDialog } from '~/shared/context/DialogContext'
+import { Route as RouteEnum } from '~/shared/enums/Route'
 import { Problem } from '~/shared/models/Problem'
+import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 
 type Props = {
-    route: BaseRoute
+    route: Route<RouteEnum>
 }
 
 const Profile = ({ route }: Props) => {

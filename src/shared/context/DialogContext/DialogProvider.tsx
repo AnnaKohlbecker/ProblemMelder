@@ -33,11 +33,12 @@ const DialogProvider = ({ children }: Props) => {
     return (
         <DialogContext.Provider value={{ setDialogInfo }}>
             {children}
-            <Portal>
-                {dialogInfo && (
+            {dialogInfo && (
+                <Portal>
                     <Dialog
-                        visible
+                        visible={true}
                         dismissable={false}
+                        dismissableBackButton={true}
                         style={globalStyles.dialog}
                     >
                         <Dialog.Title>{dialogInfo.title}</Dialog.Title>
@@ -53,8 +54,8 @@ const DialogProvider = ({ children }: Props) => {
                             </Button>
                         </Dialog.Actions>
                     </Dialog>
-                )}
-            </Portal>
+                </Portal>
+            )}
         </DialogContext.Provider>
     )
 }

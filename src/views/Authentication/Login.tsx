@@ -101,7 +101,7 @@ const Login = () => {
                         <TextInput
                             name='password'
                             label='Passwort'
-                            secureTextEntry
+                            secureTextEntry={true}
                             rules={{ required: 'Bitte gebe ein Passwort ein.' }}
                         />
                         <View style={loginStyles.buttonContainer}>

@@ -1,10 +1,11 @@
+import { Route } from '@react-navigation/native'
 import { View } from 'react-native'
-import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
-import Header from '~/shared/components/Header'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import { Route as RouteEnum } from '~/shared/enums/Route'
+import Header from '~/shared/views/Header'
 
 type Props = {
-    route: BaseRoute
+    route: Route<RouteEnum>
 }
 
 const Authorities = ({ route }: Props) => {
