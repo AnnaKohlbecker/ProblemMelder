@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
-import { Marker } from 'react-native-maps'
+import { Marker, MarkerPressEvent } from 'react-native-maps'
 import { problemStatusToIconAndColor } from '~/shared/helpers/ProblemStatusToIconAndColor'
 import { Marker as TMarker } from '~/shared/types/Marker'
 
 type Props = {
     marker: TMarker
-    onPress: () => void
+    onPress?: (event: MarkerPressEvent) => void
 }
 
 const MapMarker = ({ marker, onPress }: Props) => {

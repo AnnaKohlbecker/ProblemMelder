@@ -5,7 +5,7 @@ import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { problemStatusToIconAndColor } from '~/shared/helpers/ProblemStatusToIconAndColor'
-import { DisplayedProblem } from '~/shared/types/DisplayedProblems'
+import { Problem } from '~/shared/models/Problem'
 
 const styles = StyleSheet.create({
     headerButton: {
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 })
 
 type Props = {
-    problem: DisplayedProblem
+    problem: Problem
     onCardPress?: () => void
 }
 
@@ -30,10 +30,7 @@ const ProblemCard = ({ problem, onCardPress }: Props) => {
 
     return (
         <Card style={globalStyles.card}>
-            <TouchableRipple
-                onPress={onCardPress}
-                rippleColor={colors.secondary}
-            >
+            <TouchableRipple onPress={onCardPress}>
                 <View style={globalStyles.flexRowWithSpace}>
                     <View style={globalStyles.flexRow}>
                         <IconButton

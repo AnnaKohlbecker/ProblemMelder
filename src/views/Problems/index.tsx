@@ -1,22 +1,19 @@
 import { ParamListBase, Route, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import * as Location from 'expo-location'
-import { isNil } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Alert, FlatList, View } from 'react-native'
+import { Alert, FlatList, RefreshControl, View } from 'react-native'
 import { FAB, Searchbar, Text } from 'react-native-paper'
-import { useProblemCommentsByProblemsQuery } from '~/queries/ProblemComments/useProblemCommentsByProblemQuery'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { useUserByIdQuery } from '~/queries/Users/useUserByIdQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { Route as RouteEnum } from '~/shared/enums/Route'
-import { DisplayedProblem } from '~/shared/types/DisplayedProblems'
+import { Problem } from '~/shared/models/Problem'
 import Filter from '~/shared/views/Filter'
 import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
-import ProblemDetails from '~/views/ProblemDetails'
 import ProblemCard from '~/views/Problems/components/ProblemCard'
+import ProblemDetails from '~/views/Problems/components/ProblemDetails'
 import { useProblemsFilterLogic } from '~/views/Problems/hooks/useProblemFilterLogic'
 import { useProblemsSearchLogic } from '~/views/Problems/hooks/useProblemsSearchLogic'
 
@@ -27,12 +24,7 @@ type Props = {
 const Problems = ({ route }: Props) => {
     const { session } = useAuth()
     const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
-    const [displayedProblems, setDisplayedProblems] = useState<DisplayedProblem[]>([])
-    const [showProblemDetails, setShowProblemDetails] = useState(false)
-    const [selectedProblemDetails, setSelectedProblemDetails] = useState<DisplayedProblem | null>(
-        null,
-    )
-    const [isFetching, setIsFetching] = useState(false)
+    const [selectedProblemDetails, setSelectedProblemDetails] = useState<Problem>()
 
     const { isLoading: userLoading, error: userError } = useUserByIdQuery({
         userId: session?.user.id,
@@ -40,22 +32,17 @@ const Problems = ({ route }: Props) => {
     const {
         data: problems,
         isLoading: problemsLoading,
+        isRefetching: problemsRefetching,
         error: problemsError,
         refetch: refetchProblems,
     } = useProblemsQuery()
 
-    const {
-        data: comments,
-        isLoading: commentsLoading,
-        error: commentsError,
-    } = useProblemCommentsByProblemsQuery({ problems: problems })
-
     const { searchedProblems, search, setSearch } = useProblemsSearchLogic({
-        problems: displayedProblems ?? [],
+        problems: problems ?? [],
     })
 
     const { filteredProblems, filter, setFilter } = useProblemsFilterLogic({
-        problems: displayedProblems ?? [],
+        problems: problems ?? [],
     })
 
     const searchedAndFilteredProblems = useMemo(() => {
@@ -68,75 +55,27 @@ const Problems = ({ route }: Props) => {
         navigate(RouteEnum.PROBLEM_REPORT)
     }, [navigate])
 
-    const onShowProblemDetails = useCallback((problem: DisplayedProblem) => {
+    const onShowProblemDetails = useCallback((problem: Problem) => {
         setSelectedProblemDetails(problem)
-        setShowProblemDetails(true)
     }, [])
 
     const onCloseProblemDetails = useCallback(() => {
-        setSelectedProblemDetails(null)
-        setShowProblemDetails(false)
+        setSelectedProblemDetails(undefined)
     }, [])
 
-    const handleEndReached = useCallback(() => {
-        if (isFetching || problemsLoading) return
+    const onRefresh = useCallback(() => {
+        if (problemsLoading || problemsRefetching) return
 
-        setIsFetching(true)
         refetchProblems()
-
-        setTimeout(() => {
-            setIsFetching(false)
-        }, 3000)
-    }, [isFetching, problemsLoading, refetchProblems])
+    }, [problemsLoading, problemsRefetching, refetchProblems])
 
     useEffect(() => {
-        if (!problems) return
-
-        setDisplayedProblems([])
-
-        problems.forEach((problem) => {
-            if (isNil(problem.location)) {
-                // eslint-disable-next-line no-console
-                console.warn('Standort fehlt für Problem mit ID: ' + problem.id)
-                return
-            }
-
-            const commentsCount = comments?.[problem.id]?.length ?? 0
-            const [latitude, longitude] = problem.location.split(',').map(Number)
-
-            Location.reverseGeocodeAsync({ latitude, longitude }).then(([location]) => {
-                const address =
-                    location.formattedAddress ??
-                    `${location.street ?? ''}, ${location.city ?? ''}, ${location.country ?? ''}`
-
-                setDisplayedProblems((prevProblems) => [
-                    ...prevProblems,
-                    {
-                        ...problem,
-                        address,
-                        formattedDate: new Date(problem.date).toLocaleDateString('de-DE'),
-                        commentsCount,
-                    },
-                ])
-            })
-        })
-    }, [problems, comments])
-
-    useEffect(() => {
-        if (userError || problemsError || commentsError) {
+        if (userError || problemsError) {
             Alert.alert('Fehler', 'Ein unerwarteter Fehler ist aufgetreten.')
         }
-    }, [userError, problemsError, commentsError])
+    }, [userError, problemsError])
 
-    if (showProblemDetails && selectedProblemDetails)
-        return (
-            <ProblemDetails
-                problem={selectedProblemDetails}
-                onClose={onCloseProblemDetails}
-            />
-        )
-
-    if (userLoading || problemsLoading || commentsLoading) return <LoadingSpinner />
+    if (userLoading || problemsLoading) return <LoadingSpinner />
 
     return (
         <View style={globalStyles.flexBox}>
@@ -173,8 +112,12 @@ const Problems = ({ route }: Props) => {
                         />
                     )}
                     ListFooterComponent={<View style={globalStyles.flatListFooterComponent} />}
-                    onEndReached={handleEndReached}
-                    onEndReachedThreshold={0.5}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={problemsRefetching}
+                            onRefresh={onRefresh}
+                        />
+                    }
                 />
             )}
             <FAB
@@ -182,6 +125,12 @@ const Problems = ({ route }: Props) => {
                 onPress={onReportProblem}
                 style={globalStyles.fab}
             />
+            {selectedProblemDetails && (
+                <ProblemDetails
+                    problem={selectedProblemDetails}
+                    onClose={onCloseProblemDetails}
+                />
+            )}
         </View>
     )
 }

@@ -1,8 +1,8 @@
 import { useDeferredValue, useMemo, useState } from 'react'
-import { DisplayedProblem } from '~/shared/types/DisplayedProblems'
+import { Problem } from '~/shared/models/Problem'
 
 type Props = {
-    problems: DisplayedProblem[]
+    problems: Problem[]
 }
 
 export const useProblemsSearchLogic = ({ problems }: Props) => {

@@ -1,8 +1,11 @@
 import { isNil } from 'lodash'
-import { useCallback, useMemo, useState } from 'react'
+import { ElementType, useCallback, useMemo, useState } from 'react'
 import { Platform, StyleSheet, View } from 'react-native'
 import MapView, {
+    LatLng,
     MapPressEvent,
+    Marker,
+    MarkerPressEvent,
     PROVIDER_DEFAULT,
     PROVIDER_GOOGLE,
     Region,
@@ -10,25 +13,40 @@ import MapView, {
 import { FAB } from 'react-native-paper'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useLocation } from '~/shared/context/LocationContext'
-import { Marker as TMarker } from '~/shared/types/Marker'
-import DetailPopup from '~/shared/views/BaseMap/components/DetailPopup'
-import MapMarker from '~/shared/views/BaseMap/components/MapMarker'
 import { customMapStyle } from '~/shared/views/BaseMap/constants/customMapStyle'
 
-type Props = {
+type MarkerBaseInfo = LatLng & { id: number }
+
+type MarkerProps<T extends MarkerBaseInfo> = {
+    marker: T
+    onPress?: (event: MarkerPressEvent) => void
+}
+
+type Props<T extends MarkerBaseInfo> = {
     onFabPress?: () => void
 
     onMapPress?: (event: MapPressEvent) => void
 
-    markers?: TMarker[]
-}
+    markers?: T[]
+} & (
+    | {
+          MarkerComponent: ElementType<MarkerProps<T>>
+          onMarkerPressed: (marker: T) => void
+      }
+    | { MarkerComponent?: never; onMarkerPressed?: never }
+)
 
 const IS_ANDROID = Platform.OS === 'android'
 
-const BaseMap = ({ onFabPress, onMapPress, markers }: Props) => {
+const BaseMap = <T extends MarkerBaseInfo = MarkerBaseInfo>({
+    onFabPress,
+    onMapPress,
+    markers,
+    MarkerComponent,
+    onMarkerPressed,
+}: Props<T>) => {
     const location = useLocation()
 
-    const [markerDetails, setMarkerDetails] = useState<TMarker>()
     const [region, setRegion] = useState<Region>()
 
     const currentLocation = useMemo(() => {
@@ -71,6 +89,8 @@ const BaseMap = ({ onFabPress, onMapPress, markers }: Props) => {
         [currentLocation, region],
     )
 
+    const MapMarker = useMemo(() => MarkerComponent ?? Marker, [MarkerComponent])
+
     return (
         <View style={globalStyles.flexBox}>
             <MapView
@@ -90,16 +110,11 @@ const BaseMap = ({ onFabPress, onMapPress, markers }: Props) => {
                     <MapMarker
                         key={marker.id}
                         marker={marker}
-                        onPress={() => setMarkerDetails(marker)}
+                        coordinate={marker}
+                        onPress={() => onMarkerPressed?.(marker)}
                     />
                 ))}
             </MapView>
-            {markerDetails && (
-                <DetailPopup
-                    marker={markerDetails}
-                    onClose={() => setMarkerDetails(undefined)}
-                />
-            )}
             {!isNil(onFabPress) && (
                 <FAB
                     icon='plus'

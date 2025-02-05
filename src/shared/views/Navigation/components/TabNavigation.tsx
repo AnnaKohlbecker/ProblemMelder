@@ -3,6 +3,7 @@ import { ParamListBase, RouteProp } from '@react-navigation/native'
 import { useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { IconButton } from 'react-native-paper'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { colors } from '~/shared/constants/colors'
 import { RouteInformation } from '~/shared/constants/routeInformation'
 import { Route } from '~/shared/enums/Route'
@@ -19,6 +20,8 @@ const TabNavigation = () => {
     const onFocus = useCallback(() => {
         queryClient.invalidateQueries()
     }, [queryClient])
+
+    const insets = useSafeAreaInsets()
 
     const screenOptions = useCallback(
         ({ route }: { route: RouteProp<ParamListBase, string> }): BottomTabNavigationOptions => ({
@@ -41,6 +44,7 @@ const TabNavigation = () => {
 
     return (
         <Tab.Navigator
+            safeAreaInsets={{ ...insets, bottom: insets.bottom + 5 }}
             initialRouteName={Route.MAP}
             screenOptions={screenOptions}
             screenListeners={{
