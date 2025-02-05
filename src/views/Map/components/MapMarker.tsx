@@ -9,14 +9,15 @@ type Props = {
 }
 
 const MapMarker = ({ marker, onPress }: Props) => {
-    const { color } = useMemo(() => problemStatusToIconAndColor(marker.status), [marker.status])
-
-    // TODO: Gray is not supported as pin color
+    const { markerColor } = useMemo(
+        () => problemStatusToIconAndColor(marker.status),
+        [marker.status],
+    )
 
     return (
         <Marker
             coordinate={marker}
-            pinColor={color}
+            pinColor={markerColor}
             onPress={onPress}
         />
     )
