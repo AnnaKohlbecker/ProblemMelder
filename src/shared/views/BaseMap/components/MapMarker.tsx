@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Marker } from 'react-native-maps'
-import { problemStatusToColor } from '~/shared/helpers/ProblemStatusToColor'
+import { problemStatusToIconAndColor } from '~/shared/helpers/ProblemStatusToIconAndColor'
 import { Marker as TMarker } from '~/shared/types/Marker'
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 }
 
 const MapMarker = ({ marker, onPress }: Props) => {
-    const color = useMemo(() => problemStatusToColor(marker.status), [marker.status])
+    const { color } = useMemo(() => problemStatusToIconAndColor(marker.status), [marker.status])
 
     return (
         <Marker

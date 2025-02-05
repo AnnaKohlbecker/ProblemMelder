@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
 
 /**
@@ -9,10 +10,26 @@ export const globalStyles = StyleSheet.create({
         backgroundColor: colors.white,
     },
     card: {
-        flex: 1,
-        gap: 20,
+        backgroundColor: colors.white,
+        borderRadius: 10,
+        marginVertical: 10,
+        padding: 5,
+    },
+    cardsView: {
         paddingHorizontal: 20,
         paddingVertical: 20,
+    },
+    centerContainer: {
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center',
+    },
+    column: {
+        flex: 1,
+    },
+    container: {
+        flex: 1,
+        flexDirection: 'row',
     },
     dialog: {
         backgroundColor: colors.white,
@@ -23,18 +40,67 @@ export const globalStyles = StyleSheet.create({
         position: 'absolute',
         right: 0,
     },
+    flatList: {
+        paddingHorizontal: 20,
+    },
+    flatListFooterComponent: {
+        padding: 35,
+    },
     flexBox: {
         flex: 1,
     },
+    flexRow: {
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+    flexRowWithSpace: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
     header: {
         backgroundColor: colors.white,
+        color: colors.black,
+    },
+    iconGroup: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        paddingRight: 20,
+    },
+    infoRow: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        gap: 5,
+        marginVertical: 2,
     },
     mb: {
         marginBottom: 10,
+    },
+    noDataText: {
+        color: colors.darkGray,
+        fontSize: RFValue(16),
+        textAlign: 'center',
+    },
+    searchAndFilterContainer: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        gap: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+    },
+    searchBar: {
+        backgroundColor: colors.gray,
+        color: colors.black,
+        flex: 1,
     },
     separator: {
         backgroundColor: colors.gray,
         height: 1,
         width: '100%',
+    },
+    title: {
+        color: colors.black,
+        fontSize: RFValue(16),
+        fontWeight: 'bold',
     },
 })
