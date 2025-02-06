@@ -3,28 +3,28 @@ import { isNil } from 'lodash'
 import { useCallback } from 'react'
 import { supabase } from '~/services/supabase'
 import { Table } from '~/shared/enums/Table'
-import { User } from '~/shared/models/User'
+import { Role } from '~/shared/models/Role'
 
 type Props = {
     userId: string | undefined
 }
 
-export const useUserByIdQuery = ({ userId }: Props) => {
+export const useRoleByUserQuery = ({ userId }: Props) => {
     const queryFn = useCallback(async () => {
         const response = await supabase
-            .from(Table.Users)
-            .select('*')
+            .from(Table.UserData)
+            .select('role(*)')
             .eq('userId', userId)
             .single()
             .throwOnError()
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore because supabase typings are incorrect
-        return response.data as User
+        return response.data?.role as Role
     }, [userId])
 
-    return useQuery<User>({
-        queryKey: ['userByIdQuery', userId],
+    return useQuery<Role>({
+        queryKey: ['roleByUserQuery', userId],
         queryFn,
         enabled: !isNil(userId),
     })

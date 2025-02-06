@@ -1,8 +1,16 @@
 export enum Route {
     MAIN = 'main',
+
     MAP = 'map',
     PROBLEMS = 'problems',
-    PROBLEM_REPORT = 'problemReport',
     AUTHORITIES = 'authorities',
     PROFILE = 'profile',
+    MANAGEMENT = 'management',
+
+    PROBLEM_REPORT = 'problemReport',
+
+    AUTHORITIES_MANAGEMENT = 'authoritiesManagement',
+    CATEGORIES_MANAGEMENT = 'categoriesManagement',
+    EMPLOYEES_MANAGEMENT = 'employeesManagement',
+    ARCHIVE = 'archive',
 }

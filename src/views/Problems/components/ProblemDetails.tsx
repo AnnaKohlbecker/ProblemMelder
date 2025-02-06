@@ -103,7 +103,7 @@ const ProblemDetails = ({ problem, onClose }: Props) => {
 
     return (
         <View style={[StyleSheet.absoluteFillObject, styles.wrapper]}>
-            <Card style={[globalStyles.dialog, styles.card]}>
+            <Card style={[globalStyles.bgWhite, styles.card]}>
                 <View style={styles.titleWrapper}>
                     <Icon
                         source={icon}

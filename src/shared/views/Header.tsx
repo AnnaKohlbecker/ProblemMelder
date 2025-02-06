@@ -13,7 +13,11 @@ import { Route as RouteEnum } from '~/shared/enums/Route'
 export const styles = StyleSheet.create({
     title: {
         color: colors.primary,
-        fontSize: RFValue(20),
+        fontSize: RFValue(18),
+    },
+    wrapper: {
+        backgroundColor: colors.white,
+        color: colors.black,
     },
 })
 
@@ -41,7 +45,7 @@ const Header = ({ route, seperator = true, onClose }: Props) => {
 
     return (
         <View>
-            <Appbar.Header style={globalStyles.header}>
+            <Appbar.Header style={styles.wrapper}>
                 {onClose && (
                     <Appbar.BackAction
                         onPress={onClose}

@@ -6,14 +6,19 @@ import { IconButton } from 'react-native-paper'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { colors } from '~/shared/constants/colors'
 import { RouteInformation } from '~/shared/constants/routeInformation'
+import { useAuth } from '~/shared/context/AuthContext'
+import { Role } from '~/shared/enums/Role'
 import { Route } from '~/shared/enums/Route'
 import { NavigationParamList } from '~/shared/views/Navigation/types/NavigationParamList'
 import Authorities from '~/views/Authorities'
+import Management from '~/views/Management/Overview'
 import Map from '~/views/Map'
 import Problems from '~/views/Problems'
 import Profile from '~/views/Profile'
 
 const TabNavigation = () => {
+    const { hasRole } = useAuth()
+
     const queryClient = useQueryClient()
     const Tab = createBottomTabNavigator<NavigationParamList>()
 
@@ -75,14 +80,25 @@ const TabNavigation = () => {
                     title: RouteInformation[Route.AUTHORITIES].title,
                 }}
             />
-            <Tab.Screen
-                name={Route.PROFILE}
-                component={Profile}
-                options={{
-                    headerShown: false,
-                    title: RouteInformation[Route.PROFILE].title,
-                }}
-            />
+            {hasRole(Role.Admin) ? (
+                <Tab.Screen
+                    name={Route.MANAGEMENT}
+                    component={Management}
+                    options={{
+                        headerShown: false,
+                        title: RouteInformation[Route.MANAGEMENT].title,
+                    }}
+                />
+            ) : (
+                <Tab.Screen
+                    name={Route.PROFILE}
+                    component={Profile}
+                    options={{
+                        headerShown: false,
+                        title: RouteInformation[Route.PROFILE].title,
+                    }}
+                />
+            )}
         </Tab.Navigator>
     )
 }

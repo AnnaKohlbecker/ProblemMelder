@@ -8,6 +8,6 @@ export enum Table {
     ProblemCategories = 'ProblemCategories',
     Problems = 'Problems',
     Roles = 'Roles',
-    Users = 'Users',
+    UserData = 'UserData',
     ProblemComments = 'ProblemComments',
 }

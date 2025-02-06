@@ -6,7 +6,7 @@ import { colors } from '~/shared/constants/colors'
  * Commonly used styles to be reused accorss the app to maintain consistency and avoid duplication.
  */
 export const globalStyles = StyleSheet.create({
-    appbar: {
+    bgWhite: {
         backgroundColor: colors.white,
     },
     card: {
@@ -15,36 +15,11 @@ export const globalStyles = StyleSheet.create({
         marginVertical: 10,
         padding: 5,
     },
-    cardsView: {
-        paddingHorizontal: 20,
-        paddingVertical: 20,
-    },
-    centerContainer: {
-        alignItems: 'center',
-        flex: 1,
-        justifyContent: 'center',
-    },
-    column: {
-        flex: 1,
-    },
-    container: {
-        flex: 1,
-        flexDirection: 'row',
-    },
-    dialog: {
-        backgroundColor: colors.white,
-    },
     fab: {
         bottom: 0,
         margin: 16,
         position: 'absolute',
         right: 0,
-    },
-    flatList: {
-        paddingHorizontal: 20,
-    },
-    flatListFooterComponent: {
-        padding: 35,
     },
     flexBox: {
         flex: 1,
@@ -58,21 +33,6 @@ export const globalStyles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
-    header: {
-        backgroundColor: colors.white,
-        color: colors.black,
-    },
-    iconGroup: {
-        alignItems: 'center',
-        flexDirection: 'row',
-        paddingRight: 20,
-    },
-    infoRow: {
-        alignItems: 'center',
-        flexDirection: 'row',
-        gap: 5,
-        marginVertical: 2,
-    },
     mb: {
         marginBottom: 10,
     },
@@ -80,13 +40,6 @@ export const globalStyles = StyleSheet.create({
         color: colors.darkGray,
         fontSize: RFValue(16),
         textAlign: 'center',
-    },
-    searchAndFilterContainer: {
-        alignItems: 'center',
-        flexDirection: 'row',
-        gap: 20,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
     },
     searchBar: {
         backgroundColor: colors.gray,

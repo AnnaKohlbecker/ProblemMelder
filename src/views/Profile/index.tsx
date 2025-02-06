@@ -1,10 +1,10 @@
 import { Route } from '@react-navigation/native'
-import { useCallback, useEffect, useMemo } from 'react'
-import { Alert, View } from 'react-native'
+import { useCallback, useMemo } from 'react'
+import { Alert, StyleSheet, View } from 'react-native'
 import { Button, Card, Text } from 'react-native-paper'
 import { useDeleteProblemMutation } from '~/queries/Problems/useDeleteProblemMutation'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
-import { useUserByIdQuery } from '~/queries/Users/useUserByIdQuery'
+import { useUserByIdQuery } from '~/queries/UserData/useUserByIdQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { useDialog } from '~/shared/context/DialogContext'
@@ -17,20 +17,22 @@ type Props = {
     route: Route<RouteEnum>
 }
 
+const styles = StyleSheet.create({
+    wrapper: {
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+    },
+})
+
 const Profile = ({ route }: Props) => {
     const { session, role } = useAuth()
     const showDialog = useDialog()
 
-    const {
-        data: user,
-        isLoading: userLoading,
-        error: userError,
-    } = useUserByIdQuery({ userId: session?.user.id })
+    const { data: user, isLoading: userLoading } = useUserByIdQuery({ userId: session?.user.id })
 
     const {
         data: problems,
         isLoading: problemsLoading,
-        error: problemsError,
         refetch: refetchProblems,
     } = useProblemsQuery()
 
@@ -62,24 +64,16 @@ const Profile = ({ route }: Props) => {
             : 'Keine Probleme vorhanden.'
     }, [problems])
 
-    useEffect(() => {
-        if (!userError && !problemsError) return
-
-        Alert.alert('Fehler', 'Ein unerwarteter Fehler ist aufgetreten.')
-        // eslint-disable-next-line no-console
-        console.error(userError ?? problemsError)
-    }, [userError, problemsError])
-
     return userLoading || problemsLoading || isDeletingProblem ? (
         <LoadingSpinner />
     ) : (
         <View style={globalStyles.flexBox}>
             <Header route={route} />
-            <View style={globalStyles.cardsView}>
+            <View style={styles.wrapper}>
                 <Card style={globalStyles.card}>
                     <Card.Title title='Rolle' />
                     <Card.Content>
-                        <Text variant='bodyLarge'>{role}</Text>
+                        <Text variant='bodyLarge'>{role?.displayName}</Text>
                     </Card.Content>
                 </Card>
                 <Card style={globalStyles.card}>

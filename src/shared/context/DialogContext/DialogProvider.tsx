@@ -39,7 +39,7 @@ const DialogProvider = ({ children }: Props) => {
                         visible={true}
                         dismissable={false}
                         dismissableBackButton={true}
-                        style={globalStyles.dialog}
+                        style={globalStyles.bgWhite}
                     >
                         <Dialog.Title>{dialogInfo.title}</Dialog.Title>
                         <Dialog.Content style={styles.content}>

@@ -1,9 +1,10 @@
 import { Session } from '@supabase/supabase-js'
 import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react'
 import { Alert, AppState } from 'react-native'
-import { useRoleByUserQuery } from '~/queries/UserRoles/useRoleByUserQuery'
+import { useRoleByUserQuery } from '~/queries/UserData/useRoleByUserQuery'
 import { supabase } from '~/services/supabase'
 import { AuthContext } from '~/shared/context/AuthContext'
+import { Role as RoleEnum } from '~/shared/enums/Role'
 
 type Props = PropsWithChildren
 
@@ -39,10 +40,20 @@ const AuthProvider = ({ children }: Props) => {
      * Fetches the role of the current user.
      */
     const {
-        data: role,
+        data: userRole,
         error: roleError,
         isLoading: roleLoading,
     } = useRoleByUserQuery({ userId: session?.user.id })
+
+    /**
+     * Callback to check whether the current user has a specific role
+     */
+    const hasRole = useCallback(
+        (role: RoleEnum) => {
+            return userRole?.name === role
+        },
+        [userRole?.name],
+    )
 
     /**
      * Fetches the user's session from the database and ensures that session changes are propagated correctly.
@@ -58,6 +69,9 @@ const AuthProvider = ({ children }: Props) => {
         })
     }, [])
 
+    /**
+     * Error handler
+     */
     useEffect(() => {
         if (!roleError) return
 
@@ -72,7 +86,7 @@ const AuthProvider = ({ children }: Props) => {
     const isLoading = useMemo(() => sessionLoading || roleLoading, [sessionLoading, roleLoading])
 
     return (
-        <AuthContext.Provider value={{ session, role, isLoading, signOut }}>
+        <AuthContext.Provider value={{ session, role: userRole, isLoading, signOut, hasRole }}>
             {children}
         </AuthContext.Provider>
     )
