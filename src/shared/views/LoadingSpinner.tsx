@@ -17,7 +17,7 @@ const LoadingSpinner = ({ size = 'large' }: Props) => {
     return (
         <View style={styles.container}>
             <ActivityIndicator
-                animating
+                animating={true}
                 size={size}
             />
         </View>

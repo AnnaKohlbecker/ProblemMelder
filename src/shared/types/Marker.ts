@@ -1,8 +1,4 @@
 import { LatLng } from 'react-native-maps'
-import { ProblemStatus } from '~/shared/enums/ProblemStatus'
+import { Problem } from '~/shared/models/Problem'
 
-export type Marker = LatLng & {
-    id: number
-    title: string
-    status: ProblemStatus
-}
+export type Marker = LatLng & Problem

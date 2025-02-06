@@ -1,9 +1,11 @@
+import { ParamListBase, Route, useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as FileSystem from 'expo-file-system'
 import { isNil } from 'lodash'
 import { useCallback, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
-import { Appbar, Button, ProgressBar, Text } from 'react-native-paper'
+import { Button, ProgressBar, Text } from 'react-native-paper'
 import { v4 } from 'react-native-uuid/dist/v4'
 import { useUploadImageMutation } from '~/queries/Problems/useUploadImageMutation'
 import { useUpsertProblemMutation } from '~/queries/Problems/useUpsertProblemMutation'
@@ -12,14 +14,17 @@ import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { useDialog } from '~/shared/context/DialogContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
+import { Route as RouteEnum } from '~/shared/enums/Route'
 import { Problem } from '~/shared/models/Problem'
+import Header from '~/shared/views/Header'
 import LocationSelection from '~/shared/views/Inputs/LocationSelection'
 import PictureSelection from '~/shared/views/Inputs/PictureSelection'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import TextInput from '~/shared/views/TextInput'
+import { REPORT_STEPS } from '~/views/ProblemReport/constants/reportSteps'
 
 type Props = {
-    onClose: () => void
+    route: Route<RouteEnum>
 }
 
 const styles = StyleSheet.create({
@@ -39,33 +44,15 @@ const styles = StyleSheet.create({
     stepTitle: {
         paddingHorizontal: 10,
     },
+    wrapper: {
+        backgroundColor: colors.white,
+        paddingBottom: 10,
+    },
 })
 
-const REPORT_STEPS = [
-    {
-        serial: 1,
-        title: 'Standort des Problems',
-    },
-    {
-        serial: 2,
-        title: 'Bild des Problems',
-    },
-    {
-        serial: 3,
-        title: 'Beschreibung des Problems',
-    },
-    {
-        serial: 4,
-        title: 'Zuständige Stelle',
-    },
-    {
-        serial: 5,
-        title: 'Überprüfen',
-    },
-]
-
-const ProblemReport = ({ onClose: onCloseProp }: Props) => {
+const ProblemReport = ({ route }: Props) => {
     const { session } = useAuth()
+    const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
     const [currentStepSerial, setCurrentStepSerial] = useState(1)
 
     const showDialog = useDialog()
@@ -99,10 +86,10 @@ const ProblemReport = ({ onClose: onCloseProp }: Props) => {
             description: 'Deine Eingaben werden nicht gespeichert.',
             onAccept: () => {
                 reset()
-                onCloseProp()
+                navigate(RouteEnum.MAIN)
             },
         })
-    }, [onCloseProp, reset, showDialog])
+    }, [navigate, reset, showDialog])
 
     const onPrev = useCallback(() => {
         setCurrentStepSerial((cur) => cur - 1)
@@ -144,7 +131,7 @@ const ProblemReport = ({ onClose: onCloseProp }: Props) => {
                                 },
                                 {
                                     onSuccess: () => {
-                                        onCloseProp()
+                                        navigate(RouteEnum.MAIN)
                                     },
                                 },
                             ),
@@ -152,16 +139,17 @@ const ProblemReport = ({ onClose: onCloseProp }: Props) => {
                 )
             })()
         })
-    }, [currentStepSerial, handleSubmit, onCloseProp, trigger, uploadImage, upsertProblem])
+    }, [currentStepSerial, handleSubmit, navigate, trigger, uploadImage, upsertProblem])
 
     return (
-        <FormProvider {...form}>
-            <View style={globalStyles.flexBox}>
+        <View style={[globalStyles.flexBox, styles.wrapper]}>
+            <FormProvider {...form}>
                 <View>
-                    <Appbar.Header style={globalStyles.appbar}>
-                        <Appbar.BackAction onPress={onClose} />
-                        <Appbar.Content title='Problem melden' />
-                    </Appbar.Header>
+                    <Header
+                        route={route}
+                        seperator={false}
+                        onClose={onClose}
+                    />
                     <ProgressBar
                         progress={progress}
                         color={colors.primary}
@@ -190,7 +178,7 @@ const ProblemReport = ({ onClose: onCloseProp }: Props) => {
                             <TextInput
                                 name='description'
                                 label='Beschreibung'
-                                multiline
+                                multiline={true}
                                 rules={{
                                     required: 'Bitte gebe eine Beschreibung ein.',
                                 }}
@@ -227,8 +215,8 @@ const ProblemReport = ({ onClose: onCloseProp }: Props) => {
                         {currentStepSerial === REPORT_STEPS.length ? 'Absenden' : 'Weiter'}
                     </Button>
                 </View>
-            </View>
-        </FormProvider>
+            </FormProvider>
+        </View>
     )
 }
 

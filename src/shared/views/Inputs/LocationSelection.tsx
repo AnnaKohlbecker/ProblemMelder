@@ -8,8 +8,6 @@ import { Text } from 'react-native-paper'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useLocation } from '~/shared/context/LocationContext'
-import { ProblemStatus } from '~/shared/enums/ProblemStatus'
-import { Marker } from '~/shared/types/Marker'
 import BaseMap from '~/shared/views/BaseMap'
 
 type Props = {
@@ -49,15 +47,13 @@ const LocationSelection = ({ name }: Props) => {
     /**
      * Parse the current value to a valid Region object
      */
-    const location = useMemo((): Marker | undefined => {
+    const location = useMemo(() => {
         if (isNil(value)) return undefined
 
         const [latitude, longitude] = value.split(',')
 
         return {
             id: -1,
-            status: ProblemStatus.ToDo,
-            title: 'Ausgewählter Standort',
             latitude: parseFloat(latitude),
             longitude: parseFloat(longitude),
         }

@@ -61,7 +61,7 @@ const TextInput = ({
             />
             {(helperText || error) && (
                 <HelperText
-                    visible
+                    visible={true}
                     type={error ? 'error' : 'info'}
                     padding='none'
                 >

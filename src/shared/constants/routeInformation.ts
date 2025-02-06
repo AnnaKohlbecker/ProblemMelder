@@ -1,33 +1,34 @@
-export enum RouteKeys {
-    MAP = 'map',
-    PROBLEMS = 'problems',
-    AUTHORITIES = 'authorities',
-    PROFILE = 'profile',
-}
+import { Route } from '~/shared/enums/Route'
 
-export const ROUTES = [
-    {
-        key: RouteKeys.MAP,
+export const RouteInformation = {
+    [Route.MAP]: {
         title: 'Karte',
         focusedIcon: 'map-marker',
         unfocusedIcon: 'map-marker-outline',
     },
-    {
-        key: RouteKeys.PROBLEMS,
+    [Route.PROBLEMS]: {
         title: 'Probleme',
         focusedIcon: 'alert-circle',
         unfocusedIcon: 'alert-circle-outline',
     },
-    {
-        key: RouteKeys.AUTHORITIES,
+    [Route.AUTHORITIES]: {
         title: 'Behörden',
         focusedIcon: 'office-building',
         unfocusedIcon: 'office-building-outline',
     },
-    {
-        key: RouteKeys.PROFILE,
+    [Route.PROFILE]: {
         title: 'Profil',
         focusedIcon: 'account',
         unfocusedIcon: 'account-outline',
     },
-]
+    [Route.PROBLEM_REPORT]: {
+        title: 'Problem melden',
+        focusedIcon: 'alert-circle',
+        unfocusedIcon: 'alert-circle-outline',
+    },
+    [Route.MAIN]: {
+        title: 'Hauptseite',
+        focusedIcon: 'home',
+        unfocusedIcon: 'home-outline',
+    },
+}

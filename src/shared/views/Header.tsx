@@ -1,12 +1,14 @@
+import { Route } from '@react-navigation/native'
 import { useCallback, useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Appbar } from 'react-native-paper'
-import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import { RouteInformation } from '~/shared/constants/routeInformation'
 import { useAuth } from '~/shared/context/AuthContext'
 import { useDialog } from '~/shared/context/DialogContext'
+import { Route as RouteEnum } from '~/shared/enums/Route'
 
 export const styles = StyleSheet.create({
     title: {
@@ -16,12 +18,16 @@ export const styles = StyleSheet.create({
 })
 
 type Props = {
-    route: BaseRoute
+    route: Route<RouteEnum>
+    onClose?: () => void
+    seperator?: boolean
 }
 
-const Header = ({ route }: Props) => {
+const Header = ({ route, seperator = true, onClose }: Props) => {
     const showDialog = useDialog()
     const { signOut } = useAuth()
+
+    const title = useMemo(() => RouteInformation[route.name].title, [route.name])
 
     const onLogout = useCallback(() => {
         showDialog({
@@ -36,8 +42,14 @@ const Header = ({ route }: Props) => {
     return (
         <View>
             <Appbar.Header style={globalStyles.header}>
+                {onClose && (
+                    <Appbar.BackAction
+                        onPress={onClose}
+                        color={colors.primary}
+                    />
+                )}
                 <Appbar.Content
-                    title={useMemo(() => route.title ?? '', [route.title])}
+                    title={title}
                     titleStyle={styles.title}
                 />
                 <Appbar.Action
@@ -46,7 +58,7 @@ const Header = ({ route }: Props) => {
                     color={colors.primary}
                 />
             </Appbar.Header>
-            <View style={globalStyles.separator} />
+            {seperator && <View style={globalStyles.separator} />}
         </View>
     )
 }

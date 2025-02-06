@@ -10,6 +10,7 @@ export const colors = {
     black: '#000000',
     gray: '#e9e9e9',
     darkGray: '#a9a9a9',
+    backdrop: '#00000044',
     transparent: 'transparent',
     green: '#2fc52a',
     orange: '#ffa500',

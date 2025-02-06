@@ -1,4 +1,4 @@
-const noDirectFontSizeRule = require('./no-direct-font-size.js')
+import noDirectFontSizeRule from './no-direct-font-size.mjs'
 
 /**
  * This is a custom eslint plugin containing all our custom rules.
@@ -15,7 +15,7 @@ const noDirectFontSizeRule = require('./no-direct-font-size.js')
  * }
  * ```
  */
-module.exports = {
+export default {
     rules: {
         'no-direct-font-size': noDirectFontSizeRule,
     },

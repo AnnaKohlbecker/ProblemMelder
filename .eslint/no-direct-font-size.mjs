@@ -12,7 +12,7 @@
  *    fontSize: RFValue(16),
  * };
  */
-module.exports = {
+export default {
     meta: {
         type: 'problem',
         docs: {

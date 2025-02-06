@@ -1,13 +1,11 @@
-/* eslint-disable */
+import eslint from '@eslint/js'
+import react from 'eslint-plugin-react'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactNative from 'eslint-plugin-react-native'
+import tslint from 'typescript-eslint'
+import custom from './.eslint/custom-rules.mjs'
 
-const eslint = require('@eslint/js')
-const react = require('eslint-plugin-react')
-const reactHooks = require('eslint-plugin-react-hooks')
-const reactNative = require('eslint-plugin-react-native')
-const tslint = require('typescript-eslint')
-const custom = require('./.eslint/custom-rules.js')
-
-module.exports = tslint.config(
+export default tslint.config(
     eslint.configs.recommended,
     ...tslint.configs.strict,
     ...tslint.configs.stylistic,
@@ -33,12 +31,16 @@ module.exports = tslint.config(
             ...reactHooks.configs.recommended.rules,
 
             // ----- REACT BEST PRACTICES -----
+            'react/prop-types': 'off',
+            'react/react-in-jsx-scope': 'off',
+            'react/no-danger': 'error',
             'react/jsx-uses-vars': 'error',
-            'react/react-in-jsx-scope': 'off', // Not required in React 17+
-            'react/jsx-filename-extension': ['error', { extensions: ['.tsx'] }], // Ensure JSX is in .tsx files
-            'react/prop-types': 'off', // Disable prop-types for TypeScript
             'react-hooks/rules-of-hooks': 'error',
             'react-hooks/exhaustive-deps': 'error',
+            'react/jsx-no-useless-fragment': 'error',
+            'react/jsx-boolean-value': ['error', 'always'],
+            'react/jsx-curly-brace-presence': ['error', 'never'],
+            'react/jsx-filename-extension': ['error', { extensions: ['.tsx'] }],
 
             // ----- GENERAL BEST PRACTICES -----
             yoda: 'error',
@@ -80,9 +82,11 @@ module.exports = tslint.config(
             quotes: ['error', 'single'],
 
             // ----- TYPESCRIPT BEST PRACTICES -----
-            '@typescript-eslint/explicit-module-boundary-types': 'off', // Disable forcing explicit return types
-            '@typescript-eslint/no-explicit-any': 'warn', // Warn about the use of 'any'
-            '@typescript-eslint/consistent-type-definitions': ['error', 'type'], // Enforce usage of type over interface
+            '@typescript-eslint/unbound-method': 'off',
+            '@typescript-eslint/no-base-to-string': 'off',
+            '@typescript-eslint/restrict-template-expressions': 'off',
+            '@typescript-eslint/method-signature-style': ['error', 'property'],
+            '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
 
             // ----- REACT NATIVE BEST PRACTICES -----
             'react-native/no-unused-styles': 'error', // Detect unused styles in React Native components

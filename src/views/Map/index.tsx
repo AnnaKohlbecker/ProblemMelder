@@ -1,54 +1,67 @@
+import { ParamListBase, Route, useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { useCallback, useMemo, useState } from 'react'
 import { View } from 'react-native'
-import { BaseRoute } from 'react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
-import Header from '~/shared/components/Header'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import { ProblemStatus } from '~/shared/enums/ProblemStatus'
+import { Route as RouteEnum } from '~/shared/enums/Route'
 import { Marker } from '~/shared/types/Marker'
 import BaseMap from '~/shared/views/BaseMap'
-import ProblemReport from '~/views/ProblemReport'
+import Header from '~/shared/views/Header'
+import LoadingSpinner from '~/shared/views/LoadingSpinner'
+import MapMarker from '~/views/Map/components/MapMarker'
+import ProblemDetails from '~/views/Problems/components/ProblemDetails'
 
 type Props = {
-    route: BaseRoute
+    route: Route<RouteEnum>
 }
 
 const Map = ({ route }: Props) => {
-    const [reportProblem, setReportProblem] = useState(false)
+    const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 
-    const { data: problems } = useProblemsQuery()
+    const [markerDetails, setMarkerDetails] = useState<Marker | undefined>(undefined)
+
+    const { data: problems, isLoading: problemsLoading } = useProblemsQuery()
 
     const onReportProblem = useCallback(() => {
-        setReportProblem(true)
-    }, [])
-
-    const onClose = useCallback(() => {
-        setReportProblem(false)
-    }, [])
+        navigate(RouteEnum.PROBLEM_REPORT)
+    }, [navigate])
 
     const markers = useMemo(() => {
-        return problems?.map((problem): Marker => {
-            const [latitude, longitude] = problem.location.split(',')
+        return problems
+            ?.filter((prob) => prob.status !== ProblemStatus.Cancelled)
+            .map((problem): Marker => {
+                const [latitude, longitude] = problem.location.split(',')
 
-            return {
-                id: problem.id,
-                latitude: parseFloat(latitude),
-                longitude: parseFloat(longitude),
-                title: problem.title,
-                status: problem.status,
-            }
-        })
+                return {
+                    ...problem,
+                    latitude: parseFloat(latitude),
+                    longitude: parseFloat(longitude),
+                }
+            })
     }, [problems])
-
-    if (reportProblem) return <ProblemReport onClose={onClose} />
 
     return (
         <>
             <Header route={route} />
             <View style={globalStyles.flexBox}>
-                <BaseMap
-                    markers={markers}
-                    onFabPress={onReportProblem}
-                />
+                {problemsLoading ? (
+                    <LoadingSpinner />
+                ) : (
+                    <BaseMap<Marker>
+                        markers={markers}
+                        MarkerComponent={MapMarker}
+                        onMarkerPressed={setMarkerDetails}
+                        onFabPress={onReportProblem}
+                    />
+                )}
+                {markerDetails && (
+                    <ProblemDetails
+                        problem={markerDetails}
+                        onClose={() => setMarkerDetails(undefined)}
+                    />
+                )}
             </View>
         </>
     )
