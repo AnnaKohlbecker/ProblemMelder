@@ -13,7 +13,7 @@ export const theme = {
         accent: colors.secondary,
         background: colors.white,
         surface: colors.secondary,
-        surfaceVariant: colors.white,
+        surfaceVariant: colors.secondary,
         outline: colors.secondary,
         primaryContainer: colors.primary,
         onPrimaryContainer: colors.white,

@@ -9,6 +9,9 @@ export const globalStyles = StyleSheet.create({
     bgWhite: {
         backgroundColor: colors.white,
     },
+    bold: {
+        fontWeight: 'bold',
+    },
     card: {
         backgroundColor: colors.white,
         borderRadius: 10,
