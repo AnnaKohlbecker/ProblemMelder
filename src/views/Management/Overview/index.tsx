@@ -48,6 +48,7 @@ const Management = ({ route }: Props) => {
             <Header route={route} />
             <View style={[globalStyles.flexBox, styles.wrapper]}>
                 <Card style={[globalStyles.card, styles.card]}>
+                    <Text variant='titleMedium'>Hallo, {user?.name}!</Text>
                     <Text variant='titleMedium'>
                         Deine Punkte:{' '}
                         {userLoading ? (

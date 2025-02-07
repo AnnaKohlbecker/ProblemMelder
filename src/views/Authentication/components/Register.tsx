@@ -1,3 +1,4 @@
+import { isNil } from 'lodash'
 import { useCallback, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Alert, StyleSheet, View } from 'react-native'
@@ -50,12 +51,6 @@ const Register = () => {
     const { data: roles, isLoading: rolesLoading } = useRolesQuery()
     const { data: authorities, isLoading: authoritiesLoading } = useAuthoritiesQuery()
 
-    const authorityDomains = useMemo(() => {
-        if (!authorities) return []
-
-        return authorities.map((authority) => authority.domain)
-    }, [authorities])
-
     const login = useCallback(
         async ({ name, email, password }: RegisterModel) => {
             if (!isDirty) return
@@ -63,18 +58,32 @@ const Register = () => {
             setRegistering(true)
 
             const domain = email.split('@')[1]
-            const isAuthority = authorityDomains.includes(domain)
+            const authority = authorities?.find((authority) => authority.domain === domain)
+            if (!isNil(authority) && !authority.allowSignup) {
+                Alert.alert(
+                    'Registrierung verboten',
+                    'Die Registrierung für diese Domain ist nicht erlaubt. Bitte kontaktieren Sie Ihren Administrator.',
+                )
+                setRegistering(false)
+                return
+            }
 
             const role = roles?.find(
-                (role) => role.name === (isAuthority ? Role.Manager : Role.User),
+                (role) => role.name === (!isNil(authority) ? Role.Manager : Role.User),
             )
+
+            if (isNil(role)) {
+                Alert.alert('Fehler', 'Ein unerwarteter Fehler ist aufgetreten.')
+                setRegistering(false)
+                return
+            }
 
             const { error } = await supabase.auth.signUp({
                 email,
                 password,
                 options: {
                     data: {
-                        role,
+                        role: role.id,
                         name,
                     },
                 },
@@ -88,7 +97,7 @@ const Register = () => {
             // eslint-disable-next-line no-console
             console.error(error)
         },
-        [authorityDomains, isDirty, roles],
+        [authorities, isDirty, roles],
     )
 
     const validate = useCallback((val: string) => {
@@ -96,6 +105,11 @@ const Register = () => {
 
         return true
     }, [])
+
+    const loading = useMemo(
+        () => rolesLoading || authoritiesLoading || registering,
+        [authoritiesLoading, registering, rolesLoading],
+    )
 
     return (
         <View style={globalStyles.flexBox}>
@@ -123,14 +137,20 @@ const Register = () => {
                         name='password'
                         label='Passwort'
                         secureTextEntry={true}
-                        rules={{ required: 'Bitte gebe ein Passwort ein.' }}
+                        rules={{
+                            required: 'Bitte gebe ein Passwort ein.',
+                            minLength: {
+                                value: 6,
+                                message: 'Das Passwort muss midestens 6 Zeichen lang sein.',
+                            },
+                        }}
                     />
                     <View style={loginStyles.buttonContainer}>
                         <Button
                             mode='contained'
                             onPress={handleSubmit(login)}
-                            disabled={!isDirty}
-                            loading={rolesLoading || authoritiesLoading || registering}
+                            disabled={!isDirty || loading}
+                            loading={loading}
                         >
                             Registrieren
                         </Button>
