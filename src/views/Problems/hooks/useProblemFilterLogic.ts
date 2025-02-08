@@ -1,4 +1,5 @@
-import { useDeferredValue, useMemo, useState } from 'react'
+import { isNil } from 'lodash'
+import { useMemo, useState } from 'react'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { Problem } from '~/shared/models/Problem'
 
@@ -7,15 +8,15 @@ type Props = {
 }
 
 export const useProblemsFilterLogic = ({ problems }: Props) => {
-    const [filter, setFilter] = useState<ProblemStatus | null>(null)
-    const debouncedFilter = useDeferredValue(filter)
+    const [filter, setFilter] = useState<ProblemStatus>()
 
     const filteredProblems = useMemo(() => {
         return problems?.filter((problem) => {
-            if (debouncedFilter === null) return problems
-            return problem.status === (debouncedFilter as ProblemStatus)
+            if (isNil(filter)) return problems
+
+            return problem.status === filter
         })
-    }, [problems, debouncedFilter])
+    }, [problems, filter])
 
     return {
         filter,

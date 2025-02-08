@@ -1,11 +1,7 @@
 import { createContext, useContext } from 'react'
 
-export type SnackbarInfo = {
-    text: string
-}
-
 type SnackbarContextProps = {
-    setSnackbarInfo: (snackbarInfo: SnackbarInfo) => void
+    setSnackbarInfo: (text: string) => void
 }
 
 export const SnackbarContext = createContext<SnackbarContextProps>({

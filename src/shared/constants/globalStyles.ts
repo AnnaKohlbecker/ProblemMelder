@@ -18,6 +18,9 @@ export const globalStyles = StyleSheet.create({
         marginVertical: 10,
         padding: 5,
     },
+    dialog: {
+        backgroundColor: colors.white,
+    },
     fab: {
         bottom: 0,
         margin: 16,

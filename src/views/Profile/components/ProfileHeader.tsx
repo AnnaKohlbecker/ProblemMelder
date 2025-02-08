@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
         gap: 20,
     },
     greeting: {
+        fontSize: RFValue(14),
         paddingBottom: 5,
     },
     header: {
@@ -30,6 +31,9 @@ const styles = StyleSheet.create({
     },
     imageWrapper: {
         alignItems: 'flex-start',
+    },
+    infoText: {
+        fontSize: RFValue(10),
     },
 })
 
@@ -57,34 +61,27 @@ const ProfileHeader = () => {
                         />
                     </View>
                     <View>
-                        <Text
-                            variant='titleLarge'
-                            style={[globalStyles.bold, styles.greeting]}
-                        >
-                            Hallo, {user?.name}!
-                        </Text>
-                        <Text variant='titleMedium'>
-                            Deine Rolle:{' '}
-                            <Text
-                                variant='bodyLarge'
-                                style={globalStyles.bold}
-                            >
-                                {prestiegeInfo.role}
-                            </Text>
-                        </Text>
-                        <Text variant='titleMedium'>
-                            {userLoading ? (
-                                <LoadingSpinner size={12} />
-                            ) : (
-                                <Text
-                                    variant='bodyLarge'
-                                    style={globalStyles.bold}
-                                >
-                                    {user?.points} von {prestiegeInfo.nextRolePoints}
+                        {isNil(user) || userLoading ? (
+                            <LoadingSpinner />
+                        ) : (
+                            <>
+                                <Text style={[globalStyles.bold, styles.greeting]}>
+                                    Hallo, {user.name}!
                                 </Text>
-                            )}{' '}
-                            Punkten zur nächsten Rolle!
-                        </Text>
+                                <Text style={styles.infoText}>
+                                    Deine Rolle:{' '}
+                                    <Text style={[globalStyles.bold, styles.infoText]}>
+                                        {prestiegeInfo.role}
+                                    </Text>
+                                </Text>
+                                <Text style={styles.infoText}>
+                                    <Text style={[globalStyles.bold, styles.infoText]}>
+                                        {user.points} von {prestiegeInfo.nextRolePoints}
+                                    </Text>{' '}
+                                    Punkten zur nächsten Rolle!
+                                </Text>
+                            </>
+                        )}
                     </View>
                 </View>
             </Card>

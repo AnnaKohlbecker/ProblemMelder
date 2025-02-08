@@ -1,6 +1,6 @@
 import { ParamListBase, Route, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native'
 import { FAB, Searchbar, Text } from 'react-native-paper'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
@@ -57,19 +57,18 @@ const Problems = ({ route }: Props) => {
         refetch: refetchProblems,
     } = useProblemsQuery()
 
+    // TODO Hide old closed problems (green / gray, older than 2 weeks)
+    // const preFilteredProblems = useMemo(() => {
+    //     return problems?.filter((problem) => problem.dateClosed ) // Diff < 2 wochen
+    // })
+
     const { searchedProblems, search, setSearch } = useProblemsSearchLogic({
         problems: problems ?? [],
     })
 
     const { filteredProblems, filter, setFilter } = useProblemsFilterLogic({
-        problems: problems ?? [],
+        problems: searchedProblems ?? [],
     })
-
-    const searchedAndFilteredProblems = useMemo(() => {
-        return filteredProblems.filter((problem) =>
-            searchedProblems.some((searchedProblem) => searchedProblem.id === problem.id),
-        )
-    }, [filteredProblems, searchedProblems])
 
     const onReportProblem = useCallback(() => {
         navigate(RouteEnum.PROBLEM_REPORT)
@@ -106,7 +105,7 @@ const Problems = ({ route }: Props) => {
                     onChangeFilter={setFilter}
                 />
             </View>
-            {searchedAndFilteredProblems.length === 0 ? (
+            {filteredProblems.length === 0 ? (
                 <View style={styles.container}>
                     <Text style={globalStyles.noDataText}>
                         {problems?.length === 0
@@ -116,7 +115,7 @@ const Problems = ({ route }: Props) => {
                 </View>
             ) : (
                 <FlatList
-                    data={searchedAndFilteredProblems}
+                    data={filteredProblems}
                     style={styles.list}
                     renderItem={({ item: problem, index }) => (
                         <ProblemCard

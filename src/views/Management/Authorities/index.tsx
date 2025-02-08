@@ -1,15 +1,20 @@
 import { ParamListBase, Route, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { useCallback } from 'react'
+import { isNil } from 'lodash'
+import { useCallback, useState } from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 import { FAB } from 'react-native-paper'
 import { useAuthoritiesQuery } from '~/queries/Authorities/useAuthoritiesQuery'
+import { useDeleteAuthorityMutation } from '~/queries/Authorities/useDeleteAuthorityMutation'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import { useDialog } from '~/shared/context/DialogContext'
+import { useSnackbar } from '~/shared/context/SnackbarContext'
 import { Route as RouteEnum } from '~/shared/enums/Route'
 import { Authority } from '~/shared/models/Authority'
 import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
-import AuthorityListItem from '~/views/Management/Authorities/components/AuthorityIListtem'
+import AddOrEditAuthorityModal from '~/views/Management/Authorities/components/AddOrEditAuthorityModal'
+import AuthorityListItem from '~/views/Management/Authorities/components/AuthorityListItem'
 
 type Props = {
     route: Route<RouteEnum>
@@ -22,21 +27,49 @@ const styles = StyleSheet.create({
 })
 
 const AuthoritiesManagement = ({ route }: Props) => {
+    const showDialog = useDialog()
+    const showSnackbar = useSnackbar()
+
+    const [editInfo, setEditInfo] = useState<{ editInfo?: Authority }>()
+
     const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 
-    const { data: authorities, isLoading: authoritiesLoading } = useAuthoritiesQuery()
+    const { mutate: deleteAuthority } = useDeleteAuthorityMutation()
+    const {
+        data: authorities,
+        isLoading: authoritiesLoading,
+        refetch: refetchAuthorities,
+    } = useAuthoritiesQuery()
 
     const onClose = useCallback(() => {
         navigate(RouteEnum.MANAGEMENT)
     }, [navigate])
 
     const onAdd = useCallback(() => {
-        // TODO
+        setEditInfo({})
     }, [])
 
-    const onEdit = useCallback((authority: Authority) => {}, [])
+    const onEdit = useCallback((authority: Authority) => {
+        setEditInfo({ editInfo: authority })
+    }, [])
 
-    const onDelete = useCallback((authority: Authority) => {}, [])
+    const onDelete = useCallback(
+        (authority: Authority) => {
+            if (isNil(authority.id)) return
+
+            showDialog({
+                title: 'Behörde löschen?',
+                description:
+                    'Möchtest du diese Behörde wirklich löschen? Diese Änderung kann nicht Rückgängig gemacht werden.',
+                onAccept: () => {
+                    deleteAuthority(authority.id)
+                    refetchAuthorities()
+                    showSnackbar('Die Behörde wurde erfolgreich gelöscht.')
+                },
+            })
+        },
+        [deleteAuthority, refetchAuthorities, showDialog, showSnackbar],
+    )
 
     return (
         <View style={globalStyles.flexBox}>
@@ -70,6 +103,15 @@ const AuthoritiesManagement = ({ route }: Props) => {
                     </>
                 )}
             </View>
+            {editInfo && (
+                <AddOrEditAuthorityModal
+                    editInfo={editInfo.editInfo}
+                    onClose={() => {
+                        refetchAuthorities()
+                        setEditInfo(undefined)
+                    }}
+                />
+            )}
         </View>
     )
 }
