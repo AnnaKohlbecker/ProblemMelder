@@ -6,4 +6,5 @@ export type User = {
     points: number
     name: string
     userId: string
+    authorityId: number
 }

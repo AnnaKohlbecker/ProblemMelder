@@ -30,6 +30,10 @@ export const globalStyles = StyleSheet.create({
     flexBox: {
         flex: 1,
     },
+    flexCenter: {
+        flex: 1,
+        justifyContent: 'center',
+    },
     flexRow: {
         alignItems: 'center',
         flexDirection: 'row',

@@ -15,4 +15,5 @@ export type Problem = {
     priorityVotesCount: number
     priority: number | undefined
     categoryId: number
+    closedDate: Date | undefined
 }

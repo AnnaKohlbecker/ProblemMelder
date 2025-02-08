@@ -1,12 +1,16 @@
 import { ParamListBase, Route, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { useCallback, useState } from 'react'
+import { isAfter } from 'date-fns/isAfter'
+import { subWeeks } from 'date-fns/subWeeks'
+import isNil from 'lodash/isNil'
+import { useCallback, useMemo, useState } from 'react'
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native'
 import { FAB, Searchbar, Text } from 'react-native-paper'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { useUserByIdQuery } from '~/queries/UserData/useUserByIdQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
+import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { Route as RouteEnum } from '~/shared/enums/Route'
 import { Problem } from '~/shared/models/Problem'
 import Filter from '~/shared/views/Filter'
@@ -57,13 +61,21 @@ const Problems = ({ route }: Props) => {
         refetch: refetchProblems,
     } = useProblemsQuery()
 
-    // TODO Hide old closed problems (green / gray, older than 2 weeks)
-    // const preFilteredProblems = useMemo(() => {
-    //     return problems?.filter((problem) => problem.dateClosed ) // Diff < 2 wochen
-    // })
+    // Hide old closed and solved problems which are older than 2 weekss
+    const preFilteredProblems = useMemo(() => {
+        const twoWeeksAgo = subWeeks(new Date(), 2)
+
+        return problems?.filter(
+            (problem) =>
+                (problem.status !== ProblemStatus.Cancelled &&
+                    problem.status !== ProblemStatus.Done) ||
+                isNil(problem.closedDate) ||
+                isAfter(problem.closedDate, twoWeeksAgo),
+        )
+    }, [problems])
 
     const { searchedProblems, search, setSearch } = useProblemsSearchLogic({
-        problems: problems ?? [],
+        problems: preFilteredProblems ?? [],
     })
 
     const { filteredProblems, filter, setFilter } = useProblemsFilterLogic({

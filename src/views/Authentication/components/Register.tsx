@@ -84,6 +84,7 @@ const Register = () => {
                 options: {
                     data: {
                         role: role.id,
+                        authorityId: authority?.id,
                         name,
                     },
                 },
