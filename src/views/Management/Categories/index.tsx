@@ -1,9 +1,10 @@
 import { ParamListBase, Route, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { isNil } from 'lodash'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 import { FAB } from 'react-native-paper'
+import { useAuthoritiesQuery } from '~/queries/Authorities/useAuthoritiesQuery'
 import { useDeleteProblemCategoryMutation } from '~/queries/ProblemCategories/useDeleteProblemCategoryMutation'
 import { useProblemCategoriesQuery } from '~/queries/ProblemCategories/useProblemCategoriesQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
@@ -41,6 +42,8 @@ const CategoriesManagement = ({ route }: Props) => {
         refetch: refetchCategories,
     } = useProblemCategoriesQuery()
 
+    const { data: authorities, isLoading: authoritiesLoading } = useAuthoritiesQuery()
+
     const onClose = useCallback(() => {
         navigate(RouteEnum.MANAGEMENT)
     }, [navigate])
@@ -71,6 +74,11 @@ const CategoriesManagement = ({ route }: Props) => {
         [deleteCategory, refetchCategories, showDialog, showSnackbar],
     )
 
+    const loading = useMemo(
+        () => categoriesLoading || authoritiesLoading,
+        [categoriesLoading, authoritiesLoading],
+    )
+
     return (
         <View style={globalStyles.flexBox}>
             <Header
@@ -78,7 +86,7 @@ const CategoriesManagement = ({ route }: Props) => {
                 onClose={onClose}
             />
             <View style={globalStyles.flexBox}>
-                {categoriesLoading ? (
+                {loading ? (
                     <LoadingSpinner />
                 ) : (
                     <>
@@ -89,6 +97,7 @@ const CategoriesManagement = ({ route }: Props) => {
                                 renderItem={({ item }) => (
                                     <CategoryListItem
                                         item={item}
+                                        authorities={authorities ?? []}
                                         onEdit={onEdit}
                                         onDelete={onDelete}
                                     />

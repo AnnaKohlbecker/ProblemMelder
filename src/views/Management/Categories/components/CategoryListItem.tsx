@@ -1,8 +1,9 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Card, Icon, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import { Authority } from '~/shared/models/Authority'
 import { ProblemCategory } from '~/shared/models/ProblemCategory'
 
 const styles = StyleSheet.create({
@@ -30,13 +31,23 @@ const styles = StyleSheet.create({
 
 type Props = {
     item: ProblemCategory
+    authorities: Authority[]
     onEdit: (item: ProblemCategory) => void
     onDelete: (item: ProblemCategory) => void
 }
 
-const CategoryListItem = ({ item, onEdit: onEditProp, onDelete: onDeleteProp }: Props) => {
+const CategoryListItem = ({
+    item,
+    authorities,
+    onEdit: onEditProp,
+    onDelete: onDeleteProp,
+}: Props) => {
     const onEdit = useCallback(() => onEditProp(item), [item, onEditProp])
     const onDelete = useCallback(() => onDeleteProp(item), [item, onDeleteProp])
+
+    const authority = useMemo(() => {
+        return authorities.find((authority) => authority.id === item.authorityId)
+    }, [authorities, item.authorityId])
 
     return (
         <Card style={[globalStyles.card, styles.card]}>
@@ -56,6 +67,7 @@ const CategoryListItem = ({ item, onEdit: onEditProp, onDelete: onDeleteProp }: 
                         )}
                         <Text style={styles.title}>{item.title}</Text>
                     </View>
+                    <Text>{authority?.name}</Text>
                 </View>
                 <View style={styles.buttons}>
                     <IconButton

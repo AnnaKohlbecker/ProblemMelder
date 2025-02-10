@@ -34,7 +34,11 @@ type Props = {
     onDelete: (item: Authority) => void
 }
 
-const AuthorityListItem = ({ item, onEdit: onEditProp, onDelete: onDeleteProp }: Props) => {
+const AuthorityManagementListItem = ({
+    item,
+    onEdit: onEditProp,
+    onDelete: onDeleteProp,
+}: Props) => {
     const onEdit = useCallback(() => onEditProp(item), [item, onEditProp])
     const onDelete = useCallback(() => onDeleteProp(item), [item, onDeleteProp])
 
@@ -77,4 +81,4 @@ const AuthorityListItem = ({ item, onEdit: onEditProp, onDelete: onDeleteProp }:
     )
 }
 
-export default AuthorityListItem
+export default AuthorityManagementListItem

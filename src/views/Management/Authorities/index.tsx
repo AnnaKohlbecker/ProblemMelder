@@ -14,7 +14,7 @@ import { Authority } from '~/shared/models/Authority'
 import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import AddOrEditAuthorityModal from '~/views/Management/Authorities/components/AddOrEditAuthorityModal'
-import AuthorityListItem from '~/views/Management/Authorities/components/AuthorityListItem'
+import AuthorityManagementListItem from '~/views/Management/Authorities/components/AuthorityManagementListItem'
 
 type Props = {
     route: Route<RouteEnum>
@@ -87,7 +87,7 @@ const AuthoritiesManagement = ({ route }: Props) => {
                                 data={authorities}
                                 keyExtractor={(item) => item.id.toString()}
                                 renderItem={({ item }) => (
-                                    <AuthorityListItem
+                                    <AuthorityManagementListItem
                                         item={item}
                                         onEdit={onEdit}
                                         onDelete={onDelete}
