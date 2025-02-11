@@ -2,11 +2,14 @@ import { useCallback, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { StyleSheet } from 'react-native'
 import { Button, Dialog, Portal } from 'react-native-paper'
+import { useAuthoritiesQuery } from '~/queries/Authorities/useAuthoritiesQuery'
 import { useUpsertProblemCategoryMutation } from '~/queries/ProblemCategories/useUpsertProblemCategoryMutation'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useSnackbar } from '~/shared/context/SnackbarContext'
 import { ProblemCategory } from '~/shared/models/ProblemCategory'
 import IconPicker from '~/shared/views/Inputs/IconPicker'
+import SelectMenu from '~/shared/views/Inputs/SelectMenu'
+import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import TextInput from '~/shared/views/TextInput'
 import { ProblemCategoryFormData } from '~/views/Management/Categories/types/ProblemCategoryFormData'
 
@@ -25,6 +28,8 @@ const AddOrEditCategoryModal = ({ editInfo, onClose }: Props) => {
     const showSnackbar = useSnackbar()
 
     const { mutate: upsertCategory } = useUpsertProblemCategoryMutation()
+
+    const { data: authorities, isLoading: authoritiesLoading } = useAuthoritiesQuery()
 
     const form = useForm<ProblemCategoryFormData>({
         defaultValues: {
@@ -56,6 +61,15 @@ const AddOrEditCategoryModal = ({ editInfo, onClose }: Props) => {
         [editInfo],
     )
 
+    const authorityOptions = useMemo(
+        () =>
+            authorities?.map((authority) => ({
+                label: authority.name,
+                value: authority.id,
+            })) ?? [],
+        [authorities],
+    )
+
     return (
         <Portal>
             <Dialog
@@ -80,6 +94,19 @@ const AddOrEditCategoryModal = ({ editInfo, onClose }: Props) => {
                                 required: 'Bitte wähle ein Icon aus.',
                             }}
                         />
+                        {authoritiesLoading ? (
+                            <LoadingSpinner />
+                        ) : (
+                            <SelectMenu
+                                label='Zuständige Behörde'
+                                name='authorityId'
+                                options={authorityOptions}
+                                disabled={authoritiesLoading}
+                                rules={{
+                                    required: 'Bitte wähle eine Behörde aus.',
+                                }}
+                            />
+                        )}
                     </Dialog.Content>
                     <Dialog.Actions>
                         <Button onPress={onClose}>Abbrechen</Button>
