@@ -89,7 +89,7 @@ const Archive = ({ route }: Props) => {
     }, [problemsLoading, problemsRefetching, refetchProblems])
 
     return (
-        <View style={globalStyles.flexBox}>
+        <View style={globalStyles.flexBoxWithColor}>
             <Header
                 route={route}
                 onClose={onClose}

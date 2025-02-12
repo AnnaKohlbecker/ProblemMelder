@@ -58,9 +58,16 @@ const Login = () => {
 
             if (!error) return
 
-            Alert.alert('Fehler', 'Ein unerwarteter Fehler ist aufgetreten.')
-            // eslint-disable-next-line no-console
-            console.error(error)
+            if (error.name === 'AuthApiError') {
+                Alert.alert(
+                    'Falsche Anmeldedaten',
+                    'Die eingegebene E-Mail oder das Passwort ist falsch. Bitte versuche es erneut.',
+                )
+            } else {
+                Alert.alert('Fehler', 'Ein unerwarteter Fehler ist aufgetreten.')
+                // eslint-disable-next-line no-console
+                console.error(error)
+            }
         },
         [isDirty],
     )
@@ -72,7 +79,7 @@ const Login = () => {
     }, [])
 
     return (
-        <View style={globalStyles.flexBox}>
+        <View style={globalStyles.flexBoxWithColor}>
             <View style={loginStyles.header}>
                 <Text style={loginStyles.headerText}>Anmelden</Text>
             </View>

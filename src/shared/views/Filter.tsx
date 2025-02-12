@@ -7,7 +7,7 @@ import { problemStatusToIconAndColor } from '~/shared/helpers/ProblemStatusToIco
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.gray,
+        backgroundColor: colors.secondary,
         borderRadius: 100,
     },
     menuContent: {
@@ -67,7 +67,7 @@ const Filter = ({ value, onChangeFilter }: FilterProps) => {
                         icon={currentIconAndColor.icon}
                         onPress={openMenu}
                         size={24}
-                        iconColor={colors.black}
+                        mode='contained'
                     />
                 }
                 contentStyle={styles.menuContent}

@@ -54,7 +54,7 @@ const Profile = ({ route }: Props) => {
     }, [problems])
 
     return (
-        <View style={globalStyles.flexBox}>
+        <View style={globalStyles.flexBoxWithColor}>
             <Header route={route} />
             {problemsLoading || isDeletingProblem ? (
                 <LoadingSpinner />

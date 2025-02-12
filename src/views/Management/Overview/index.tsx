@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 
 const Management = ({ route }: Props) => {
     return (
-        <View style={globalStyles.flexBox}>
+        <View style={globalStyles.flexBoxWithColor}>
             <Header route={route} />
             <ProfileHeader />
             <View style={globalStyles.flexBox}>

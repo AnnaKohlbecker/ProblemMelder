@@ -12,6 +12,9 @@ export const globalStyles = StyleSheet.create({
     bold: {
         fontWeight: 'bold',
     },
+    button: {
+        backgroundColor: colors.secondary,
+    },
     card: {
         backgroundColor: colors.white,
         borderRadius: 10,
@@ -28,6 +31,10 @@ export const globalStyles = StyleSheet.create({
         right: 0,
     },
     flexBox: {
+        flex: 1,
+    },
+    flexBoxWithColor: {
+        backgroundColor: colors.tertiary,
         flex: 1,
     },
     flexCenter: {
@@ -47,17 +54,17 @@ export const globalStyles = StyleSheet.create({
         marginBottom: 10,
     },
     noDataText: {
-        color: colors.darkGray,
+        color: colors.secondary,
         fontSize: RFValue(16),
         textAlign: 'center',
     },
     searchBar: {
-        backgroundColor: colors.gray,
+        backgroundColor: colors.white,
         color: colors.black,
         flex: 1,
     },
     separator: {
-        backgroundColor: colors.gray,
+        backgroundColor: colors.secondary,
         height: 1,
         width: '100%',
     },
