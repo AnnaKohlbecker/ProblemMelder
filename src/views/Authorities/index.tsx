@@ -33,7 +33,7 @@ const Authorities = ({ route }: Props) => {
     }, [authoritiesLoading, authoritiesRefetching, refetchAuthorities])
 
     return (
-        <View style={globalStyles.flexBox}>
+        <View style={globalStyles.flexBoxWithColor}>
             <Header route={route} />
             <View style={globalStyles.flexBox}>
                 {authoritiesLoading ? (

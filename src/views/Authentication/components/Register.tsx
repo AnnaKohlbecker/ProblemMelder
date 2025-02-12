@@ -94,9 +94,16 @@ const Register = () => {
 
             if (!error) return
 
-            Alert.alert('Fehler', 'Ein unerwarteter Fehler ist aufgetreten.')
-            // eslint-disable-next-line no-console
-            console.error(error)
+            if (error.name === 'AuthApiError') {
+                Alert.alert(
+                    'Bereits registriert',
+                    'Dieser Benutzer existiert bereits. Bitte loggen Sie sich ein.',
+                )
+            } else {
+                Alert.alert('Fehler', 'Ein unerwarteter Fehler ist aufgetreten.')
+                // eslint-disable-next-line no-console
+                console.error(error)
+            }
         },
         [authorities, isDirty, roles],
     )
@@ -113,7 +120,7 @@ const Register = () => {
     )
 
     return (
-        <View style={globalStyles.flexBox}>
+        <View style={globalStyles.flexBoxWithColor}>
             <View style={loginStyles.header}>
                 <Text style={loginStyles.headerText}>Registrieren</Text>
             </View>

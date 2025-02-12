@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     image: {
         alignItems: 'center',
         alignSelf: 'center',
-        backgroundColor: colors.gray,
+        backgroundColor: colors.secondary,
         borderRadius: 20,
         height: RFValue(240),
         justifyContent: 'center',

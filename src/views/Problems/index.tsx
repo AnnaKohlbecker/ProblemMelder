@@ -103,7 +103,7 @@ const Problems = ({ route }: Props) => {
     if (userLoading || problemsLoading) return <LoadingSpinner />
 
     return (
-        <View style={globalStyles.flexBox}>
+        <View style={globalStyles.flexBoxWithColor}>
             <Header route={route} />
             <View style={styles.filterWrapper}>
                 <Searchbar

@@ -1,17 +1,10 @@
 import { useMemo } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import { Card, IconButton, Text, TouchableRipple } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
-import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { problemStatusToIconAndColor } from '~/shared/helpers/ProblemStatusToIconAndColor'
 import { Problem } from '~/shared/models/Problem'
-
-const styles = StyleSheet.create({
-    headerButton: {
-        backgroundColor: colors.gray,
-    },
-})
 
 type Props = {
     problem: Problem
@@ -20,7 +13,7 @@ type Props = {
 
 const ProblemCard = ({ problem, onCardPress }: Props) => {
     const headerRightIcon = useMemo(() => {
-        return problem.status === -1 ? 'replay' : 'delete'
+        return problem.status === -1 ? 'replay' : 'trash-can'
     }, [problem.status])
 
     const iconAndColor = useMemo(
@@ -44,8 +37,7 @@ const ProblemCard = ({ problem, onCardPress }: Props) => {
                         <IconButton
                             icon={headerRightIcon}
                             size={RFValue(20)}
-                            iconColor={colors.black}
-                            style={styles.headerButton}
+                            mode='contained'
                         />
                     </View>
                 </View>

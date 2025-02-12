@@ -72,7 +72,7 @@ const AuthoritiesManagement = ({ route }: Props) => {
     )
 
     return (
-        <View style={globalStyles.flexBox}>
+        <View style={globalStyles.flexBoxWithColor}>
             <Header
                 route={route}
                 onClose={onClose}

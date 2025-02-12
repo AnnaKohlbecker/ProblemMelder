@@ -118,7 +118,7 @@ const PictureSelection = ({ name }: Props) => {
                 >
                     <TouchableOpacity style={styles.flashlight}>
                         <IconButton
-                            mode='contained-tonal'
+                            mode='contained'
                             size={20}
                             onPress={() => setEnableTorch((prev) => !prev)}
                             icon={enableTorch ? 'flashlight' : 'flashlight-off'}
@@ -130,7 +130,7 @@ const PictureSelection = ({ name }: Props) => {
                                 <LoadingSpinner />
                             ) : (
                                 <IconButton
-                                    mode='contained-tonal'
+                                    mode='contained'
                                     icon='camera'
                                     size={40}
                                     onPress={() => {
