@@ -21,6 +21,9 @@ const styles = StyleSheet.create({
     domain: {
         gap: 4,
     },
+    loadingSpinner: {
+        padding: 14,
+    },
     title: {
         fontSize: RFValue(16),
     },
@@ -75,7 +78,9 @@ const AuthorityManagementListItem = ({
                         onPress={onEdit}
                     />
                     {staffLoading ? (
-                        <LoadingSpinner size={16} />
+                        <View style={styles.loadingSpinner}>
+                            <LoadingSpinner size={16} />
+                        </View>
                     ) : (
                         <IconButton
                             size={16}
