@@ -1,7 +1,3 @@
--- This file contains SQL queries for managing the database operations related to the 'users' table.
--- It includes queries for creating, reading, updating, and deleting user records.
--- The queries are designed to ensure data integrity and optimize performance.
-
 CREATE FUNCTION public.insert_user_data()
 RETURNS TRIGGER AS $$
 BEGIN

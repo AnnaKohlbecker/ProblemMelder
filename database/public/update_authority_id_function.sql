@@ -1,24 +1,26 @@
 CREATE FUNCTION public.update_authority_id()
 RETURNS TRIGGER AS $$
-    BEGIN
-        IF TG_OP = 'INSERT' THEN
-            -- Directly assign the authorityId based on the email domain
-            NEW.authorityId := (
-                SELECT id
-                FROM public."Authorities"
-                WHERE "domain" = SPLIT_PART(NEW.email, '@', 2)
-            );
-        ELSE IF TG_OP = 'UPDATE' THEN
-            -- If the email has changed, update the authorityId
-            IF OLD.email <> NEW.email THEN
-                NEW.authorityId := (
-                    SELECT id
-                    FROM public."Authorities"
-                    WHERE "domain" = SPLIT_PART(NEW.email, '@', 2)
-                );
-            END IF;
-        END IF;
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        UPDATE public."userData"
+        SET "authorityId" = NEW.id
+        WHERE SPLIT_PART(email, '@', 2) = NEW.domain;
 
-        RETURN NEW;
-    END;
+    ELSIF TG_OP = 'UPDATE' THEN
+        IF OLD.domain <> NEW.domain THEN
+            -- Remove authorityId (set to NULL) for users that matched the OLD domain but no longer match the new one
+            UPDATE public."userData"
+            SET "authorityId" = NULL
+            WHERE SPLIT_PART(email, '@', 2) = OLD.domain
+            AND SPLIT_PART(email, '@', 2) <> NEW.domain;
+
+            -- Set authorityId for users matching the NEW domain
+            UPDATE public."userData"
+            SET "authorityId" = NEW.id
+            WHERE SPLIT_PART(email, '@', 2) = NEW.domain;
+        END IF;
+    END IF;
+
+    RETURN NEW;
+END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
