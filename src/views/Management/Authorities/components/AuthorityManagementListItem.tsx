@@ -1,9 +1,12 @@
+import { isNil } from 'lodash'
 import { useCallback } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Card, Icon, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
+import { useUsersByAuthorityQuery } from '~/queries/Authorities/useUsersByAuthorityQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { Authority } from '~/shared/models/Authority'
+import LoadingSpinner from '~/shared/views/LoadingSpinner'
 
 const styles = StyleSheet.create({
     buttons: {
@@ -42,6 +45,8 @@ const AuthorityManagementListItem = ({
     const onEdit = useCallback(() => onEditProp(item), [item, onEditProp])
     const onDelete = useCallback(() => onDeleteProp(item), [item, onDeleteProp])
 
+    const { data: staffMembers, isLoading: staffLoading } = useUsersByAuthorityQuery(item.id)
+
     return (
         <Card style={[globalStyles.card, styles.card]}>
             <View style={styles.wrapper}>
@@ -69,12 +74,17 @@ const AuthorityManagementListItem = ({
                         icon='pencil'
                         onPress={onEdit}
                     />
-                    <IconButton
-                        size={16}
-                        mode='contained'
-                        icon='trash-can'
-                        onPress={onDelete}
-                    />
+                    {staffLoading ? (
+                        <LoadingSpinner size={16} />
+                    ) : (
+                        <IconButton
+                            size={16}
+                            disabled={!isNil(staffMembers) && staffMembers.length > 0}
+                            mode='contained'
+                            icon='trash-can'
+                            onPress={onDelete}
+                        />
+                    )}
                 </View>
             </View>
         </Card>
