@@ -15,12 +15,10 @@ export const useRoleByUserQuery = ({ userId }: Props) => {
             .from(Table.UserData)
             .select('role(*)')
             .eq('userId', userId)
-            .single()
+            .limit(1)
             .throwOnError()
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore because supabase typings are incorrect
-        return response.data?.role as Role
+        return (response.data[0]?.role ?? null) as unknown as Role
     }, [userId])
 
     return useQuery<Role>({
