@@ -7,7 +7,7 @@ import { problemStatusToIconAndColor } from '~/shared/helpers/ProblemStatusToIco
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.gray,
+        backgroundColor: colors.secondary,
         borderRadius: 100,
     },
     menuContent: {
@@ -19,8 +19,8 @@ const styles = StyleSheet.create({
 })
 
 type FilterProps = {
-    value: ProblemStatus | null
-    onChangeFilter: (filter: ProblemStatus | null) => void
+    value: ProblemStatus | undefined
+    onChangeFilter: (filter: ProblemStatus | undefined) => void
 }
 
 const Filter = ({ value, onChangeFilter }: FilterProps) => {
@@ -30,7 +30,7 @@ const Filter = ({ value, onChangeFilter }: FilterProps) => {
     const closeMenu = useCallback(() => setMenuVisible(false), [])
 
     const handleFilterSelect = useCallback(
-        (filter: ProblemStatus | null) => {
+        (filter: ProblemStatus | undefined) => {
             onChangeFilter(filter)
             closeMenu()
         },
@@ -41,7 +41,7 @@ const Filter = ({ value, onChangeFilter }: FilterProps) => {
 
     const renderedMenuItems = useMemo(() => {
         const menuItems = [
-            { filter: null, title: 'Kein Filter' },
+            { filter: undefined, title: 'Kein Filter' },
             { filter: -1, title: 'Deaktiviert' },
             { filter: 0, title: 'Zu Erledigen' },
             { filter: 1, title: 'In Bearbeitung' },
@@ -67,7 +67,7 @@ const Filter = ({ value, onChangeFilter }: FilterProps) => {
                         icon={currentIconAndColor.icon}
                         onPress={openMenu}
                         size={24}
-                        iconColor={colors.black}
+                        mode='contained'
                     />
                 }
                 contentStyle={styles.menuContent}

@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native'
 import { Portal, Snackbar } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
-import { SnackbarContext, SnackbarInfo } from '~/shared/context/SnackbarContext'
+import { SnackbarContext } from '~/shared/context/SnackbarContext'
 
 type Props = PropsWithChildren
 
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
  * Manages a snackbar notification system using context, allowing child components to display and dismiss snackbars with a centralized state.
  */
 const SnackbarProvider = ({ children }: Props) => {
-    const [snackbarInfo, setSnackbarInfo] = useState<SnackbarInfo>()
+    const [snackbarInfo, setSnackbarInfo] = useState<string>()
 
     const onDismiss = useCallback(() => {
         setSnackbarInfo(undefined)
@@ -42,7 +42,7 @@ const SnackbarProvider = ({ children }: Props) => {
                             labelStyle: styles.label,
                         }}
                     >
-                        {snackbarInfo.text}
+                        {snackbarInfo}
                     </Snackbar>
                 )}
             </Portal>

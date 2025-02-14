@@ -1,12 +1,16 @@
 import { ParamListBase, Route, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Alert, FlatList, RefreshControl, View } from 'react-native'
+import { isAfter } from 'date-fns/isAfter'
+import { subWeeks } from 'date-fns/subWeeks'
+import isNil from 'lodash/isNil'
+import { useCallback, useMemo, useState } from 'react'
+import { FlatList, RefreshControl, StyleSheet, View } from 'react-native'
 import { FAB, Searchbar, Text } from 'react-native-paper'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
-import { useUserByIdQuery } from '~/queries/Users/useUserByIdQuery'
+import { useUserByIdQuery } from '~/queries/UserData/useUserByIdQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
+import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { Route as RouteEnum } from '~/shared/enums/Route'
 import { Problem } from '~/shared/models/Problem'
 import Filter from '~/shared/views/Filter'
@@ -21,35 +25,62 @@ type Props = {
     route: Route<RouteEnum>
 }
 
+const styles = StyleSheet.create({
+    container: {
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center',
+    },
+    filterWrapper: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        gap: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+    },
+    list: {
+        paddingHorizontal: 20,
+    },
+    listFooter: {
+        padding: 35,
+    },
+})
+
 const Problems = ({ route }: Props) => {
     const { session } = useAuth()
     const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
     const [selectedProblemDetails, setSelectedProblemDetails] = useState<Problem>()
 
-    const { isLoading: userLoading, error: userError } = useUserByIdQuery({
+    const { isLoading: userLoading } = useUserByIdQuery({
         userId: session?.user.id,
     })
     const {
         data: problems,
         isLoading: problemsLoading,
         isRefetching: problemsRefetching,
-        error: problemsError,
         refetch: refetchProblems,
     } = useProblemsQuery()
 
+    // Hide old closed and solved problems which are older than 2 weekss
+    const preFilteredProblems = useMemo(() => {
+        const twoWeeksAgo = subWeeks(new Date(), 2)
+
+        return problems?.filter(
+            (problem) =>
+                (problem.status !== ProblemStatus.Cancelled &&
+                    problem.status !== ProblemStatus.Done) ||
+                isNil(problem.closedDate) ||
+                isAfter(problem.closedDate, twoWeeksAgo),
+        )
+    }, [problems])
+
     const { searchedProblems, search, setSearch } = useProblemsSearchLogic({
-        problems: problems ?? [],
+        problems: preFilteredProblems ?? [],
     })
 
     const { filteredProblems, filter, setFilter } = useProblemsFilterLogic({
-        problems: problems ?? [],
+        problems: searchedProblems ?? [],
     })
-
-    const searchedAndFilteredProblems = useMemo(() => {
-        return filteredProblems.filter((problem) =>
-            searchedProblems.some((searchedProblem) => searchedProblem.id === problem.id),
-        )
-    }, [filteredProblems, searchedProblems])
 
     const onReportProblem = useCallback(() => {
         navigate(RouteEnum.PROBLEM_REPORT)
@@ -69,18 +100,12 @@ const Problems = ({ route }: Props) => {
         refetchProblems()
     }, [problemsLoading, problemsRefetching, refetchProblems])
 
-    useEffect(() => {
-        if (userError || problemsError) {
-            Alert.alert('Fehler', 'Ein unerwarteter Fehler ist aufgetreten.')
-        }
-    }, [userError, problemsError])
-
     if (userLoading || problemsLoading) return <LoadingSpinner />
 
     return (
-        <View style={globalStyles.flexBox}>
+        <View style={globalStyles.flexBoxWithColor}>
             <Header route={route} />
-            <View style={globalStyles.searchAndFilterContainer}>
+            <View style={styles.filterWrapper}>
                 <Searchbar
                     style={globalStyles.searchBar}
                     value={search}
@@ -92,8 +117,8 @@ const Problems = ({ route }: Props) => {
                     onChangeFilter={setFilter}
                 />
             </View>
-            {searchedAndFilteredProblems.length === 0 ? (
-                <View style={globalStyles.centerContainer}>
+            {filteredProblems.length === 0 ? (
+                <View style={styles.container}>
                     <Text style={globalStyles.noDataText}>
                         {problems?.length === 0
                             ? 'Keine Probleme vorhanden.'
@@ -102,8 +127,8 @@ const Problems = ({ route }: Props) => {
                 </View>
             ) : (
                 <FlatList
-                    data={searchedAndFilteredProblems}
-                    style={globalStyles.flatList}
+                    data={filteredProblems}
+                    style={styles.list}
                     renderItem={({ item: problem, index }) => (
                         <ProblemCard
                             key={index}
@@ -111,7 +136,7 @@ const Problems = ({ route }: Props) => {
                             onCardPress={() => onShowProblemDetails(problem)}
                         />
                     )}
-                    ListFooterComponent={<View style={globalStyles.flatListFooterComponent} />}
+                    ListFooterComponent={<View style={styles.listFooter} />}
                     refreshControl={
                         <RefreshControl
                             refreshing={problemsRefetching}

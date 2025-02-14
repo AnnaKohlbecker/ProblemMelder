@@ -2,9 +2,9 @@ import { colors } from '~/shared/constants/colors'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { never } from '~/shared/helpers/never'
 
-export const problemStatusToIconAndColor = (status: ProblemStatus | null) => {
+export const problemStatusToIconAndColor = (status: ProblemStatus | undefined) => {
     switch (status) {
-        case null:
+        case undefined:
             return { icon: 'filter-remove', color: colors.gray, markerColor: 'orange' }
         case ProblemStatus.Cancelled:
             return { icon: 'cancel', color: colors.gray, markerColor: 'orange' }

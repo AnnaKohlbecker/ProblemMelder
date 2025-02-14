@@ -10,9 +10,9 @@ export const useProblemsSearchLogic = ({ problems }: Props) => {
     const debouncedSearch = useDeferredValue(search)
 
     const searchedProblems = useMemo(() => {
-        return problems?.filter((problem) => {
-            return problem.title.toLowerCase().includes(debouncedSearch.toLowerCase())
-        })
+        return problems?.filter((problem) =>
+            problem.title.toLowerCase().includes(debouncedSearch.toLowerCase()),
+        )
     }, [problems, debouncedSearch])
 
     return {

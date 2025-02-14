@@ -1,12 +1,14 @@
 import { Session } from '@supabase/supabase-js'
 import { createContext, useContext } from 'react'
-import { Role } from '~/shared/enums/Role'
+import { Role as RoleEnum } from '~/shared/enums/Role'
+import { Role } from '~/shared/models/Role'
 
 type AuthContextProps = {
     session: Session | undefined
     role: Role | undefined
     isLoading: boolean
     signOut: () => void
+    hasRole: (role: RoleEnum) => boolean
 }
 
 export const AuthContext = createContext<AuthContextProps>({
@@ -15,6 +17,9 @@ export const AuthContext = createContext<AuthContextProps>({
     isLoading: false,
     signOut: () => {
         //
+    },
+    hasRole: () => {
+        return false
     },
 })
 

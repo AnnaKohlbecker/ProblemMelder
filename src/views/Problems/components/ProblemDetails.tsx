@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     image: {
         alignItems: 'center',
         alignSelf: 'center',
-        backgroundColor: colors.gray,
+        backgroundColor: colors.secondary,
         borderRadius: 20,
         height: RFValue(240),
         justifyContent: 'center',
@@ -103,7 +103,7 @@ const ProblemDetails = ({ problem, onClose }: Props) => {
 
     return (
         <View style={[StyleSheet.absoluteFillObject, styles.wrapper]}>
-            <Card style={[globalStyles.dialog, styles.card]}>
+            <Card style={[globalStyles.bgWhite, styles.card]}>
                 <View style={styles.titleWrapper}>
                     <Icon
                         source={icon}

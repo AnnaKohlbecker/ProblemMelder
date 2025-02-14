@@ -1,12 +1,11 @@
 import { useCallback, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Alert, StyleSheet, View } from 'react-native'
-import { Button, Card, Text } from 'react-native-paper'
+import { Button, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { supabase } from '~/services/supabase'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
-import Link from '~/shared/views/Link'
 import TextInput from '~/shared/views/TextInput'
 
 type LoginModel = {
@@ -19,17 +18,6 @@ export const loginStyles = StyleSheet.create({
         alignItems: 'flex-end',
         display: 'flex',
     },
-    card: {
-        alignItems: 'center',
-        backgroundColor: colors.secondary,
-        borderRadius: 10,
-        flexDirection: 'row',
-        paddingHorizontal: 10,
-        paddingVertical: 20,
-    },
-    footer: {
-        padding: 30,
-    },
     header: {
         alignItems: 'center',
         flex: 1,
@@ -40,7 +28,7 @@ export const loginStyles = StyleSheet.create({
         fontSize: RFValue(28),
     },
     main: {
-        flex: 1,
+        flex: 2,
         gap: 25,
         padding: 30,
     },
@@ -70,9 +58,16 @@ const Login = () => {
 
             if (!error) return
 
-            Alert.alert('Fehler', 'Ein unerwarteter Fehler ist aufgetreten.')
-            // eslint-disable-next-line no-console
-            console.error(error)
+            if (error.name === 'AuthApiError') {
+                Alert.alert(
+                    'Falsche Anmeldedaten',
+                    'Die eingegebene E-Mail oder das Passwort ist falsch. Bitte versuche es erneut.',
+                )
+            } else {
+                Alert.alert('Fehler', 'Ein unerwarteter Fehler ist aufgetreten.')
+                // eslint-disable-next-line no-console
+                console.error(error)
+            }
         },
         [isDirty],
     )
@@ -84,7 +79,7 @@ const Login = () => {
     }, [])
 
     return (
-        <View style={globalStyles.flexBox}>
+        <View style={globalStyles.flexBoxWithColor}>
             <View style={loginStyles.header}>
                 <Text style={loginStyles.headerText}>Anmelden</Text>
             </View>
@@ -115,16 +110,6 @@ const Login = () => {
                         </Button>
                     </View>
                 </FormProvider>
-            </View>
-            <View style={loginStyles.footer}>
-                <Card
-                    contentStyle={loginStyles.card}
-                    mode='contained'
-                >
-                    <Link href='https://dhbw-loerrach.de/impressum'>Impressum</Link>
-                    <Text>|</Text>
-                    <Link href='https://dhbw-loerrach.de/datenschutz'>Datenschutz</Link>
-                </Card>
             </View>
         </View>
     )

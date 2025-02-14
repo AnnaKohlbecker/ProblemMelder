@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '~/shared/context/AuthContext'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import Navigation from '~/shared/views/Navigation'
-import Login from '~/views/Authentication/Login'
+import Authentication from '~/views/Authentication'
 import NoConnection from '~/views/Miscellaneous/NoConnection'
 
 const Main = () => {
@@ -30,7 +30,7 @@ const Main = () => {
 
     if (isLoading) return <LoadingSpinner />
 
-    return session ? <Navigation /> : <Login />
+    return session ? <Navigation /> : <Authentication />
 }
 
 export default Main

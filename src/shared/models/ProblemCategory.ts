@@ -1,4 +1,6 @@
 export type ProblemCategory = {
     id: number
-    name: string
+    title: string
+    icon: string
+    authorityId: number
 }

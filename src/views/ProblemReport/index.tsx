@@ -2,9 +2,9 @@ import { ParamListBase, Route, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as FileSystem from 'expo-file-system'
 import { isNil } from 'lodash'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { StyleSheet, View } from 'react-native'
+import { BackHandler, StyleSheet, View } from 'react-native'
 import { Button, ProgressBar, Text } from 'react-native-paper'
 import { v4 } from 'react-native-uuid/dist/v4'
 import { useUploadImageMutation } from '~/queries/Problems/useUploadImageMutation'
@@ -90,6 +90,15 @@ const ProblemReport = ({ route }: Props) => {
             },
         })
     }, [navigate, reset, showDialog])
+
+    useEffect(() => {
+        const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+            onClose()
+            return true
+        })
+
+        return () => subscription.remove()
+    }, [onClose])
 
     const onPrev = useCallback(() => {
         setCurrentStepSerial((cur) => cur - 1)
