@@ -31,9 +31,6 @@ const styles = StyleSheet.create({
     flashlight: {
         alignSelf: 'flex-end',
     },
-    header: {
-        margin: 10,
-    },
 })
 
 const PictureSelection = ({ name }: Props) => {
@@ -85,15 +82,8 @@ const PictureSelection = ({ name }: Props) => {
 
     return (
         <View style={globalStyles.flexBox}>
-            <View style={styles.header}>
-                <Text
-                    variant='bodyMedium'
-                    style={globalStyles.mb}
-                >
-                    Mache ein Bild des Problems.
-                </Text>
-                {error && <Text style={styles.error}>{error.message}</Text>}
-            </View>
+            {error && <Text style={styles.error}>{error.message}</Text>}
+
             {value ? (
                 <View style={globalStyles.flexBox}>
                     <Image

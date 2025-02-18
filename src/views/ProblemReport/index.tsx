@@ -17,10 +17,6 @@ import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { Route as RouteEnum } from '~/shared/enums/Route'
 import { Problem } from '~/shared/models/Problem'
 import Header from '~/shared/views/Header'
-import LocationSelection from '~/shared/views/Inputs/LocationSelection'
-import PictureSelection from '~/shared/views/Inputs/PictureSelection'
-import LoadingSpinner from '~/shared/views/LoadingSpinner'
-import TextInput from '~/shared/views/TextInput'
 import { REPORT_STEPS } from '~/views/ProblemReport/constants/reportSteps'
 
 type Props = {
@@ -32,11 +28,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 10,
-    },
-    formWrapper: {
-        gap: 10,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
     },
     progress: {
         backgroundColor: colors.secondary,
@@ -60,13 +51,16 @@ const ProblemReport = ({ route }: Props) => {
     const form = useForm<Problem>({
         defaultValues: {
             status: ProblemStatus.ToDo,
-            authorityId: 1,
             userId: session?.user.id,
         },
     })
     const { handleSubmit, reset, trigger } = form
 
-    const currentStep = useMemo(() => {
+    const {
+        component: CurrentStep,
+        serial,
+        title,
+    } = useMemo(() => {
         const step = REPORT_STEPS.find((x) => x.serial === currentStepSerial)
 
         if (isNil(step)) {
@@ -78,7 +72,7 @@ const ProblemReport = ({ route }: Props) => {
         return step
     }, [currentStepSerial])
 
-    const progress = useMemo(() => currentStep.serial / REPORT_STEPS.length, [currentStep])
+    const progress = useMemo(() => serial / REPORT_STEPS.length, [serial])
 
     const onClose = useCallback(() => {
         showDialog({
@@ -150,6 +144,11 @@ const ProblemReport = ({ route }: Props) => {
         })
     }, [currentStepSerial, handleSubmit, navigate, trigger, uploadImage, upsertProblem])
 
+    const isLoading = useMemo(
+        () => isUploadingImage || isUpsertingProblem,
+        [isUploadingImage, isUpsertingProblem],
+    )
+
     return (
         <View style={[globalStyles.flexBox, styles.wrapper]}>
             <FormProvider {...form}>
@@ -168,46 +167,11 @@ const ProblemReport = ({ route }: Props) => {
                         variant='titleMedium'
                         style={styles.stepTitle}
                     >
-                        Schritt {currentStep.serial} von {REPORT_STEPS.length}: {currentStep.title}
+                        Schritt {serial} von {REPORT_STEPS.length}: {title}
                     </Text>
                 </View>
                 <View style={globalStyles.flexBox}>
-                    {currentStep.serial === 1 && <LocationSelection name='location' />}
-                    {currentStep.serial === 2 && <PictureSelection name='image' />}
-                    {currentStep.serial === 3 && (
-                        <View style={[globalStyles.flexBox, styles.formWrapper]}>
-                            <TextInput
-                                name='title'
-                                label='Titel'
-                                rules={{
-                                    required: 'Bitte gebe einen Titel ein.',
-                                }}
-                                helperText='Kurze Problembeschreibung'
-                            />
-                            <TextInput
-                                name='description'
-                                label='Beschreibung'
-                                multiline={true}
-                                rules={{
-                                    required: 'Bitte gebe eine Beschreibung ein.',
-                                }}
-                                helperText='Problembeschreibung mit allen relevanten Informationen'
-                            />
-                        </View>
-                    )}
-                    {currentStep.serial === 4 && (
-                        <View style={globalStyles.flexBox}>
-                            <Text>
-                                Hier kommt ne coole Auswahl hin, jetzt ist es erstmal immer 1 lol.
-                            </Text>
-                        </View>
-                    )}
-                    {currentStep.serial === 5 && (
-                        <View style={globalStyles.flexBox}>
-                            {(isUploadingImage || isUpsertingProblem) && <LoadingSpinner />}
-                            <Text>Hier kommt ne coole Zusammenfassung hin.</Text>
-                        </View>
-                    )}
+                    <CurrentStep isLoading={isLoading} />
                 </View>
                 <View style={styles.buttons}>
                     <Button
