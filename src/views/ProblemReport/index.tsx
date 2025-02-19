@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
 const ProblemReport = ({ route }: Props) => {
     const { session } = useAuth()
     const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
+
     const [currentStepSerial, setCurrentStepSerial] = useState(1)
 
     const showDialog = useDialog()
@@ -177,13 +178,15 @@ const ProblemReport = ({ route }: Props) => {
                     <Button
                         mode='contained'
                         onPress={onPrev}
-                        disabled={currentStepSerial === 1}
+                        disabled={currentStepSerial === 1 || isUpsertingProblem}
                     >
                         Zurück
                     </Button>
                     <Button
                         mode='contained'
                         onPress={onNext}
+                        disabled={isUpsertingProblem}
+                        loading={isUpsertingProblem}
                     >
                         {currentStepSerial === REPORT_STEPS.length ? 'Absenden' : 'Weiter'}
                     </Button>
