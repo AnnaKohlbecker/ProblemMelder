@@ -24,6 +24,10 @@ export const globalStyles = StyleSheet.create({
     dialog: {
         backgroundColor: colors.white,
     },
+    error: {
+        alignSelf: 'center',
+        color: colors.red,
+    },
     fab: {
         bottom: 0,
         margin: 16,

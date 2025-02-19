@@ -19,6 +19,7 @@ export const theme = {
         onPrimaryContainer: colors.white,
         secondaryContainer: colors.secondary,
         inverseOnSurface: colors.white,
+        error: colors.red,
     },
     roundness: 5,
 }
