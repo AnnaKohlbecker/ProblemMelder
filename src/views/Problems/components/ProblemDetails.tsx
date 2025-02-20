@@ -21,42 +21,43 @@ type Props = {
 
 const styles = StyleSheet.create({
     card: {
-        padding: 20,
+        maxHeight: '95%',
+        padding: 25,
         width: '90%',
     },
     closeButton: {
         position: 'absolute',
-        right: -20,
-        top: -20,
-    },
-    content: {
-        paddingVertical: 10,
+        right: -15,
+        top: -15,
     },
     flexText: {
         flexShrink: 1,
         flexWrap: 'wrap',
     },
+    gapBetween: {
+        gap: 10,
+    },
+    headingWrapper: {
+        maxWidth: '70%',
+        paddingLeft: 10,
+    },
     icon: {
-        padding: 10,
+        paddingRight: 10,
     },
     image: {
-        alignItems: 'center',
-        alignSelf: 'center',
-        backgroundColor: colors.secondary,
         borderRadius: 20,
         height: RFValue(240),
+        maxWidth: '100%',
+        width: RFValue(1000),
+    },
+    imageWrapper: {
+        alignItems: 'center',
         justifyContent: 'center',
-        width: RFValue(240),
+        width: '100%',
     },
     title: {
         fontWeight: 'bold',
-    },
-    titleWrapper: {
-        alignItems: 'center',
-        alignSelf: 'center',
-        flexDirection: 'row',
-        gap: 10,
-        marginBottom: 10,
+        maxWidth: '100%',
     },
     wrapper: {
         alignItems: 'center',
@@ -110,54 +111,66 @@ const ProblemDetails = ({ problem, onClose }: Props) => {
 
     return (
         <View style={[StyleSheet.absoluteFillObject, styles.wrapper]}>
-            {problemCategoryLoading ? (
+            {problemCategoryLoading && !address ? (
                 <LoadingSpinner size={70} />
             ) : (
                 <Card style={[globalStyles.bgWhite, styles.card]}>
-                    <Icon
-                        source={icon}
-                        color={color}
-                        size={RFValue(45)}
-                    />
-                    <View style={styles.titleWrapper}>
-                        <Icon
-                            source={problemCategory?.icon}
-                            color={colors.black}
-                            size={RFValue(25)}
+                    <View style={styles.gapBetween}>
+                        <IconButton
+                            icon='close'
+                            onPress={onClose}
+                            style={styles.closeButton}
+                            size={RFValue(20)}
+                            mode='contained'
                         />
-                        <Text
-                            variant='headlineSmall'
-                            style={styles.title}
-                        >
-                            {problem.title}
-                        </Text>
-                    </View>
-                    <IconButton
-                        icon='close'
-                        onPress={onClose}
-                        style={styles.closeButton}
-                    />
-                    <View style={styles.content}>
-                        {problem.image ? (
-                            <ImagePreview
-                                source={{ uri: getImagePath(problem.image) }}
-                                style={styles.image}
-                            />
-                        ) : (
-                            <View style={styles.image}>
-                                <Text style={globalStyles.noDataText}>Kein Bild vorhanden</Text>
-                            </View>
-                        )}
-                    </View>
-                    <View style={globalStyles.flexRow}>
-                        <View style={styles.icon}>
+
+                        <View style={globalStyles.flexRow}>
                             <Icon
-                                source='map-marker'
-                                size={RFValue(25)}
-                                color={colors.black}
+                                source={icon}
+                                color={color}
+                                size={RFValue(35)}
                             />
+                            <View style={styles.headingWrapper}>
+                                <Text
+                                    variant='headlineSmall'
+                                    style={styles.title}
+                                    numberOfLines={2}
+                                    ellipsizeMode='tail'
+                                >
+                                    {problem.title}
+                                </Text>
+                            </View>
                         </View>
-                        {address ? (
+                        <View style={globalStyles.flexRow}>
+                            <View style={styles.imageWrapper}>
+                                {problem.image ? (
+                                    <ImagePreview
+                                        source={{ uri: getImagePath(problem.image) }}
+                                        style={styles.image}
+                                    />
+                                ) : (
+                                    <Text style={globalStyles.noDataText}>Kein Bild vorhanden</Text>
+                                )}
+                            </View>
+                        </View>
+                        <View style={globalStyles.flexRow}>
+                            <View style={styles.icon}>
+                                <Icon
+                                    source={problemCategory?.icon}
+                                    color={colors.black}
+                                    size={RFValue(25)}
+                                />
+                            </View>
+                            <Text variant='bodyLarge'>{problemCategory?.title}</Text>
+                        </View>
+                        <View style={globalStyles.flexRow}>
+                            <View style={styles.icon}>
+                                <Icon
+                                    source='map-marker'
+                                    size={RFValue(25)}
+                                    color={colors.black}
+                                />
+                            </View>
                             <Text
                                 variant='bodyLarge'
                                 numberOfLines={2}
@@ -166,50 +179,47 @@ const ProblemDetails = ({ problem, onClose }: Props) => {
                             >
                                 {address}
                             </Text>
-                        ) : (
-                            <LoadingSpinner size={20} />
-                        )}
-                    </View>
-                    <View style={globalStyles.flexRow}>
-                        <View style={styles.icon}>
-                            <Icon
-                                source='calendar'
-                                size={RFValue(25)}
-                                color={colors.black}
-                            />
                         </View>
-                        <Text variant='bodyLarge'>{formattedDate}</Text>
-                    </View>
-                    <View style={globalStyles.flexRowWithSpace}>
                         <View style={globalStyles.flexRow}>
                             <View style={styles.icon}>
                                 <Icon
-                                    source='comment'
+                                    source='calendar'
                                     size={RFValue(25)}
-                                    color={colors.primary}
+                                    color={colors.black}
                                 />
                             </View>
-
-                            {commentsLoading ? (
-                                <View>
-                                    <LoadingSpinner size={20} />
-                                </View>
-                            ) : (
-                                <Text variant='bodyLarge'>{comments?.length}</Text>
-                            )}
+                            <Text variant='bodyLarge'>{formattedDate}</Text>
                         </View>
-                        <View style={globalStyles.flexRow}>
-                            {problem.status === 2 ? (
-                                <>
-                                    {getRatingIcons(problem.status, problem.stars ?? 0)}
-                                    <Text>{problem.starsVotesCount}</Text>
-                                </>
-                            ) : (
-                                <>
-                                    {getRatingIcons(problem.status, problem.priority ?? 0)}
-                                    <Text>{problem.priorityVotesCount}</Text>
-                                </>
-                            )}
+                        <View style={globalStyles.flexRowWithSpace}>
+                            <View style={globalStyles.flexRow}>
+                                <View style={styles.icon}>
+                                    <Icon
+                                        source='comment'
+                                        size={RFValue(25)}
+                                        color={colors.primary}
+                                    />
+                                </View>
+                                {commentsLoading ? (
+                                    <View>
+                                        <LoadingSpinner size={20} />
+                                    </View>
+                                ) : (
+                                    <Text variant='bodyLarge'>{comments?.length}</Text>
+                                )}
+                            </View>
+                            <View style={globalStyles.flexRow}>
+                                {problem.status === 2 ? (
+                                    <>
+                                        {getRatingIcons(problem.status, problem.stars ?? 0)}
+                                        <Text>{problem.starsVotesCount}</Text>
+                                    </>
+                                ) : (
+                                    <>
+                                        {getRatingIcons(problem.status, problem.priority ?? 0)}
+                                        <Text>{problem.priorityVotesCount}</Text>
+                                    </>
+                                )}
+                            </View>
                         </View>
                     </View>
                 </Card>
