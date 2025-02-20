@@ -1,6 +1,5 @@
 import { BottomTabNavigationOptions, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { ParamListBase, RouteProp } from '@react-navigation/native'
-import { useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { IconButton } from 'react-native-paper'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -19,12 +18,7 @@ import Profile from '~/views/Profile'
 const TabNavigation = () => {
     const { hasRole } = useAuth()
 
-    const queryClient = useQueryClient()
     const Tab = createBottomTabNavigator<NavigationParamList>()
-
-    const onFocus = useCallback(() => {
-        queryClient.invalidateQueries()
-    }, [queryClient])
 
     const insets = useSafeAreaInsets()
 
@@ -52,9 +46,6 @@ const TabNavigation = () => {
             safeAreaInsets={{ ...insets, bottom: insets.bottom + 5 }}
             initialRouteName={Route.MAP}
             screenOptions={screenOptions}
-            screenListeners={{
-                focus: onFocus,
-            }}
         >
             <Tab.Screen
                 name={Route.MAP}

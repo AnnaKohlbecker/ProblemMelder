@@ -1,5 +1,5 @@
 import { Route } from '@react-navigation/native'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native'
 import { useAuthoritiesQuery } from '~/queries/Authorities/useAuthoritiesQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
@@ -26,10 +26,13 @@ const Authorities = ({ route }: Props) => {
         isRefetching: authoritiesRefetching,
     } = useAuthoritiesQuery()
 
+    const [isUserTriggeredRefetch, setIsUserTriggeredRefetch] = useState(false)
+
     const onRefresh = useCallback(() => {
         if (authoritiesLoading || authoritiesRefetching) return
 
-        refetchAuthorities()
+        setIsUserTriggeredRefetch(true)
+        refetchAuthorities().finally(() => setIsUserTriggeredRefetch(false))
     }, [authoritiesLoading, authoritiesRefetching, refetchAuthorities])
 
     return (
@@ -46,7 +49,7 @@ const Authorities = ({ route }: Props) => {
                             renderItem={({ item }) => <AuthorityListItem item={item} />}
                             refreshControl={
                                 <RefreshControl
-                                    refreshing={authoritiesRefetching}
+                                    refreshing={isUserTriggeredRefetch && authoritiesRefetching}
                                     onRefresh={onRefresh}
                                 />
                             }
