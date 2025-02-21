@@ -5,6 +5,7 @@ export type DialogInfo = {
     description: string
     acceptLabel?: string
     onAccept: () => void
+    dismissHidden?: boolean
     dismissLabel?: string
     onDismiss?: () => void
 }

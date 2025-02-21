@@ -6,7 +6,11 @@ import { Problem } from '~/shared/models/Problem'
 
 export const useProblemsQuery = () => {
     const queryFn = useCallback(async () => {
-        const response = await supabase.from(Table.Problems).select('*').throwOnError()
+        const response = await supabase
+            .from(Table.Problems)
+            .select('*')
+            .order('date')
+            .throwOnError()
 
         return response.data as Problem[]
     }, [])

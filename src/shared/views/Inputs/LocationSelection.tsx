@@ -15,9 +15,6 @@ type Props = {
 }
 
 const styles = StyleSheet.create({
-    error: {
-        color: colors.primary,
-    },
     header: {
         margin: 10,
     },
@@ -28,6 +25,12 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
 })
+
+type Marker = {
+    id: string
+    latitude: number
+    longitude: number
+}
 
 const LocationSelection = ({ name }: Props) => {
     const [currentAddress, setCurrentAddress] = useState<string>()
@@ -53,7 +56,7 @@ const LocationSelection = ({ name }: Props) => {
         const [latitude, longitude] = value.split(',')
 
         return {
-            id: -1,
+            id: value,
             latitude: parseFloat(latitude),
             longitude: parseFloat(longitude),
         }
@@ -109,10 +112,10 @@ const LocationSelection = ({ name }: Props) => {
                 >
                     {currentAddress ?? 'Unbekannt'}
                 </Text>
-                {error && <Text style={styles.error}>{error.message}</Text>}
+                {error && <Text style={globalStyles.error}>{error.message}</Text>}
             </View>
             <View style={[styles.map, globalStyles.flexBox]}>
-                <BaseMap
+                <BaseMap<Marker>
                     onMapPress={onMapPress}
                     markers={location ? [location] : undefined}
                 />

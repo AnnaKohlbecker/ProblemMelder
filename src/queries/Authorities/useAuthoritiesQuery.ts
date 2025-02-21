@@ -6,7 +6,11 @@ import { Authority } from '~/shared/models/Authority'
 
 export const useAuthoritiesQuery = () => {
     const queryFn = useCallback(async () => {
-        const { data } = await supabase.from(Table.Authorities).select('*').throwOnError()
+        const { data } = await supabase
+            .from(Table.Authorities)
+            .select('*')
+            .order('id')
+            .throwOnError()
 
         return data
     }, [])

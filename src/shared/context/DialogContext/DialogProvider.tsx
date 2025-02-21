@@ -46,9 +46,11 @@ const DialogProvider = ({ children }: Props) => {
                             <Text style={styles.description}>{dialogInfo.description}</Text>
                         </Dialog.Content>
                         <Dialog.Actions>
-                            <Button onPress={onDismiss}>
-                                {dialogInfo.dismissLabel ?? 'Abbrechen'}
-                            </Button>
+                            {!dialogInfo.dismissHidden && (
+                                <Button onPress={onDismiss}>
+                                    {dialogInfo.dismissLabel ?? 'Abbrechen'}
+                                </Button>
+                            )}
                             <Button onPress={onAccept}>
                                 {dialogInfo.acceptLabel ?? 'Fortfahren'}
                             </Button>

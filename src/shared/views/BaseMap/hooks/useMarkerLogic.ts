@@ -1,5 +1,5 @@
 import isNil from 'lodash/isNil'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Region } from 'react-native-maps'
 import { MarkerBaseInfo } from '~/shared/types/MarkerBaseInfo'
 
@@ -11,35 +11,32 @@ export const useMarkerLogic = <T extends MarkerBaseInfo = MarkerBaseInfo>({
     markers,
 }: Props<T>) => {
     const [displayedMarkers, setDisplayedMarkers] = useState<T[]>([])
+    const [currentRegion, setCurrentRegion] = useState<Region | null>(null)
 
     const updateMarkers = useCallback(
         (region: Region) => {
             if (isNil(region) || isNil(markers)) return
 
-            // Only display markers that are not already displayed
-            const availableMarkers = markers.filter(
-                (m) => !displayedMarkers.some((d) => d.id === m.id),
-            )
+            setCurrentRegion(region)
 
-            // Only display markers that are in the current region
-            const filteredMarkers = availableMarkers.filter((marker) => {
-                const { latitude, longitude } = marker
-
-                return (
-                    // We multiply the deltas by 1.5 to display markers that are slightly outside the region
+            const filteredMarkers = markers.filter(
+                ({ latitude, longitude }) =>
                     latitude >= region.latitude - region.latitudeDelta * 1.5 &&
                     latitude <= region.latitude + region.latitudeDelta * 1.5 &&
                     longitude >= region.longitude - region.longitudeDelta * 1.5 &&
-                    longitude <= region.longitude + region.longitudeDelta * 1.5
-                )
-            })
+                    longitude <= region.longitude + region.longitudeDelta * 1.5,
+            )
 
-            if (filteredMarkers.length === 0) return
-
-            setDisplayedMarkers([...displayedMarkers, ...filteredMarkers])
+            setDisplayedMarkers(filteredMarkers)
         },
-        [displayedMarkers, markers],
+        [markers],
     )
+
+    useEffect(() => {
+        if (!currentRegion || !markers) return
+
+        updateMarkers(currentRegion)
+    }, [markers, currentRegion, updateMarkers])
 
     return {
         displayedMarkers,

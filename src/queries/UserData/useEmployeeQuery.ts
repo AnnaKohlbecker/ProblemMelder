@@ -11,6 +11,7 @@ export const useEmployeeQuery = () => {
             .from(Table.UserData)
             .select('*,Roles(name))')
             .in('Roles.name', [Role.Admin, Role.Manager])
+            .order('name')
             .throwOnError()
 
         return response.data as unknown as User[]

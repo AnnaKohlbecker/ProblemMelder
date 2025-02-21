@@ -61,6 +61,8 @@ const Problems = ({ route }: Props) => {
         refetch: refetchProblems,
     } = useProblemsQuery()
 
+    const [isUserTriggeredRefetch, setIsUserTriggeredRefetch] = useState(false)
+
     // Hide old closed and solved problems which are older than 2 weekss
     const preFilteredProblems = useMemo(() => {
         const twoWeeksAgo = subWeeks(new Date(), 2)
@@ -97,7 +99,8 @@ const Problems = ({ route }: Props) => {
     const onRefresh = useCallback(() => {
         if (problemsLoading || problemsRefetching) return
 
-        refetchProblems()
+        setIsUserTriggeredRefetch(true)
+        refetchProblems().finally(() => setIsUserTriggeredRefetch(false))
     }, [problemsLoading, problemsRefetching, refetchProblems])
 
     if (userLoading || problemsLoading) return <LoadingSpinner />
@@ -139,7 +142,7 @@ const Problems = ({ route }: Props) => {
                     ListFooterComponent={<View style={styles.listFooter} />}
                     refreshControl={
                         <RefreshControl
-                            refreshing={problemsRefetching}
+                            refreshing={isUserTriggeredRefetch && problemsRefetching}
                             onRefresh={onRefresh}
                         />
                     }

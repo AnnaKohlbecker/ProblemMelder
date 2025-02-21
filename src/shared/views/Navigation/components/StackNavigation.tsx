@@ -1,6 +1,4 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { useQueryClient } from '@tanstack/react-query'
-import { useCallback } from 'react'
 import { Route } from '~/shared/enums/Route'
 import TabNavigation from '~/shared/views/Navigation/components/TabNavigation'
 import { NavigationParamList } from '~/shared/views/Navigation/types/NavigationParamList'
@@ -13,17 +11,8 @@ import ProblemReport from '~/views/ProblemReport'
 const StackNavigation = () => {
     const Stack = createNativeStackNavigator<NavigationParamList>()
 
-    const queryClient = useQueryClient()
-
-    const onFocus = useCallback(() => {
-        queryClient.invalidateQueries()
-    }, [queryClient])
-
     return (
-        <Stack.Navigator
-            initialRouteName={Route.MAIN}
-            screenListeners={{ focus: onFocus }}
-        >
+        <Stack.Navigator initialRouteName={Route.MAIN}>
             {/* Tab Navigation */}
             <Stack.Screen
                 name={Route.MAIN}

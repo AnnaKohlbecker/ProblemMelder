@@ -94,6 +94,15 @@ const AddOrEditCategoryModal = ({ editInfo, onClose }: Props) => {
                                 required: 'Bitte wähle ein Icon aus.',
                             }}
                         />
+                        <TextInput
+                            name='description'
+                            label='Beschreibung'
+                            multiline={true}
+                            rules={{
+                                required: 'Bitte gebe eine Beschreibung ein.',
+                            }}
+                            helperText='Kategoriebeschreibung für unentschlossene Bürgerinnen und Bürger.'
+                        />
                         {authoritiesLoading ? (
                             <LoadingSpinner />
                         ) : (
