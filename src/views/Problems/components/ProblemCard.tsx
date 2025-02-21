@@ -33,13 +33,11 @@ const ProblemCard = ({ problem, onCardPress }: Props) => {
                         />
                         <Text style={globalStyles.title}>{problem.title}</Text>
                     </View>
-                    <View style={globalStyles.flexRow}>
-                        <IconButton
-                            icon={headerRightIcon}
-                            size={RFValue(20)}
-                            mode='contained'
-                        />
-                    </View>
+                    <IconButton
+                        icon={headerRightIcon}
+                        size={RFValue(20)}
+                        mode='contained'
+                    />
                 </View>
             </TouchableRipple>
         </Card>
