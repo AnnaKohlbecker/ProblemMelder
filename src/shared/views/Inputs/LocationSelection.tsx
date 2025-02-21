@@ -15,9 +15,6 @@ type Props = {
 }
 
 const styles = StyleSheet.create({
-    error: {
-        color: colors.primary,
-    },
     header: {
         margin: 10,
     },
@@ -115,7 +112,7 @@ const LocationSelection = ({ name }: Props) => {
                 >
                     {currentAddress ?? 'Unbekannt'}
                 </Text>
-                {error && <Text style={styles.error}>{error.message}</Text>}
+                {error && <Text style={globalStyles.error}>{error.message}</Text>}
             </View>
             <View style={[styles.map, globalStyles.flexBox]}>
                 <BaseMap<Marker>
