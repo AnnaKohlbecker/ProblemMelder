@@ -31,7 +31,7 @@ export const useCreateProblemCommentMutation = () => {
     )
 
     return useMutation({
-        mutationKey: ['createCommentMutation'],
+        mutationKey: ['createProblemCommentMutation'],
         mutationFn,
     })
 }

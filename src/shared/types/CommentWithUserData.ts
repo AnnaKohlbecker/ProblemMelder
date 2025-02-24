@@ -1,6 +1,6 @@
-import { Comment } from '~/shared/models/Comment'
+import { ProblemComment } from '~/shared/models/ProblemComment'
 import { UserData } from '~/shared/models/UserData'
 
-export type CommentWithUserData = Comment & {
+export type CommentWithUserData = ProblemComment & {
     UserData: UserData
 }

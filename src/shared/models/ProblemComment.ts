@@ -1,4 +1,4 @@
-export type Comment = {
+export type ProblemComment = {
     id: number
     userId: string
     problemId: string
