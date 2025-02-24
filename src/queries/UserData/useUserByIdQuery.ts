@@ -3,7 +3,7 @@ import { isNil } from 'lodash'
 import { useCallback } from 'react'
 import { supabase } from '~/services/supabase'
 import { Table } from '~/shared/enums/Table'
-import { User } from '~/shared/models/User'
+import { UserData } from '~/shared/models/UserData'
 
 type Props = {
     userId: string | undefined
@@ -20,10 +20,10 @@ export const useUserByIdQuery = ({ userId }: Props) => {
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore because supabase typings are incorrect
-        return response.data as User
+        return response.data as UserData
     }, [userId])
 
-    return useQuery<User>({
+    return useQuery<UserData>({
         queryKey: ['userByIdQuery', userId],
         queryFn,
         enabled: !isNil(userId),

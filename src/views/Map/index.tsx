@@ -11,7 +11,7 @@ import BaseMap from '~/shared/views/BaseMap'
 import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import MapMarker from '~/views/Map/components/MapMarker'
-import ProblemDetails from '~/views/Problems/components/ProblemDetails'
+import ProblemDetailView from '~/views/ProblemDetailView'
 
 type Props = {
     route: Route<RouteEnum>
@@ -57,7 +57,7 @@ const Map = ({ route }: Props) => {
                     />
                 )}
                 {markerDetails && (
-                    <ProblemDetails
+                    <ProblemDetailView
                         problem={markerDetails}
                         onClose={() => setMarkerDetails(undefined)}
                     />

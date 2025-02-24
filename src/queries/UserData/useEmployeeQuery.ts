@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import { supabase } from '~/services/supabase'
 import { Role } from '~/shared/enums/Role'
 import { Table } from '~/shared/enums/Table'
-import { User } from '~/shared/models/User'
+import { UserData } from '~/shared/models/UserData'
 
 export const useEmployeeQuery = () => {
     const queryFn = useCallback(async () => {
@@ -14,10 +14,10 @@ export const useEmployeeQuery = () => {
             .order('name')
             .throwOnError()
 
-        return response.data as unknown as User[]
+        return response.data as unknown as UserData[]
     }, [])
 
-    return useQuery<User[]>({
+    return useQuery<UserData[]>({
         queryKey: ['employeeQuery'],
         queryFn,
     })

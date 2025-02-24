@@ -3,11 +3,11 @@ import { StyleSheet, View } from 'react-native'
 import { Card, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { globalStyles } from '~/shared/constants/globalStyles'
-import { User } from '~/shared/models/User'
+import { UserData } from '~/shared/models/UserData'
 
 type Props = {
-    item: User
-    onDelete: (employee: User) => void
+    item: UserData
+    onDelete: (employee: UserData) => void
 }
 
 const styles = StyleSheet.create({

@@ -16,4 +16,5 @@ export const colors = {
     orange: '#ffa500',
     red: '#e03131',
     yellow: '#ffdd20',
+    gold: '#d4af37',
 }

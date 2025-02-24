@@ -35,6 +35,7 @@ const TabNavigation = () => {
                     iconColor={color}
                 />
             ),
+            tabBarHideOnKeyboard: true,
             tabBarActiveTintColor: colors.primary,
             tabBarInactiveTintColor: colors.secondary,
         }),

@@ -2,9 +2,9 @@ import { useCallback } from 'react'
 import { useController } from 'react-hook-form'
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
-import { useProblemCategoriesQuery } from '~/queries/ProblemCategories/useProblemCategoriesQuery'
+import { useCategoriesQuery } from '~/queries/Categories/useCategoriesQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
-import { ProblemCategory } from '~/shared/models/ProblemCategory'
+import { Category } from '~/shared/models/Category'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import ReportCategoryCard from '~/views/ProblemReport/components/ReportCategoryCard'
 import { ReportStepProps } from '~/views/ProblemReport/types/ReportStepProps'
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
 })
 
 const ReportCategoryStep = ({ isLoading }: ReportStepProps) => {
-    const { data: categories, isLoading: categoriesLoading } = useProblemCategoriesQuery()
+    const { data: categories, isLoading: categoriesLoading } = useCategoriesQuery()
 
     const {
         field: { value, onChange },
@@ -36,14 +36,14 @@ const ReportCategoryStep = ({ isLoading }: ReportStepProps) => {
     } = useController({ name: 'authorityId' })
 
     const onPress = useCallback(
-        (category: ProblemCategory) => () => {
+        (category: Category) => () => {
             onChange(category.id)
             setAcademyId(category.authorityId)
         },
         [onChange, setAcademyId],
     )
 
-    const renderItem = useCallback<ListRenderItem<ProblemCategory>>(
+    const renderItem = useCallback<ListRenderItem<Category>>(
         ({ item }) => (
             <ReportCategoryCard
                 item={item}
@@ -63,7 +63,7 @@ const ReportCategoryStep = ({ isLoading }: ReportStepProps) => {
                 <LoadingSpinner />
             ) : (
                 <View style={styles.container}>
-                    <FlatList<ProblemCategory>
+                    <FlatList<Category>
                         data={categories}
                         renderItem={renderItem}
                         numColumns={3}

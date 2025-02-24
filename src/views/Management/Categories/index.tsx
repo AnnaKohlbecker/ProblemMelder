@@ -5,13 +5,13 @@ import { useCallback, useMemo, useState } from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 import { FAB } from 'react-native-paper'
 import { useAuthoritiesQuery } from '~/queries/Authorities/useAuthoritiesQuery'
-import { useDeleteProblemCategoryMutation } from '~/queries/ProblemCategories/useDeleteProblemCategoryMutation'
-import { useProblemCategoriesQuery } from '~/queries/ProblemCategories/useProblemCategoriesQuery'
+import { useCategoriesQuery } from '~/queries/Categories/useCategoriesQuery'
+import { useDeleteCategoryMutation } from '~/queries/Categories/useDeleteCategoryMutation'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useDialog } from '~/shared/context/DialogContext'
 import { useSnackbar } from '~/shared/context/SnackbarContext'
 import { Route as RouteEnum } from '~/shared/enums/Route'
-import { ProblemCategory } from '~/shared/models/ProblemCategory'
+import { Category } from '~/shared/models/Category'
 import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import AddOrEditCategoryModal from '~/views/Management/Categories/components/AddOrEditCategoryModal'
@@ -31,16 +31,16 @@ const CategoriesManagement = ({ route }: Props) => {
     const showDialog = useDialog()
     const showSnackbar = useSnackbar()
 
-    const [editInfo, setEditInfo] = useState<{ editInfo?: ProblemCategory }>()
+    const [editInfo, setEditInfo] = useState<{ editInfo?: Category }>()
 
     const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 
-    const { mutate: deleteCategory } = useDeleteProblemCategoryMutation()
+    const { mutate: deleteCategory } = useDeleteCategoryMutation()
     const {
         data: categories,
         isLoading: categoriesLoading,
         refetch: refetchCategories,
-    } = useProblemCategoriesQuery()
+    } = useCategoriesQuery()
 
     const { data: authorities, isLoading: authoritiesLoading } = useAuthoritiesQuery()
 
@@ -52,12 +52,12 @@ const CategoriesManagement = ({ route }: Props) => {
         setEditInfo({})
     }, [])
 
-    const onEdit = useCallback((category: ProblemCategory) => {
+    const onEdit = useCallback((category: Category) => {
         setEditInfo({ editInfo: category })
     }, [])
 
     const onDelete = useCallback(
-        (category: ProblemCategory) => {
+        (category: Category) => {
             if (isNil(category.id)) return
 
             showDialog({

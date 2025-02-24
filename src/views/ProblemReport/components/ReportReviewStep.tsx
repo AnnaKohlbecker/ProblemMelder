@@ -5,7 +5,7 @@ import { useFormContext } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
 import { Icon, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
-import { useProblemCategoriesQuery } from '~/queries/ProblemCategories/useProblemCategoriesQuery'
+import { useCategoriesQuery } from '~/queries/Categories/useCategoriesQuery'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { Problem } from '~/shared/models/Problem'
@@ -77,7 +77,7 @@ const ReportReviewStep = ({ isLoading }: ReportStepProps) => {
         })
     })
 
-    const { data: categories, isLoading: categoriesLoading } = useProblemCategoriesQuery()
+    const { data: categories, isLoading: categoriesLoading } = useCategoriesQuery()
 
     const category = useMemo(
         () => categories?.find((c) => c.id === getValues('categoryId')),

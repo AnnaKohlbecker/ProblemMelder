@@ -4,13 +4,13 @@ import { supabase } from '~/services/supabase'
 import { Table } from '~/shared/enums/Table'
 import { ProblemCategoryFormData } from '~/views/Management/Categories/types/ProblemCategoryFormData'
 
-export const useUpsertProblemCategoryMutation = () => {
+export const useUpsertCategoryMutation = () => {
     const mutationFn = useCallback(async (data: ProblemCategoryFormData) => {
-        return await supabase.from(Table.ProblemCategories).upsert(data).throwOnError()
+        return await supabase.from(Table.Categories).upsert(data).throwOnError()
     }, [])
 
     return useMutation({
-        mutationKey: ['upsertProblemCategoryMutation'],
+        mutationKey: ['upsertCategoryMutation'],
         mutationFn,
     })
 }

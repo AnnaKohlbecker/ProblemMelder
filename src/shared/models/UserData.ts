@@ -1,6 +1,6 @@
 import { Role } from '~/shared/enums/Role'
 
-export type User = {
+export type UserData = {
     id: number
     role: Role
     points: number
