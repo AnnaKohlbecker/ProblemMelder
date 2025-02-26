@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     wrapper: {
-        maxHeight: '90%',
+        maxHeight: '80%',
         minHeight: 200,
     },
 })
