@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     wrapper: {
-        maxHeight: '80%',
+        maxHeight: '90%',
         minHeight: 200,
     },
 })
@@ -49,21 +49,19 @@ const ProblemComments = ({ problem, comments, onSend: onSendProp }: Props) => {
     }, [])
 
     return (
-        <>
-            <View style={styles.wrapper}>
-                <FlatList<CommentWithUserData>
-                    data={comments}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id.toString()}
-                    contentContainerStyle={styles.contentContainer}
-                />
-            </View>
+        <View style={styles.wrapper}>
+            <FlatList<CommentWithUserData>
+                data={comments}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id.toString()}
+                contentContainerStyle={styles.contentContainer}
+            />
             <ChatInput
                 onSend={onSend}
                 disabled={isNil(session)}
                 pending={creatingComment}
             />
-        </>
+        </View>
     )
 }
 
