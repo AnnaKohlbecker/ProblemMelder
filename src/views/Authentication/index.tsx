@@ -1,18 +1,28 @@
 import { BottomTabNavigationOptions, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { NavigationContainer, ParamListBase, RouteProp } from '@react-navigation/native'
+import {
+    NavigationContainer,
+    ParamListBase,
+    RouteProp,
+    useNavigation,
+} from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { View } from 'react-native'
-import { IconButton } from 'react-native-paper'
+import { Appbar, IconButton } from 'react-native-paper'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import { Route } from '~/shared/enums/Route'
+import { HeaderStyles } from '~/shared/views/Header'
 import Login from '~/views/Authentication/components/Login'
 import Register from '~/views/Authentication/components/Register'
 
 const Authentication = () => {
     const queryClient = useQueryClient()
     const Tab = createBottomTabNavigator()
+
+    const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 
     const onFocus = useCallback(() => {
         queryClient.invalidateQueries()
@@ -35,9 +45,22 @@ const Authentication = () => {
         [],
     )
 
+    const onClose = useCallback(() => {
+        navigate(Route.MAP)
+    }, [navigate])
+
     return (
         <View style={globalStyles.flexBox}>
-            <NavigationContainer>
+            <View>
+                <Appbar.Header style={HeaderStyles.wrapper}>
+                    <Appbar.BackAction
+                        onPress={onClose}
+                        color={colors.primary}
+                    />
+                </Appbar.Header>
+                <View style={globalStyles.separator} />
+            </View>
+            <NavigationContainer independent={true}>
                 <Tab.Navigator
                     initialRouteName='Anmelden'
                     safeAreaInsets={{ ...insets, bottom: insets.bottom + 5 }}

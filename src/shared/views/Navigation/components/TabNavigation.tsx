@@ -9,6 +9,7 @@ import { useAuth } from '~/shared/context/AuthContext'
 import { Role } from '~/shared/enums/Role'
 import { Route } from '~/shared/enums/Route'
 import { NavigationParamList } from '~/shared/views/Navigation/types/NavigationParamList'
+import Authentication from '~/views/Authentication'
 import Authorities from '~/views/Authorities'
 import Management from '~/views/Management/Overview'
 import Map from '~/views/Map'
@@ -16,7 +17,7 @@ import Problems from '~/views/Problems'
 import Profile from '~/views/Profile'
 
 const TabNavigation = () => {
-    const { hasRole } = useAuth()
+    const { session, hasRole } = useAuth()
 
     const Tab = createBottomTabNavigator<NavigationParamList>()
 
@@ -72,22 +73,34 @@ const TabNavigation = () => {
                     title: RouteInformation[Route.AUTHORITIES].title,
                 }}
             />
-            {hasRole(Role.Admin) ? (
-                <Tab.Screen
-                    name={Route.MANAGEMENT}
-                    component={Management}
-                    options={{
-                        headerShown: false,
-                        title: RouteInformation[Route.MANAGEMENT].title,
-                    }}
-                />
+            {session ? (
+                hasRole(Role.Admin) ? (
+                    <Tab.Screen
+                        name={Route.MANAGEMENT}
+                        component={Management}
+                        options={{
+                            headerShown: false,
+                            title: RouteInformation[Route.MANAGEMENT].title,
+                        }}
+                    />
+                ) : (
+                    <Tab.Screen
+                        name={Route.PROFILE}
+                        component={Profile}
+                        options={{
+                            headerShown: false,
+                            title: RouteInformation[Route.PROFILE].title,
+                        }}
+                    />
+                )
             ) : (
                 <Tab.Screen
-                    name={Route.PROFILE}
-                    component={Profile}
+                    name={Route.AUTHENTICATION}
+                    component={Authentication}
                     options={{
                         headerShown: false,
-                        title: RouteInformation[Route.PROFILE].title,
+                        tabBarStyle: { display: 'none' },
+                        title: RouteInformation[Route.AUTHENTICATION].title,
                     }}
                 />
             )}

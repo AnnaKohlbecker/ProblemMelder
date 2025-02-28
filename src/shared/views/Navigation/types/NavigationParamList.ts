@@ -3,6 +3,8 @@ import { Route } from '~/shared/enums/Route'
 export type NavigationParamList = {
     [Route.MAIN]: undefined
 
+    [Route.AUTHENTICATION]: undefined
+
     [Route.PROBLEM_REPORT]: undefined
 
     [Route.PROBLEMS]: undefined

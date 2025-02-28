@@ -1,4 +1,6 @@
-import { Route } from '@react-navigation/native'
+import { ParamListBase, Route, useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { isNil } from 'lodash'
 import { useCallback, useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Appbar } from 'react-native-paper'
@@ -10,7 +12,7 @@ import { useAuth } from '~/shared/context/AuthContext'
 import { useDialog } from '~/shared/context/DialogContext'
 import { Route as RouteEnum } from '~/shared/enums/Route'
 
-export const styles = StyleSheet.create({
+export const HeaderStyles = StyleSheet.create({
     title: {
         color: colors.primary,
         fontSize: RFValue(18),
@@ -29,11 +31,17 @@ type Props = {
 
 const Header = ({ route, seperator = true, onClose }: Props) => {
     const showDialog = useDialog()
-    const { signOut } = useAuth()
+    const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
+    const { session, signOut } = useAuth()
 
     const title = useMemo(() => RouteInformation[route.name].title, [route.name])
 
-    const onLogout = useCallback(() => {
+    const onLoginLogout = useCallback(() => {
+        if (isNil(session)) {
+            navigate(RouteEnum.AUTHENTICATION)
+            return
+        }
+
         showDialog({
             title: 'Abmelden?',
             description: '',
@@ -41,11 +49,11 @@ const Header = ({ route, seperator = true, onClose }: Props) => {
                 signOut()
             },
         })
-    }, [showDialog, signOut])
+    }, [navigate, session, showDialog, signOut])
 
     return (
         <View>
-            <Appbar.Header style={styles.wrapper}>
+            <Appbar.Header style={HeaderStyles.wrapper}>
                 {onClose && (
                     <Appbar.BackAction
                         onPress={onClose}
@@ -54,11 +62,11 @@ const Header = ({ route, seperator = true, onClose }: Props) => {
                 )}
                 <Appbar.Content
                     title={title}
-                    titleStyle={styles.title}
+                    titleStyle={HeaderStyles.title}
                 />
                 <Appbar.Action
-                    icon='logout'
-                    onPress={onLogout}
+                    icon={session ? 'logout' : 'login'}
+                    onPress={onLoginLogout}
                     color={colors.primary}
                 />
             </Appbar.Header>
