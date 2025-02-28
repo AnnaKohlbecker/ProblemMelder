@@ -1,8 +1,8 @@
 import { useDeferredValue, useMemo, useState } from 'react'
-import { User } from '~/shared/models/User'
+import { UserData } from '~/shared/models/UserData'
 
 type Props = {
-    employees: User[]
+    employees: UserData[]
 }
 
 export const useEmployeeSearchLogic = ({ employees }: Props) => {

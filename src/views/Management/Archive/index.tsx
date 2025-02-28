@@ -13,8 +13,8 @@ import { Route as RouteEnum } from '~/shared/enums/Route'
 import { Problem } from '~/shared/models/Problem'
 import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
+import ProblemDetailView from '~/views/ProblemDetailView'
 import ProblemCard from '~/views/Problems/components/ProblemCard'
-import ProblemDetails from '~/views/Problems/components/ProblemDetails'
 import { useProblemsSearchLogic } from '~/views/Problems/hooks/useProblemsSearchLogic'
 
 type Props = {
@@ -135,7 +135,7 @@ const Archive = ({ route }: Props) => {
                         />
                     )}
                     {selectedProblemDetails && (
-                        <ProblemDetails
+                        <ProblemDetailView
                             problem={selectedProblemDetails}
                             onClose={onCloseProblemDetails}
                         />

@@ -16,8 +16,8 @@ import { Problem } from '~/shared/models/Problem'
 import Filter from '~/shared/views/Filter'
 import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
+import ProblemDetailView from '~/views/ProblemDetailView'
 import ProblemCard from '~/views/Problems/components/ProblemCard'
-import ProblemDetails from '~/views/Problems/components/ProblemDetails'
 import { useProblemsFilterLogic } from '~/views/Problems/hooks/useProblemFilterLogic'
 import { useProblemsSearchLogic } from '~/views/Problems/hooks/useProblemsSearchLogic'
 
@@ -154,7 +154,7 @@ const Problems = ({ route }: Props) => {
                 style={globalStyles.fab}
             />
             {selectedProblemDetails && (
-                <ProblemDetails
+                <ProblemDetailView
                     problem={selectedProblemDetails}
                     onClose={onCloseProblemDetails}
                 />

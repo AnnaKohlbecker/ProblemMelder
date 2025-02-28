@@ -4,7 +4,7 @@ import { Card, Icon, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { Authority } from '~/shared/models/Authority'
-import { ProblemCategory } from '~/shared/models/ProblemCategory'
+import { Category } from '~/shared/models/Category'
 
 const styles = StyleSheet.create({
     buttons: {
@@ -30,10 +30,10 @@ const styles = StyleSheet.create({
 })
 
 type Props = {
-    item: ProblemCategory
+    item: Category
     authorities: Authority[]
-    onEdit: (item: ProblemCategory) => void
-    onDelete: (item: ProblemCategory) => void
+    onEdit: (item: Category) => void
+    onDelete: (item: Category) => void
 }
 
 const CategoryListItem = ({

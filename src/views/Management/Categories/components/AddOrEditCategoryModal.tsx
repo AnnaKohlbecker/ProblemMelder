@@ -3,10 +3,10 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { StyleSheet } from 'react-native'
 import { Button, Dialog, Portal } from 'react-native-paper'
 import { useAuthoritiesQuery } from '~/queries/Authorities/useAuthoritiesQuery'
-import { useUpsertProblemCategoryMutation } from '~/queries/ProblemCategories/useUpsertProblemCategoryMutation'
+import { useUpsertCategoryMutation } from '~/queries/Categories/useUpsertCategoryMutation'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useSnackbar } from '~/shared/context/SnackbarContext'
-import { ProblemCategory } from '~/shared/models/ProblemCategory'
+import { Category } from '~/shared/models/Category'
 import IconPicker from '~/shared/views/Inputs/IconPicker'
 import SelectMenu from '~/shared/views/Inputs/SelectMenu'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
@@ -14,7 +14,7 @@ import TextInput from '~/shared/views/TextInput'
 import { ProblemCategoryFormData } from '~/views/Management/Categories/types/ProblemCategoryFormData'
 
 type Props = {
-    editInfo: ProblemCategory | undefined
+    editInfo: Category | undefined
     onClose: () => void
 }
 
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
 const AddOrEditCategoryModal = ({ editInfo, onClose }: Props) => {
     const showSnackbar = useSnackbar()
 
-    const { mutate: upsertCategory } = useUpsertProblemCategoryMutation()
+    const { mutate: upsertCategory } = useUpsertCategoryMutation()
 
     const { data: authorities, isLoading: authoritiesLoading } = useAuthoritiesQuery()
 

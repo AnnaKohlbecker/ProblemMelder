@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { Icon, Text, TouchableRipple } from 'react-native-paper'
 import { Authority } from '~/shared/models/Authority'
-import { User } from '~/shared/models/User'
+import { UserData } from '~/shared/models/UserData'
 import { EmployeeListItem } from '~/views/Management/Employees/components/EmployeeListItem'
 
 const styles = StyleSheet.create({
@@ -18,9 +18,9 @@ const styles = StyleSheet.create({
 })
 
 type Props = {
-    onDelete: (item: User) => void
+    onDelete: (item: UserData) => void
     authority: Authority
-    employees: User[]
+    employees: UserData[]
     searching: boolean
 }
 
@@ -32,7 +32,7 @@ const AuthorityEmployeeGroup = ({ onDelete, authority, employees, searching }: P
         [authority.id, employees],
     )
 
-    const renderItem = useCallback<ListRenderItem<User>>(
+    const renderItem = useCallback<ListRenderItem<UserData>>(
         ({ item }) => {
             return (
                 <EmployeeListItem
@@ -59,7 +59,7 @@ const AuthorityEmployeeGroup = ({ onDelete, authority, employees, searching }: P
                 </View>
             </TouchableRipple>
             {(expanded || searching) && (
-                <FlatList<User>
+                <FlatList<UserData>
                     data={authorityEmployees}
                     renderItem={renderItem}
                     keyExtractor={(item) => item.id.toString()}

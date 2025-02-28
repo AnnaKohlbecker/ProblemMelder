@@ -5,7 +5,7 @@
  */
 export enum Table {
     Authorities = 'Authorities',
-    ProblemCategories = 'ProblemCategories',
+    Categories = 'Categories',
     Problems = 'Problems',
     Roles = 'Roles',
     UserData = 'UserData',

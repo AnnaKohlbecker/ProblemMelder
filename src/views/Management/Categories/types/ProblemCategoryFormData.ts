@@ -1,5 +1,5 @@
-import { ProblemCategory } from '~/shared/models/ProblemCategory'
+import { Category } from '~/shared/models/Category'
 
-export type ProblemCategoryFormData = Omit<ProblemCategory, 'id'> & {
+export type ProblemCategoryFormData = Omit<Category, 'id'> & {
     id?: number
 }

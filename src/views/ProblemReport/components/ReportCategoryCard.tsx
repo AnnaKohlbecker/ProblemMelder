@@ -4,7 +4,7 @@ import { Card, Icon, IconButton, Text, TouchableRipple } from 'react-native-pape
 import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
 import { useDialog } from '~/shared/context/DialogContext'
-import { ProblemCategory } from '~/shared/models/ProblemCategory'
+import { Category } from '~/shared/models/Category'
 
 const styles = StyleSheet.create({
     card: {
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 })
 
 type Props = {
-    item: ProblemCategory
+    item: Category
     selected: boolean
     onPress: () => void
 }

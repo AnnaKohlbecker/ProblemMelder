@@ -2,12 +2,12 @@ import { useQuery } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { supabase } from '~/services/supabase'
 import { Table } from '~/shared/enums/Table'
-import { ProblemCategory } from '~/shared/models/ProblemCategory'
+import { Category } from '~/shared/models/Category'
 
-export const useProblemCategoriesQuery = () => {
+export const useCategoriesQuery = () => {
     const queryFn = useCallback(async () => {
         const response = await supabase
-            .from(Table.ProblemCategories)
+            .from(Table.Categories)
             .select('*')
             .order('id')
             .throwOnError()
@@ -15,8 +15,8 @@ export const useProblemCategoriesQuery = () => {
         return response.data
     }, [])
 
-    return useQuery<ProblemCategory[]>({
-        queryKey: ['problemCategoriesQuery'],
+    return useQuery<Category[]>({
+        queryKey: ['categoriesQuery'],
         queryFn,
     })
 }
