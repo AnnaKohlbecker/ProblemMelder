@@ -7,6 +7,12 @@ export const RouteInformation = {
         unfocusedIcon: 'home-outline',
     },
 
+    [Route.AUTHENTICATION]: {
+        title: 'Anmelden',
+        focusedIcon: 'login',
+        unfocusedIcon: 'login',
+    },
+
     [Route.MAP]: {
         title: 'Karte',
         focusedIcon: 'map-marker',

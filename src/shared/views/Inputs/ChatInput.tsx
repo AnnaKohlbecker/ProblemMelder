@@ -58,7 +58,7 @@ const ChatInput = ({ pending, disabled, onSend }: Props) => {
                 onContentSizeChange={(event) => {
                     setHeight(Math.min(120, Math.max(40, event.nativeEvent.contentSize.height)))
                 }}
-                placeholder={disabled ? 'Nur für angemeldete Nutzer*innen' : undefined}
+                placeholder={disabled ? 'Bitte anmelden' : undefined}
                 style={[styles.input, { height }]}
             />
             <IconButton

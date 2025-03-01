@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Route } from '~/shared/enums/Route'
 import TabNavigation from '~/shared/views/Navigation/components/TabNavigation'
 import { NavigationParamList } from '~/shared/views/Navigation/types/NavigationParamList'
+import Authentication from '~/views/Authentication'
 import Archive from '~/views/Management/Archive'
 import AuthoritiesManagement from '~/views/Management/Authorities'
 import CategoriesManagement from '~/views/Management/Categories'
@@ -17,6 +18,13 @@ const StackNavigation = () => {
             <Stack.Screen
                 name={Route.MAIN}
                 component={TabNavigation}
+                options={{ headerShown: false }}
+            />
+
+            {/* Authentication */}
+            <Stack.Screen
+                name={Route.AUTHENTICATION}
+                component={Authentication}
                 options={{ headerShown: false }}
             />
 

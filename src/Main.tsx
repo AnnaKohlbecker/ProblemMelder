@@ -3,11 +3,10 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '~/shared/context/AuthContext'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import Navigation from '~/shared/views/Navigation'
-import Authentication from '~/views/Authentication'
 import NoConnection from '~/views/Miscellaneous/NoConnection'
 
 const Main = () => {
-    const { session, isLoading } = useAuth()
+    const { isLoading } = useAuth()
 
     const [isConnected, setIsConnected] = useState(true)
 
@@ -30,7 +29,7 @@ const Main = () => {
 
     if (isLoading) return <LoadingSpinner />
 
-    return session ? <Navigation /> : <Authentication />
+    return <Navigation />
 }
 
 export default Main

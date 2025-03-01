@@ -1,6 +1,8 @@
 export enum Route {
     MAIN = 'main',
 
+    AUTHENTICATION = 'authentication',
+
     MAP = 'map',
     PROBLEMS = 'problems',
     AUTHORITIES = 'authorities',
