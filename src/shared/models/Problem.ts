@@ -16,4 +16,5 @@ export type Problem = {
     priority: number | undefined
     categoryId: number
     closedDate: Date | undefined
+    reason: string
 }

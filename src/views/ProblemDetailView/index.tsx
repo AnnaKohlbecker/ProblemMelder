@@ -3,15 +3,20 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { BackHandler, StyleSheet, View } from 'react-native'
 import { Card, Icon, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
+import { useCategoriesQuery } from '~/queries/Categories/useCategoriesQuery'
 import { useCategoryByIdQuery } from '~/queries/Categories/useCategoryByIdQuery'
 import { useProblemCommentsByProblemQuery } from '~/queries/ProblemComments/useProblemCommentsByProblemQuery'
+import { useUserByIdQuery } from '~/queries/UserData/useUserByIdQuery'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import { useAuth } from '~/shared/context/AuthContext'
+import { Role } from '~/shared/enums/Role'
 import { problemStatusToIconAndColor } from '~/shared/helpers/ProblemStatusToIconAndColor'
 import { Problem } from '~/shared/models/Problem'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import ProblemComments from '~/views/ProblemDetailView/components/ProblemComments'
 import ProblemDetails from '~/views/ProblemDetailView/components/ProblemDetails'
+import ProblemReview from '~/views/ProblemDetailView/components/ProblemReview'
 import { ProblemDetailViewContent } from '~/views/ProblemDetailView/enums/ProblemDetailViewContent'
 
 type Props = {
@@ -35,9 +40,16 @@ const styles = StyleSheet.create({
     },
     headingWrapper: {
         maxWidth: '70%',
+        minWidth: '60%',
         paddingLeft: 10,
     },
+    reviewButton: {
+        position: 'absolute',
+        right: 30,
+        top: -15,
+    },
     title: {
+        fontSize: RFValue(16),
         fontWeight: 'bold',
         maxWidth: '100%',
     },
@@ -50,6 +62,17 @@ const styles = StyleSheet.create({
 })
 
 const ProblemDetailView = ({ problem, onClose }: Props) => {
+    const { session, hasRole } = useAuth()
+
+    const { data: user, isLoading: userLoading } = useUserByIdQuery({ userId: session?.user.id })
+
+    const { data: categories, isLoading: categoriesLoading } = useCategoriesQuery()
+
+    const canReview = useMemo(
+        () => hasRole(Role.Admin) || hasRole(Role.Manager) || (!isNil(user) && user.points > 1000),
+        [hasRole, user],
+    )
+
     const [currentContent, setCurrentContent] = useState<ProblemDetailViewContent>(
         ProblemDetailViewContent.Details,
     )
@@ -75,6 +98,10 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
         setCurrentContent(ProblemDetailViewContent.Comments)
     }, [])
 
+    const onReview = useCallback(() => {
+        setCurrentContent(ProblemDetailViewContent.Review)
+    }, [])
+
     useEffect(() => {
         const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
             onClose()
@@ -87,37 +114,90 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
     return (
         <View style={[StyleSheet.absoluteFillObject, styles.wrapper]}>
             <Card style={[globalStyles.bgWhite, styles.card]}>
-                {categoryLoading || commentsLoading || isNil(category) ? (
+                {categoriesLoading ||
+                userLoading ||
+                categoryLoading ||
+                commentsLoading ||
+                isNil(category) ? (
                     <View style={globalStyles.flexRow}>
                         <LoadingSpinner size={70} />
                     </View>
                 ) : (
                     <View style={styles.gapBetween}>
-                        <IconButton
-                            icon='close'
-                            onPress={onClose}
-                            style={styles.closeButton}
-                            size={RFValue(20)}
-                            mode='contained'
-                        />
+                        {currentContent === ProblemDetailViewContent.Details ? (
+                            <>
+                                <IconButton
+                                    icon='close'
+                                    onPress={onClose}
+                                    style={styles.closeButton}
+                                    size={RFValue(20)}
+                                    mode='contained'
+                                />
 
-                        <View style={globalStyles.flexRow}>
-                            <Icon
-                                source={icon}
-                                color={color}
-                                size={RFValue(35)}
-                            />
-                            <View style={styles.headingWrapper}>
-                                <Text
-                                    variant='headlineSmall'
-                                    style={styles.title}
-                                    numberOfLines={2}
-                                    ellipsizeMode='tail'
-                                >
-                                    {problem.title}
-                                </Text>
+                                <View style={globalStyles.flexRow}>
+                                    <Icon
+                                        source={icon}
+                                        color={color}
+                                        size={RFValue(35)}
+                                    />
+                                    <View style={styles.headingWrapper}>
+                                        <Text
+                                            variant='headlineSmall'
+                                            style={styles.title}
+                                            numberOfLines={2}
+                                            ellipsizeMode='tail'
+                                        >
+                                            {problem.title}
+                                        </Text>
+                                    </View>
+                                </View>
+                            </>
+                        ) : (
+                            <View style={globalStyles.flexRowWithSpace}>
+                                <IconButton
+                                    icon='arrow-left'
+                                    mode='contained'
+                                    onPress={() =>
+                                        setCurrentContent(ProblemDetailViewContent.Details)
+                                    }
+                                />
+                                <View style={globalStyles.flexRow}>
+                                    <Icon
+                                        source={icon}
+                                        color={color}
+                                        size={RFValue(30)}
+                                    />
+                                    <View style={styles.headingWrapper}>
+                                        <Text
+                                            style={styles.title}
+                                            numberOfLines={2}
+                                            ellipsizeMode='tail'
+                                        >
+                                            {problem.title}
+                                        </Text>
+                                    </View>
+                                </View>
                             </View>
-                        </View>
+                        )}
+
+                        {currentContent === ProblemDetailViewContent.Details && canReview && (
+                            <>
+                                <IconButton
+                                    icon='tooltip-edit-outline'
+                                    onPress={onReview}
+                                    style={styles.reviewButton}
+                                    size={RFValue(20)}
+                                    mode='contained'
+                                />
+                                <IconButton
+                                    icon='close'
+                                    onPress={onClose}
+                                    style={styles.closeButton}
+                                    size={RFValue(20)}
+                                    mode='contained'
+                                />
+                            </>
+                        )}
                         {currentContent === ProblemDetailViewContent.Details && (
                             <ProblemDetails
                                 problem={problem}
@@ -131,6 +211,13 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
                                 problem={problem}
                                 onSend={refetchComments}
                                 comments={comments ?? []}
+                            />
+                        )}
+                        {currentContent === ProblemDetailViewContent.Review && (
+                            <ProblemReview
+                                problem={problem}
+                                onClose={onClose}
+                                categories={categories ?? []}
                             />
                         )}
                     </View>

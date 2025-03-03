@@ -80,7 +80,8 @@ const Archive = ({ route }: Props) => {
 
     const onCloseProblemDetails = useCallback(() => {
         setSelectedProblemDetails(undefined)
-    }, [])
+        refetchProblems()
+    }, [refetchProblems])
 
     const onRefresh = useCallback(() => {
         if (problemsLoading || problemsRefetching) return
