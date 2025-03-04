@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
         gap: 20,
     },
     greeting: {
-        fontSize: RFValue(14),
+        fontSize: RFValue(20),
         paddingBottom: 5,
     },
     header: {
@@ -33,7 +33,11 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
     },
     infoText: {
-        fontSize: RFValue(10),
+        fontSize: RFValue(15),
+    },
+    infoWrapper: {
+        gap: 10,
+        marginTop: RFValue(20),
     },
 })
 
@@ -52,39 +56,37 @@ const ProfileHeader = () => {
 
     return (
         <View style={styles.header}>
-            <Card style={[globalStyles.card, styles.card]}>
-                <View style={styles.cardWrapper}>
-                    <View style={styles.imageWrapper}>
-                        <Image
-                            source={prestiegeInfo.image}
-                            style={styles.image}
-                        />
+            {isNil(user) || userLoading ? (
+                <LoadingSpinner />
+            ) : (
+                <Card style={[globalStyles.card, styles.card]}>
+                    <View style={styles.cardWrapper}>
+                        <View style={styles.imageWrapper}>
+                            <Image
+                                source={prestiegeInfo.image}
+                                style={styles.image}
+                            />
+                        </View>
+
+                        <Text style={[globalStyles.bold, styles.greeting]}>{user.name}</Text>
                     </View>
-                    <View>
-                        {isNil(user) || userLoading ? (
-                            <LoadingSpinner />
-                        ) : (
-                            <>
-                                <Text style={[globalStyles.bold, styles.greeting]}>
-                                    Hallo, {user.name}!
-                                </Text>
-                                <Text style={styles.infoText}>
-                                    Deine Rolle:{' '}
-                                    <Text style={[globalStyles.bold, styles.infoText]}>
-                                        {prestiegeInfo.role}
-                                    </Text>
-                                </Text>
-                                <Text style={styles.infoText}>
-                                    <Text style={[globalStyles.bold, styles.infoText]}>
-                                        {user.points} von {prestiegeInfo.nextRolePoints}
-                                    </Text>{' '}
-                                    Punkten zur nächsten Rolle!
-                                </Text>
-                            </>
-                        )}
+                    <View style={styles.infoWrapper}>
+                        <Text style={styles.infoText}>
+                            Rolle:{' '}
+                            <Text style={[globalStyles.bold, styles.infoText]}>
+                                {prestiegeInfo.role}
+                            </Text>
+                        </Text>
+                        <Text style={styles.infoText}>
+                            Punkte:{' '}
+                            <Text style={[globalStyles.bold, styles.infoText]}>{user.points}</Text>
+                        </Text>
+                        <Text style={styles.infoText}>
+                            Nächste Rolle mit {prestiegeInfo.nextRolePoints} Punkten!
+                        </Text>
                     </View>
-                </View>
-            </Card>
+                </Card>
+            )}
         </View>
     )
 }
