@@ -9,6 +9,7 @@ import MapView, {
     PROVIDER_GOOGLE,
 } from 'react-native-maps'
 import { FAB } from 'react-native-paper'
+import { v4 } from 'react-native-uuid/dist/v4'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { MarkerBaseInfo } from '~/shared/types/MarkerBaseInfo'
 import { customMapStyle } from '~/shared/views/BaseMap/constants/customMapStyle'
@@ -66,7 +67,7 @@ const BaseMap = <T extends MarkerBaseInfo = MarkerBaseInfo>({
             >
                 {displayedMarkers.map((marker) => (
                     <MapMarker
-                        key={marker.id}
+                        key={v4()}
                         marker={marker}
                         coordinate={marker}
                         onPress={() => onMarkerPressed?.(marker)}

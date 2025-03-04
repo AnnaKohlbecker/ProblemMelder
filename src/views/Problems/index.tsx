@@ -93,8 +93,9 @@ const Problems = ({ route }: Props) => {
     }, [])
 
     const onCloseProblemDetails = useCallback(() => {
+        refetchProblems()
         setSelectedProblemDetails(undefined)
-    }, [])
+    }, [refetchProblems])
 
     const onRefresh = useCallback(() => {
         if (problemsLoading || problemsRefetching) return

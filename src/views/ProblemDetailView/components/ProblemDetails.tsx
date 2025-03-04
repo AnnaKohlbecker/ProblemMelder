@@ -33,9 +33,9 @@ const styles = StyleSheet.create({
     },
     image: {
         borderRadius: 20,
-        height: RFValue(240),
+        height: RFValue(200),
         maxWidth: '100%',
-        width: RFValue(1000),
+        width: RFValue(200),
     },
     imageWrapper: {
         alignItems: 'center',

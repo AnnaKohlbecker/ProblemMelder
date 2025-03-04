@@ -22,7 +22,11 @@ const Map = ({ route }: Props) => {
 
     const [markerDetails, setMarkerDetails] = useState<Marker | undefined>(undefined)
 
-    const { data: problems, isLoading: problemsLoading } = useProblemsQuery()
+    const {
+        data: problems,
+        isLoading: problemsLoading,
+        refetch: refetchProblems,
+    } = useProblemsQuery()
 
     const onReportProblem = useCallback(() => {
         navigate(RouteEnum.PROBLEM_REPORT)
@@ -59,7 +63,10 @@ const Map = ({ route }: Props) => {
                 {markerDetails && (
                     <ProblemDetailView
                         problem={markerDetails}
-                        onClose={() => setMarkerDetails(undefined)}
+                        onClose={() => {
+                            refetchProblems()
+                            setMarkerDetails(undefined)
+                        }}
                     />
                 )}
             </View>
