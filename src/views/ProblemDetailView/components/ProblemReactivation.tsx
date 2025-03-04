@@ -5,9 +5,7 @@ import { Button, Text } from 'react-native-paper'
 import { useUpsertProblemMutation } from '~/queries/Problems/useUpsertProblemMutation'
 import { useDialog } from '~/shared/context/DialogContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
-import { Category } from '~/shared/models/Category'
 import { Problem } from '~/shared/models/Problem'
-import SelectMenu from '~/shared/views/Inputs/SelectMenu'
 import TextInput from '~/shared/views/TextInput'
 
 const styles = StyleSheet.create({
@@ -29,11 +27,10 @@ const styles = StyleSheet.create({
 
 type Props = {
     problem: Problem
-    categories: Category[]
     onClose: () => void
 }
 
-const ProblemReview = ({ problem, categories, onClose }: Props) => {
+const ProblemReactivation = ({ problem, onClose }: Props) => {
     const confirm = useDialog()
 
     const form = useForm({
@@ -41,7 +38,7 @@ const ProblemReview = ({ problem, categories, onClose }: Props) => {
             ...problem,
             latitude: undefined,
             longitude: undefined,
-            reasonForDeactivation: undefined,
+            reasonForReactivation: undefined,
         },
     })
     const {
@@ -54,6 +51,7 @@ const ProblemReview = ({ problem, categories, onClose }: Props) => {
     const onSubmit = useCallback(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (data: any) => {
+            data.status = ProblemStatus.ToDo
             confirm({
                 title: 'Problem speichern',
                 description: 'Möchtest du die Änderungen speichern?',
@@ -74,38 +72,17 @@ const ProblemReview = ({ problem, categories, onClose }: Props) => {
         <FormProvider {...form}>
             <View style={styles.wrapper}>
                 <View style={styles.header}>
-                    <Text style={styles.subtitle}>Handelt es sich um ein ungültiges Problem?</Text>
+                    <Text style={styles.subtitle}>Wurde das Problem nicht gelöst?</Text>
                     <Text>
-                        Passe den Status und die Kategorie des Problems an, um eine Korrektur
-                        vorzunehmen.
+                        Wenn das Problem nicht zufriedenstellend gelöst wurde, kannst du es
+                        reaktivieren.
                     </Text>
                 </View>
 
-                <SelectMenu
-                    label='Status'
-                    name='status'
-                    options={[
-                        { label: 'Deaktiviert', value: ProblemStatus.Cancelled },
-                        { label: 'Zu Erledigen', value: ProblemStatus.ToDo },
-                        { label: 'In Bearbeitung', value: ProblemStatus.InProgress },
-                        { label: 'Erledigt', value: ProblemStatus.Done },
-                    ]}
-                />
-
-                <SelectMenu
-                    label='Kategorie'
-                    name='categoryId'
-                    options={categories.map((c) => ({
-                        label: c.title,
-                        value: c.id,
-                    }))}
-                />
-
                 <TextInput
-                    name='reasonForDeactivation'
+                    name='reasonForReactivation'
                     label='Begründung'
                     multiline={true}
-                    disabled={!isDirty}
                     rules={{
                         required: 'Bitte gebe eine Begründung für die Änderung ein.',
                     }}
@@ -118,7 +95,7 @@ const ProblemReview = ({ problem, categories, onClose }: Props) => {
                         disabled={isPending || !isDirty}
                         onPress={handleSubmit(onSubmit)}
                     >
-                        Speichern
+                        Reaktivieren
                     </Button>
                 </View>
             </View>
@@ -126,4 +103,4 @@ const ProblemReview = ({ problem, categories, onClose }: Props) => {
     )
 }
 
-export default ProblemReview
+export default ProblemReactivation

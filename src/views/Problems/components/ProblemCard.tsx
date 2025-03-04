@@ -12,10 +12,6 @@ type Props = {
 }
 
 const ProblemCard = ({ problem, onCardPress }: Props) => {
-    const headerRightIcon = useMemo(() => {
-        return problem.status === -1 ? 'replay' : 'trash-can'
-    }, [problem.status])
-
     const iconAndColor = useMemo(
         () => problemStatusToIconAndColor(problem.status),
         [problem.status],
@@ -33,11 +29,6 @@ const ProblemCard = ({ problem, onCardPress }: Props) => {
                         />
                         <Text style={globalStyles.title}>{problem.title}</Text>
                     </View>
-                    <IconButton
-                        icon={headerRightIcon}
-                        size={RFValue(20)}
-                        mode='contained'
-                    />
                 </View>
             </TouchableRipple>
         </Card>
