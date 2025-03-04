@@ -8,20 +8,24 @@ export const PrestiegeInformation = {
         image: StreetSpy,
         role: 'Straßen-Spion',
         nextRolePoints: 100,
+        nextRole: 'Problem-Profi',
     },
     1: {
         image: ProblemProfi,
         role: 'Problem-Profi',
         nextRolePoints: 500,
+        nextRole: 'Melde-Minister',
     },
     2: {
         image: MeldeMinister,
         role: 'Melde-Minister',
         nextRolePoints: 1000,
+        nextRole: 'Stadt-Sheriff',
     },
     3: {
         image: StadtSheriff,
         role: 'Stadt-Sheriff',
-        nextRolePoints: '∞',
+        nextRolePoints: null,
+        nextRole: null,
     },
 }

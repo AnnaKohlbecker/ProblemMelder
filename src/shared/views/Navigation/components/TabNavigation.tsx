@@ -74,7 +74,7 @@ const TabNavigation = () => {
                 }}
             />
             {session ? (
-                hasRole(Role.Admin) ? (
+                hasRole(Role.Admin) || hasRole(Role.Manager) ? (
                     <Tab.Screen
                         name={Route.MANAGEMENT}
                         component={Management}

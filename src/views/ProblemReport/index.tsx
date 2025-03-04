@@ -156,7 +156,6 @@ const ProblemReport = ({ route }: Props) => {
                 <View>
                     <Header
                         route={route}
-                        seperator={false}
                         onClose={onClose}
                     />
                     <ProgressBar

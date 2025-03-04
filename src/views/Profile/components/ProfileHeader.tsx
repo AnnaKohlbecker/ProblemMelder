@@ -1,9 +1,10 @@
 import { isNil } from 'lodash'
 import { useMemo } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
-import { Card, Text } from 'react-native-paper'
+import { Card, Divider, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { useUserByIdQuery } from '~/queries/UserData/useUserByIdQuery'
+import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { PrestiegeInformation } from '~/shared/constants/prestiegeInformation'
 import { useAuth } from '~/shared/context/AuthContext'
@@ -18,10 +19,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 20,
     },
-    greeting: {
-        fontSize: RFValue(20),
-        paddingBottom: 5,
-    },
     header: {
         padding: 20,
     },
@@ -35,14 +32,22 @@ const styles = StyleSheet.create({
     infoText: {
         fontSize: RFValue(15),
     },
+    infoTextBlue: {
+        color: colors.secondary,
+        fontSize: RFValue(15),
+    },
     infoWrapper: {
-        gap: 10,
-        marginTop: RFValue(20),
+        gap: 15,
+        marginTop: RFValue(15),
+    },
+    name: {
+        fontSize: RFValue(23),
+        paddingBottom: 5,
     },
 })
 
 const ProfileHeader = () => {
-    const { session } = useAuth()
+    const { session, role } = useAuth()
 
     const { data: user, isLoading: userLoading } = useUserByIdQuery({ userId: session?.user.id })
 
@@ -56,7 +61,7 @@ const ProfileHeader = () => {
 
     return (
         <View style={styles.header}>
-            {isNil(user) || userLoading ? (
+            {isNil(user) || userLoading || isNil(role) ? (
                 <LoadingSpinner />
             ) : (
                 <Card style={[globalStyles.card, styles.card]}>
@@ -68,22 +73,38 @@ const ProfileHeader = () => {
                             />
                         </View>
 
-                        <Text style={[globalStyles.bold, styles.greeting]}>{user.name}</Text>
+                        <Text style={[globalStyles.bold, styles.name]}>{user.name}</Text>
                     </View>
+
                     <View style={styles.infoWrapper}>
                         <Text style={styles.infoText}>
-                            Rolle:{' '}
-                            <Text style={[globalStyles.bold, styles.infoText]}>
-                                {prestiegeInfo.role}
-                            </Text>
+                            <Text style={styles.infoText}>{role.displayName}</Text>
                         </Text>
-                        <Text style={styles.infoText}>
-                            Punkte:{' '}
-                            <Text style={[globalStyles.bold, styles.infoText]}>{user.points}</Text>
-                        </Text>
-                        <Text style={styles.infoText}>
-                            Nächste Rolle mit {prestiegeInfo.nextRolePoints} Punkten!
-                        </Text>
+                        {role.name !== 'admin' && role.name !== 'manager' && (
+                            <>
+                                <Divider />
+                                <Text style={styles.infoText}>
+                                    Rolle:{' '}
+                                    <Text style={[globalStyles.bold, styles.infoText]}>
+                                        {prestiegeInfo.role}
+                                    </Text>
+                                </Text>
+                                <Text style={styles.infoText}>
+                                    Punkte:{' '}
+                                    <Text style={[globalStyles.bold, styles.infoText]}>
+                                        {user.points}
+                                    </Text>
+                                </Text>
+                                {isNil(prestiegeInfo.nextRolePoints) ? (
+                                    <Text style={styles.infoTextBlue}>Höchste Rolle erreicht!</Text>
+                                ) : (
+                                    <Text style={styles.infoTextBlue}>
+                                        {prestiegeInfo.nextRole} ab {prestiegeInfo.nextRolePoints}{' '}
+                                        Punkten!
+                                    </Text>
+                                )}
+                            </>
+                        )}
                     </View>
                 </Card>
             )}

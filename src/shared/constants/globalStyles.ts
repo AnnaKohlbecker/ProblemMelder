@@ -67,11 +67,6 @@ export const globalStyles = StyleSheet.create({
         color: colors.black,
         flex: 1,
     },
-    separator: {
-        backgroundColor: colors.secondary,
-        height: 1,
-        width: '100%',
-    },
     title: {
         color: colors.black,
         fontSize: RFValue(16),

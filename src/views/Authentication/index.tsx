@@ -58,7 +58,6 @@ const Authentication = () => {
                         color={colors.primary}
                     />
                 </Appbar.Header>
-                <View style={globalStyles.separator} />
             </View>
             <NavigationContainer independent={true}>
                 <Tab.Navigator

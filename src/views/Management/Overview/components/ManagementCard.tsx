@@ -23,10 +23,11 @@ const styles = StyleSheet.create({
     content: {
         aspectRatio: 1,
         borderRadius: 10,
-        height: RFValue(100),
-        width: RFValue(100),
+        height: RFValue(130),
+        width: RFValue(130),
     },
     subtitle: {
+        fontSize: RFValue(15),
         fontWeight: 'bold',
         textAlign: 'center',
     },
@@ -63,7 +64,7 @@ const ManagementCard = ({ route }: Props) => {
                         <Icon
                             color={colors.primary}
                             source={routeInfo.focusedIcon}
-                            size={45}
+                            size={50}
                         />
                         <Text style={styles.subtitle}>{routeInfo.title}</Text>
                     </View>

@@ -6,7 +6,6 @@ import { StyleSheet, View } from 'react-native'
 import { Appbar } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
-import { globalStyles } from '~/shared/constants/globalStyles'
 import { RouteInformation } from '~/shared/constants/routeInformation'
 import { useAuth } from '~/shared/context/AuthContext'
 import { useDialog } from '~/shared/context/DialogContext'
@@ -26,10 +25,9 @@ export const HeaderStyles = StyleSheet.create({
 type Props = {
     route: Route<RouteEnum>
     onClose?: () => void
-    seperator?: boolean
 }
 
-const Header = ({ route, seperator = true, onClose }: Props) => {
+const Header = ({ route, onClose }: Props) => {
     const showDialog = useDialog()
     const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
     const { session, signOut } = useAuth()
@@ -70,7 +68,6 @@ const Header = ({ route, seperator = true, onClose }: Props) => {
                     color={colors.primary}
                 />
             </Appbar.Header>
-            {seperator && <View style={globalStyles.separator} />}
         </View>
     )
 }
