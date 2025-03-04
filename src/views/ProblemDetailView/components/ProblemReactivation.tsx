@@ -38,7 +38,7 @@ const ProblemReactivation = ({ problem, onClose }: Props) => {
             ...problem,
             latitude: undefined,
             longitude: undefined,
-            reason: undefined,
+            reasonForReactivation: undefined,
         },
     })
     const {
@@ -80,7 +80,7 @@ const ProblemReactivation = ({ problem, onClose }: Props) => {
                 </View>
 
                 <TextInput
-                    name='reason'
+                    name='reasonForReactivation'
                     label='Begründung'
                     multiline={true}
                     rules={{

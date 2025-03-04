@@ -41,7 +41,7 @@ const ProblemReview = ({ problem, categories, onClose }: Props) => {
             ...problem,
             latitude: undefined,
             longitude: undefined,
-            reason: undefined,
+            reasonForDeactivation: undefined,
         },
     })
     const {
@@ -102,7 +102,7 @@ const ProblemReview = ({ problem, categories, onClose }: Props) => {
                 />
 
                 <TextInput
-                    name='reason'
+                    name='reasonForDeactivation'
                     label='Begründung'
                     multiline={true}
                     disabled={!isDirty}
