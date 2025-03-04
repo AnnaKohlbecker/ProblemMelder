@@ -10,12 +10,14 @@ import { useUserByIdQuery } from '~/queries/UserData/useUserByIdQuery'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
+import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { Role } from '~/shared/enums/Role'
 import { problemStatusToIconAndColor } from '~/shared/helpers/ProblemStatusToIconAndColor'
 import { Problem } from '~/shared/models/Problem'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import ProblemComments from '~/views/ProblemDetailView/components/ProblemComments'
 import ProblemDetails from '~/views/ProblemDetailView/components/ProblemDetails'
+import ProblemReactivation from '~/views/ProblemDetailView/components/ProblemReactivation'
 import ProblemReview from '~/views/ProblemDetailView/components/ProblemReview'
 import { ProblemDetailViewContent } from '~/views/ProblemDetailView/enums/ProblemDetailViewContent'
 
@@ -73,6 +75,11 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
         [hasRole, user],
     )
 
+    const canReactivate = useMemo(
+        () => problem.status === ProblemStatus.Done && session?.user,
+        [problem.status, session],
+    )
+
     const [currentContent, setCurrentContent] = useState<ProblemDetailViewContent>(
         ProblemDetailViewContent.Details,
     )
@@ -100,6 +107,10 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
 
     const onReview = useCallback(() => {
         setCurrentContent(ProblemDetailViewContent.Review)
+    }, [])
+
+    const onReactivation = useCallback(() => {
+        setCurrentContent(ProblemDetailViewContent.Reactivation)
     }, [])
 
     useEffect(() => {
@@ -180,15 +191,26 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
                             </View>
                         )}
 
-                        {currentContent === ProblemDetailViewContent.Details && canReview && (
+                        {currentContent === ProblemDetailViewContent.Details && (
                             <>
-                                <IconButton
-                                    icon='tooltip-edit-outline'
-                                    onPress={onReview}
-                                    style={styles.reviewButton}
-                                    size={RFValue(20)}
-                                    mode='contained'
-                                />
+                                {canReview && (
+                                    <IconButton
+                                        icon='pencil'
+                                        onPress={onReview}
+                                        style={styles.reviewButton}
+                                        size={RFValue(20)}
+                                        mode='contained'
+                                    />
+                                )}
+                                {!canReview && canReactivate && (
+                                    <IconButton
+                                        icon='refresh'
+                                        onPress={onReactivation}
+                                        style={styles.reviewButton}
+                                        size={RFValue(20)}
+                                        mode='contained'
+                                    />
+                                )}
                                 <IconButton
                                     icon='close'
                                     onPress={onClose}
@@ -196,15 +218,13 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
                                     size={RFValue(20)}
                                     mode='contained'
                                 />
+                                <ProblemDetails
+                                    problem={problem}
+                                    category={category}
+                                    comments={comments ?? []}
+                                    onPressComments={onPressComments}
+                                />
                             </>
-                        )}
-                        {currentContent === ProblemDetailViewContent.Details && (
-                            <ProblemDetails
-                                problem={problem}
-                                category={category}
-                                comments={comments ?? []}
-                                onPressComments={onPressComments}
-                            />
                         )}
                         {currentContent === ProblemDetailViewContent.Comments && (
                             <ProblemComments
@@ -218,6 +238,12 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
                                 problem={problem}
                                 onClose={onClose}
                                 categories={categories ?? []}
+                            />
+                        )}
+                        {currentContent === ProblemDetailViewContent.Reactivation && (
+                            <ProblemReactivation
+                                problem={problem}
+                                onClose={onClose}
                             />
                         )}
                     </View>
