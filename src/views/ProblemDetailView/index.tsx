@@ -6,7 +6,6 @@ import { RFValue } from 'react-native-responsive-fontsize'
 import { useCategoriesQuery } from '~/queries/Categories/useCategoriesQuery'
 import { useCategoryByIdQuery } from '~/queries/Categories/useCategoryByIdQuery'
 import { useProblemCommentsByProblemQuery } from '~/queries/ProblemComments/useProblemCommentsByProblemQuery'
-import { useUserByIdQuery } from '~/queries/UserData/useUserByIdQuery'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
@@ -66,14 +65,9 @@ const styles = StyleSheet.create({
 const ProblemDetailView = ({ problem, onClose }: Props) => {
     const { session, hasRole } = useAuth()
 
-    const { data: user, isLoading: userLoading } = useUserByIdQuery({ userId: session?.user.id })
-
     const { data: categories, isLoading: categoriesLoading } = useCategoriesQuery()
 
-    const canReview = useMemo(
-        () => hasRole(Role.Admin) || hasRole(Role.Manager) || (!isNil(user) && user.points > 1000),
-        [hasRole, user],
-    )
+    const canReview = useMemo(() => hasRole(Role.Admin) || hasRole(Role.Manager), [hasRole])
 
     const canReactivate = useMemo(
         () => problem.status === ProblemStatus.Done && session?.user,
@@ -125,11 +119,7 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
     return (
         <View style={[StyleSheet.absoluteFillObject, styles.wrapper]}>
             <Card style={[globalStyles.bgWhite, styles.card]}>
-                {categoriesLoading ||
-                userLoading ||
-                categoryLoading ||
-                commentsLoading ||
-                isNil(category) ? (
+                {categoriesLoading || categoryLoading || commentsLoading || isNil(category) ? (
                     <View style={globalStyles.flexRow}>
                         <LoadingSpinner size={70} />
                     </View>
