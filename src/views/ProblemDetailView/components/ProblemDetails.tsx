@@ -17,13 +17,14 @@ import { useReviewLogic } from '~/shared/hooks/useReviewLogic'
 import ImagePreview from '~/shared/views/Image'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import { Category, CommentWithUserData, Problem } from '~/supabase/types'
+import { ProblemDetailViewContent } from '~/views/ProblemDetailView/enums/ProblemDetailViewContent'
 import { useReviewUpdateLogic } from '~/views/ProblemDetailView/hooks/useReviewUpdateLogic'
 
 type Props = {
     problem: Problem
     category: Category
     comments: CommentWithUserData[]
-    onPressComments: () => void
+    goTo: (content: ProblemDetailViewContent) => () => void
 }
 
 const styles = StyleSheet.create({
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     },
 })
 
-const ProblemDetails = ({ problem, category, comments, onPressComments }: Props) => {
+const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
     const { session } = useAuth()
 
     const [address, setAddress] = useState<string>()
@@ -206,7 +207,7 @@ const ProblemDetails = ({ problem, category, comments, onPressComments }: Props)
                 <TouchableRipple
                     borderless={true}
                     style={styles.ripple}
-                    onPress={onPressComments}
+                    onPress={goTo(ProblemDetailViewContent.Comments)}
                 >
                     <View style={globalStyles.flexRowWithGap}>
                         <Icon
@@ -221,9 +222,7 @@ const ProblemDetails = ({ problem, category, comments, onPressComments }: Props)
                 <TouchableRipple
                     borderless={true}
                     style={styles.ripple}
-                    onPress={() => {
-                        //
-                    }}
+                    onPress={goTo(ProblemDetailViewContent.Rating)}
                 >
                     <View style={globalStyles.flexRow}>
                         {problem.status === ProblemStatus.Done ? (

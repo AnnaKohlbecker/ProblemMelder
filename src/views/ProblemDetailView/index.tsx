@@ -12,6 +12,7 @@ import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import { Problem } from '~/supabase/types'
 import ProblemComments from '~/views/ProblemDetailView/components/ProblemComments'
 import ProblemDetails from '~/views/ProblemDetailView/components/ProblemDetails'
+import ProblemRating from '~/views/ProblemDetailView/components/ProblemRating'
 import ProblemReactivation from '~/views/ProblemDetailView/components/ProblemReactivation'
 import ProblemReview from '~/views/ProblemDetailView/components/ProblemReview'
 import { ProblemDetailViewContent } from '~/views/ProblemDetailView/enums/ProblemDetailViewContent'
@@ -165,7 +166,7 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
                                 problem={problem}
                                 category={category}
                                 comments={comments ?? []}
-                                onPressComments={goTo(ProblemDetailViewContent.Comments)}
+                                goTo={goTo}
                             />
                         )}
                         {currentContent === ProblemDetailViewContent.Comments && (
@@ -189,6 +190,12 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
                                 problem={problem}
                                 onClose={goTo(ProblemDetailViewContent.Details)}
                                 onSubmit={onClose}
+                            />
+                        )}
+                        {currentContent === ProblemDetailViewContent.Rating && (
+                            <ProblemRating
+                                problem={problem}
+                                onClose={goTo(ProblemDetailViewContent.Details)}
                             />
                         )}
                     </View>

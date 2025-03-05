@@ -14,7 +14,7 @@ export const useReviewUpdateLogic = ({ problemId, userId, userReview, refetch }:
     const { mutate: upsertReview } = useUpsertProblemReviewMutation()
 
     const onStarRating = useCallback(
-        (rating: number) => {
+        (rating: number | null) => {
             if (isNil(userId)) return
 
             if (isNil(userReview))
@@ -50,7 +50,7 @@ export const useReviewUpdateLogic = ({ problemId, userId, userReview, refetch }:
     )
 
     const onImportanceRating = useCallback(
-        (rating: number) => {
+        (rating: number | null) => {
             if (isNil(userId)) return
 
             if (isNil(userReview))
