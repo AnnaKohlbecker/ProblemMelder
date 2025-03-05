@@ -11,7 +11,7 @@ export const useProblemsFilterLogic = ({ problems }: Props) => {
     const [filter, setFilter] = useState<ProblemStatus>()
 
     const filteredProblems = useMemo(() => {
-        return problems?.filter((problem) => {
+        return problems.filter((problem) => {
             if (isNil(filter)) return problems
 
             return problem.status === filter

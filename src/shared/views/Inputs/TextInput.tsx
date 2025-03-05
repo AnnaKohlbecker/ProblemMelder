@@ -1,3 +1,4 @@
+import { isNil } from 'lodash'
 import { useController, UseControllerProps } from 'react-hook-form'
 import { View } from 'react-native'
 // eslint-disable-next-line no-restricted-imports
@@ -49,7 +50,7 @@ const TextInput = ({
                 onChangeText={onChange}
                 secureTextEntry={secureTextEntry}
             />
-            {(helperText || error) && (
+            {(!isNil(helperText) || !isNil(error)) && (
                 <HelperText
                     visible={true}
                     type={error ? 'error' : 'info'}

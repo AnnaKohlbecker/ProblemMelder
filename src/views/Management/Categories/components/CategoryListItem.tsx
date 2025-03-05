@@ -41,8 +41,12 @@ const CategoryListItem = ({
     onEdit: onEditProp,
     onDelete: onDeleteProp,
 }: Props) => {
-    const onEdit = useCallback(() => onEditProp(item), [item, onEditProp])
-    const onDelete = useCallback(() => onDeleteProp(item), [item, onDeleteProp])
+    const onEdit = useCallback(() => {
+        onEditProp(item)
+    }, [item, onEditProp])
+    const onDelete = useCallback(() => {
+        onDeleteProp(item)
+    }, [item, onDeleteProp])
 
     const authority = useMemo(() => {
         return authorities.find((authority) => authority.id === item.authorityId)

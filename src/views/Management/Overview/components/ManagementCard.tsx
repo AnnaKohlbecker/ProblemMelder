@@ -2,7 +2,7 @@ import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { isNil } from 'lodash'
 import { useCallback, useMemo } from 'react'
-// eslint-disable-next-line no-restricted-imports
+
 import { StyleSheet, View } from 'react-native'
 import { Card, Icon, Text, TouchableRipple } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'

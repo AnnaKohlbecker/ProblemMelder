@@ -31,7 +31,9 @@ const styles = StyleSheet.create({
 })
 
 export const EmployeeListItem = ({ onDelete: onDeleteProp, item }: Props) => {
-    const onDelete = useCallback(() => onDeleteProp(item), [item, onDeleteProp])
+    const onDelete = useCallback(() => {
+        onDeleteProp(item)
+    }, [item, onDeleteProp])
 
     return (
         <Card style={[globalStyles.card, styles.card]}>

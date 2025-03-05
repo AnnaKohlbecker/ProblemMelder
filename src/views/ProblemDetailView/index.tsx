@@ -108,7 +108,9 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
             return true
         })
 
-        return () => subscription.remove()
+        return () => {
+            subscription.remove()
+        }
     }, [onClose])
 
     return (
@@ -170,9 +172,9 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
                                 <IconButton
                                     icon='arrow-left'
                                     mode='contained'
-                                    onPress={() =>
+                                    onPress={() => {
                                         setCurrentContent(ProblemDetailViewContent.Details)
-                                    }
+                                    }}
                                 />
                                 <View style={globalStyles.flexRow}>
                                     <Icon

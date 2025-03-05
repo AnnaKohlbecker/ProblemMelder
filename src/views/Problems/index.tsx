@@ -81,7 +81,7 @@ const Problems = ({ route }: Props) => {
     })
 
     const { filteredProblems, filter, setFilter } = useProblemsFilterLogic({
-        problems: searchedProblems ?? [],
+        problems: searchedProblems,
     })
 
     const onReportProblem = useCallback(() => {
@@ -101,7 +101,9 @@ const Problems = ({ route }: Props) => {
         if (problemsLoading || problemsRefetching) return
 
         setIsUserTriggeredRefetch(true)
-        refetchProblems().finally(() => setIsUserTriggeredRefetch(false))
+        refetchProblems().finally(() => {
+            setIsUserTriggeredRefetch(false)
+        })
     }, [problemsLoading, problemsRefetching, refetchProblems])
 
     if (userLoading || problemsLoading) return <LoadingSpinner />
@@ -137,7 +139,9 @@ const Problems = ({ route }: Props) => {
                         <ProblemCard
                             key={index}
                             problem={problem}
-                            onCardPress={() => onShowProblemDetails(problem)}
+                            onCardPress={() => {
+                                onShowProblemDetails(problem)
+                            }}
                         />
                     )}
                     ListFooterComponent={<View style={styles.listFooter} />}

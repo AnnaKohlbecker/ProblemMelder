@@ -92,7 +92,9 @@ const ProblemReport = ({ route }: Props) => {
             return true
         })
 
-        return () => subscription.remove()
+        return () => {
+            subscription.remove()
+        }
     }, [onClose])
 
     const onPrev = useCallback(() => {
@@ -127,7 +129,7 @@ const ProblemReport = ({ route }: Props) => {
                         path: imageId,
                     },
                     {
-                        onSuccess: () =>
+                        onSuccess: () => {
                             upsertProblem(
                                 {
                                     ...data,
@@ -138,7 +140,8 @@ const ProblemReport = ({ route }: Props) => {
                                         navigate(RouteEnum.MAIN)
                                     },
                                 },
-                            ),
+                            )
+                        },
                     },
                 )
             })()

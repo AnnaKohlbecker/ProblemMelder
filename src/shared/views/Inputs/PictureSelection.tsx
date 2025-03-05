@@ -107,7 +107,9 @@ const PictureSelection = ({ name }: Props) => {
                         <IconButton
                             mode='contained'
                             size={20}
-                            onPress={() => setEnableTorch((prev) => !prev)}
+                            onPress={() => {
+                                setEnableTorch((prev) => !prev)
+                            }}
                             icon={enableTorch ? 'flashlight' : 'flashlight-off'}
                         />
                     </TouchableOpacity>

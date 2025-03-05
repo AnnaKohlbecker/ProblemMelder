@@ -45,8 +45,12 @@ const AuthorityManagementListItem = ({
     onEdit: onEditProp,
     onDelete: onDeleteProp,
 }: Props) => {
-    const onEdit = useCallback(() => onEditProp(item), [item, onEditProp])
-    const onDelete = useCallback(() => onDeleteProp(item), [item, onDeleteProp])
+    const onEdit = useCallback(() => {
+        onEditProp(item)
+    }, [item, onEditProp])
+    const onDelete = useCallback(() => {
+        onDeleteProp(item)
+    }, [item, onDeleteProp])
 
     const { data: staffMembers, isLoading: staffLoading } = useUsersByAuthorityQuery(item.id)
 

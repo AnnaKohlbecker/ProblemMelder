@@ -1,3 +1,4 @@
+import { isNil } from 'lodash'
 import { useCallback, useMemo, useState } from 'react'
 import { UseControllerProps, useController } from 'react-hook-form'
 import { FlatList, StyleSheet, View } from 'react-native'
@@ -53,7 +54,9 @@ const SelectMenu = ({ name, rules, helperText, label, options, disabled }: Props
 
         setVisible(true)
     }, [disabled])
-    const closeModal = useCallback(() => setVisible(false), [setVisible])
+    const closeModal = useCallback(() => {
+        setVisible(false)
+    }, [setVisible])
 
     const handleSelect = useCallback(
         (value: number) => {
@@ -90,7 +93,7 @@ const SelectMenu = ({ name, rules, helperText, label, options, disabled }: Props
                     />
                 }
             />
-            {(helperText || error) && (
+            {(!isNil(helperText) || !isNil(error)) && (
                 <HelperText
                     visible={true}
                     type={error ? 'error' : 'info'}
@@ -114,7 +117,9 @@ const SelectMenu = ({ name, rules, helperText, label, options, disabled }: Props
                         renderItem={({ item }) => (
                             <TouchableRipple
                                 key={item.value.toString()}
-                                onPress={() => handleSelect(item.value)}
+                                onPress={() => {
+                                    handleSelect(item.value)
+                                }}
                             >
                                 <Text style={styles.option}>{item.label}</Text>
                             </TouchableRipple>

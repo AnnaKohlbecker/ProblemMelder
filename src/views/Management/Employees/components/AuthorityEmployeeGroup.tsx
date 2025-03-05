@@ -48,7 +48,11 @@ const AuthorityEmployeeGroup = ({ onDelete, authority, employees, searching }: P
 
     return (
         <View style={styles.content}>
-            <TouchableRipple onPress={() => setExpanded(!expanded)}>
+            <TouchableRipple
+                onPress={() => {
+                    setExpanded(!expanded)
+                }}
+            >
                 <View style={styles.heading}>
                     <Icon
                         source={expanded || searching ? 'chevron-down' : 'chevron-right'}

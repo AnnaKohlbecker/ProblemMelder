@@ -123,7 +123,9 @@ const Archive = ({ route }: Props) => {
                                 <ProblemCard
                                     key={index}
                                     problem={problem}
-                                    onCardPress={() => onShowProblemDetails(problem)}
+                                    onCardPress={() => {
+                                        onShowProblemDetails(problem)
+                                    }}
                                 />
                             )}
                             ListFooterComponent={<View style={styles.listFooter} />}

@@ -62,7 +62,13 @@ const Profile = ({ route }: Props) => {
                 <>
                     <ProfileHeader />
                     {problems && problems.length > 0 ? (
-                        <Button onPress={() => onDelete(problems[0])}>{deleteButtonText}</Button>
+                        <Button
+                            onPress={() => {
+                                onDelete(problems[0])
+                            }}
+                        >
+                            {deleteButtonText}
+                        </Button>
                     ) : (
                         <Text>{deleteButtonText}</Text>
                     )}

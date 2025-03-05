@@ -32,7 +32,9 @@ const Authorities = ({ route }: Props) => {
         if (authoritiesLoading || authoritiesRefetching) return
 
         setIsUserTriggeredRefetch(true)
-        refetchAuthorities().finally(() => setIsUserTriggeredRefetch(false))
+        refetchAuthorities().finally(() => {
+            setIsUserTriggeredRefetch(false)
+        })
     }, [authoritiesLoading, authoritiesRefetching, refetchAuthorities])
 
     return (

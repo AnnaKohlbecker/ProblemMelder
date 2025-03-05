@@ -22,7 +22,9 @@ const Main = () => {
             setIsConnected(state.isInternetReachable)
         })
 
-        return () => unsubscribe()
+        return () => {
+            unsubscribe()
+        }
     }, [])
 
     if (!isConnected) return <NoConnection />
