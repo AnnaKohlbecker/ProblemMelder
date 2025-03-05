@@ -149,11 +149,13 @@ const Problems = ({ route }: Props) => {
                     }
                 />
             )}
-            <FAB
-                icon='plus'
-                onPress={onReportProblem}
-                style={globalStyles.fab}
-            />
+            {!isNil(session) && (
+                <FAB
+                    icon='plus'
+                    onPress={onReportProblem}
+                    style={globalStyles.fab}
+                />
+            )}
             {selectedProblemDetails && (
                 <ProblemDetailView
                     problem={selectedProblemDetails}

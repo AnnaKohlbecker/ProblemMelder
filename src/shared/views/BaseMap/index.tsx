@@ -22,6 +22,8 @@ type MarkerProps<T extends MarkerBaseInfo> = {
 }
 
 type Props<T extends MarkerBaseInfo> = {
+    showFab?: boolean
+
     onFabPress?: () => void
 
     onMapPress?: (event: MapPressEvent) => void
@@ -38,6 +40,7 @@ type Props<T extends MarkerBaseInfo> = {
 const IS_ANDROID = Platform.OS === 'android'
 
 const BaseMap = <T extends MarkerBaseInfo = MarkerBaseInfo>({
+    showFab = true,
     onFabPress,
     onMapPress,
     markers,
@@ -74,7 +77,7 @@ const BaseMap = <T extends MarkerBaseInfo = MarkerBaseInfo>({
                     />
                 ))}
             </MapView>
-            {!isNil(onFabPress) && (
+            {!isNil(onFabPress) && showFab && (
                 <FAB
                     icon='plus'
                     onPress={onFabPress}
