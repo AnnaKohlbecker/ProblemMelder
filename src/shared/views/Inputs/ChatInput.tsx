@@ -8,9 +8,7 @@ const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         backgroundColor: colors.secondary,
-        borderColor: colors.primary,
         borderRadius: 30,
-        borderWidth: 1,
         flexDirection: 'row',
         margin: 10,
         paddingLeft: 10,
@@ -58,7 +56,7 @@ const ChatInput = ({ pending, disabled, onSend }: Props) => {
                 onContentSizeChange={(event) => {
                     setHeight(Math.min(120, Math.max(40, event.nativeEvent.contentSize.height)))
                 }}
-                placeholder={disabled ? 'Bitte anmelden' : undefined}
+                placeholder={disabled ? 'Bitte anmelden' : 'Kommentar'}
                 style={[styles.input, { height }]}
             />
             <IconButton

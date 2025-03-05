@@ -2,6 +2,7 @@ import { isNil } from 'lodash'
 import { useCallback } from 'react'
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { useCreateProblemCommentMutation } from '~/queries/ProblemComments/useCreateProblemCommentMutation'
+import { colors } from '~/shared/constants/colors'
 import { useAuth } from '~/shared/context/AuthContext'
 import { Problem } from '~/shared/models/Problem'
 import { CommentWithUserData } from '~/shared/types/CommentWithUserData'
@@ -16,6 +17,7 @@ type Props = {
 
 const styles = StyleSheet.create({
     contentContainer: {
+        backgroundColor: colors.tertiary,
         gap: 10,
     },
     wrapper: {
