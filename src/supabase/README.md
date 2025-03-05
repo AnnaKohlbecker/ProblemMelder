@@ -30,7 +30,9 @@ Falls sich das Datenbankschema ändert, müssen die TypeScript-Typen in `models.
 
 ```sh
 npx supabase login  # Falls du noch nicht eingeloggt bist
-npx supabase gen types typescript --project-id YOUR_PROJECT_ID > ./supabase/models.ts
+npx supabase gen types typescript --project-id YOUR_PROJECT_ID > ./src/supabase/models.ts
+npx prettier --write ./src/supabase/models.ts # Formatierung anpassen
+npx eslint --fix ./src/supabase/models.ts # ESLint Probleme beheben
 ```
 
 📌 **Hinweis:** Dein **`YOUR_PROJECT_ID`** findest du im Supabase-Dashboard unter **Settings → General**.

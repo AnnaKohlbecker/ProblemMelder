@@ -1,14 +1,22 @@
 import * as Location from 'expo-location'
+import { isNil } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { Icon, Text, TouchableRipple } from 'react-native-paper'
+import { Button, Divider, Icon, Text, TouchableRipple } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
+import { useProblemReviewsQuery } from '~/queries/ProblemReviews/useProblemReviewsQuery'
+import { useUserProblemReviewQuery } from '~/queries/ProblemReviews/useUserProblemReviewQuery'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import { useAuth } from '~/shared/context/AuthContext'
+import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { getImagePath } from '~/shared/helpers/getImagePath'
 import getRatingIcons from '~/shared/helpers/getRatingIcons'
+import { useReviewLogic } from '~/shared/hooks/useReviewLogic'
 import ImagePreview from '~/shared/views/Image'
+import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import { Category, CommentWithUserData, Problem } from '~/supabase/types'
+import { useReviewUpdateLogic } from '~/views/ProblemDetailView/hooks/useReviewUpdateLogic'
 
 type Props = {
     problem: Problem
@@ -40,15 +48,51 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: '100%',
     },
+    rating: {
+        marginRight: 10,
+    },
+    loading: {
+        height: 100,
+    },
 })
 
 const ProblemDetails = ({ problem, category, comments, onPressComments }: Props) => {
+    const { session } = useAuth()
+
     const [address, setAddress] = useState<string>()
 
     const formattedDate = useMemo(
         () => new Date(problem.date).toLocaleDateString('de-DE'),
         [problem.date],
     )
+
+    const {
+        data: reviews,
+        isLoading: reviewsLoading,
+        refetch: refetchReviews,
+    } = useProblemReviewsQuery({
+        problemId: problem.id,
+    })
+    const { amountOfImportance, amountOfStars, helpful, importance, stars, unhelpful } =
+        useReviewLogic({ reviews })
+
+    const {
+        data: userReview,
+        isLoading: userReviewLoading,
+        refetch: refetchUserReview,
+    } = useUserProblemReviewQuery({
+        userId: session?.user.id,
+        problemId: problem.id,
+    })
+    const { onHelpful } = useReviewUpdateLogic({
+        userId: session?.user.id,
+        problemId: problem.id,
+        userReview,
+        refetch: () => {
+            refetchReviews()
+            refetchUserReview()
+        },
+    })
 
     useEffect(() => {
         const [latitude, longitude] = problem.location.split(',').map(Number)
@@ -60,6 +104,13 @@ const ProblemDetails = ({ problem, category, comments, onPressComments }: Props)
             )
         })
     }, [problem.location])
+
+    if (reviewsLoading || userReviewLoading)
+        return (
+            <View style={styles.loading}>
+                <LoadingSpinner size={50} />
+            </View>
+        )
 
     return (
         <>
@@ -80,21 +131,20 @@ const ProblemDetails = ({ problem, category, comments, onPressComments }: Props)
                     <Icon
                         source={category.icon}
                         color={colors.black}
-                        size={RFValue(25)}
+                        size={RFValue(20)}
                     />
                 </View>
-                <Text variant='bodyLarge'>{category.title}</Text>
+                <Text>{category.title}</Text>
             </View>
             <View style={globalStyles.flexRow}>
                 <View style={styles.icon}>
                     <Icon
                         source='map-marker'
-                        size={RFValue(25)}
+                        size={RFValue(20)}
                         color={colors.black}
                     />
                 </View>
                 <Text
-                    variant='bodyLarge'
                     numberOfLines={2}
                     lineBreakMode='tail'
                     style={styles.flexText}
@@ -106,11 +156,11 @@ const ProblemDetails = ({ problem, category, comments, onPressComments }: Props)
                 <View style={styles.icon}>
                     <Icon
                         source='calendar'
-                        size={RFValue(25)}
+                        size={RFValue(20)}
                         color={colors.black}
                     />
                 </View>
-                <Text variant='bodyLarge'>{formattedDate}</Text>
+                <Text>{formattedDate}</Text>
             </View>
             <View style={globalStyles.flexRowWithSpace}>
                 <TouchableRipple
@@ -122,26 +172,55 @@ const ProblemDetails = ({ problem, category, comments, onPressComments }: Props)
                         <View style={styles.icon}>
                             <Icon
                                 source='comment'
-                                size={RFValue(25)}
+                                size={RFValue(20)}
                                 color={colors.primary}
                             />
                         </View>
-                        <Text variant='bodyLarge'>{comments.length}</Text>
+                        <Text>{comments.length}</Text>
                     </View>
                 </TouchableRipple>
-                <View style={globalStyles.flexRow}>
-                    {problem.status === 2 ? (
+                <View style={[globalStyles.flexRow, styles.rating]}>
+                    {problem.status === ProblemStatus.Done ? (
                         <>
-                            {getRatingIcons(problem.status, problem.stars ?? 0)}
-                            <Text>{problem.starsVotesCount}</Text>
+                            {getRatingIcons(problem.status, stars)}
+                            <Text>{amountOfStars}</Text>
                         </>
                     ) : (
                         <>
-                            {getRatingIcons(problem.status, problem.priority ?? 0)}
-                            <Text>{problem.priorityVotesCount}</Text>
+                            {getRatingIcons(problem.status, importance)}
+                            <Text>{amountOfImportance}</Text>
                         </>
                     )}
                 </View>
+            </View>
+
+            <Divider />
+            <View style={globalStyles.flexRow}>
+                <Button
+                    icon='thumb-up'
+                    mode='text'
+                    labelStyle={userReview?.helpful === true ? globalStyles.bold : undefined}
+                    textColor={userReview?.helpful === true ? colors.primary : colors.black}
+                    onPress={() => {
+                        onHelpful(userReview?.helpful ? null : true)
+                    }}
+                    disabled={isNil(session)}
+                >
+                    Hilfreich ({helpful})
+                </Button>
+                <Text>|</Text>
+                <Button
+                    icon='thumb-down'
+                    mode='text'
+                    labelStyle={userReview?.helpful === false ? globalStyles.bold : undefined}
+                    textColor={userReview?.helpful === false ? colors.primary : colors.black}
+                    onPress={() => {
+                        onHelpful(userReview?.helpful === false ? null : false)
+                    }}
+                    disabled={isNil(session)}
+                >
+                    Falschmeldung ({unhelpful})
+                </Button>
             </View>
         </>
     )

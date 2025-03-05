@@ -266,7 +266,40 @@ export type Database = {
                 ]
             }
         }
-        Views: Record<never, never>
+        Views: {
+            SanitizedProblemReviews: {
+                Row: {
+                    helpful: boolean | null
+                    id: number | null
+                    importance: number | null
+                    problemId: number | null
+                    stars: number | null
+                }
+                Insert: {
+                    helpful?: boolean | null
+                    id?: number | null
+                    importance?: number | null
+                    problemId?: number | null
+                    stars?: number | null
+                }
+                Update: {
+                    helpful?: boolean | null
+                    id?: number | null
+                    importance?: number | null
+                    problemId?: number | null
+                    stars?: number | null
+                }
+                Relationships: [
+                    {
+                        foreignKeyName: 'ProblemReviews_problemId_fkey'
+                        columns: ['problemId']
+                        isOneToOne: false
+                        referencedRelation: 'Problems'
+                        referencedColumns: ['id']
+                    },
+                ]
+            }
+        }
         Functions: Record<never, never>
         Enums: Record<never, never>
         CompositeTypes: Record<never, never>
