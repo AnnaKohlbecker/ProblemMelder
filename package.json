@@ -17,7 +17,6 @@
         "android": "expo start --android",
         "ios": "expo start --ios",
         "web": "expo start --web",
-        "postinstall": "patch-package",
         "prepare": "husky"
     },
     "dependencies": {
@@ -62,7 +61,6 @@
         "globals": "16.0.0",
         "husky": "9.1.7",
         "lint-staged": "15.4.3",
-        "patch-package": "8.0.0",
         "prettier": "3.5.3",
         "react-native-dotenv": "3.4.11",
         "typescript": "5.8.2",
