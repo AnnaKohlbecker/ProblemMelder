@@ -4,7 +4,7 @@ import { useCallback } from 'react'
 import { supabase } from '~/supabase'
 
 type Props = {
-    userId: string | undefined
+    userId: string | undefined | null
 }
 
 export const useUserByIdQuery = ({ userId }: Props) => {
