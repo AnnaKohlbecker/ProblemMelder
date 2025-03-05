@@ -6,11 +6,11 @@ import { Button, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { useAuthoritiesQuery } from '~/queries/Authorities/useAuthoritiesQuery'
 import { useRolesQuery } from '~/queries/Roles/useRolesQuery'
-import { supabase } from '~/services/supabase'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { Role } from '~/shared/enums/Role'
 import TextInput from '~/shared/views/TextInput'
+import { supabase } from '~/supabase'
 
 type RegisterModel = {
     email: string

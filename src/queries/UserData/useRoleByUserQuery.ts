@@ -1,9 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { isNil } from 'lodash'
 import { useCallback } from 'react'
-import { supabase } from '~/services/supabase'
-import { Table } from '~/shared/enums/Table'
-import { Role } from '~/shared/models/Role'
+import { supabase } from '~/supabase'
 
 type Props = {
     userId: string | undefined
@@ -11,17 +9,19 @@ type Props = {
 
 export const useRoleByUserQuery = ({ userId }: Props) => {
     const queryFn = useCallback(async () => {
+        if (isNil(userId)) return null
+
         const response = await supabase
-            .from(Table.UserData)
-            .select('role(*)')
+            .from('UserData')
+            .select('Roles(*)')
             .eq('userId', userId)
-            .limit(1)
+            .single()
             .throwOnError()
 
-        return (response.data[0]?.role ?? null) as unknown as Role
+        return response.data.Roles
     }, [userId])
 
-    return useQuery<Role>({
+    return useQuery({
         queryKey: ['roleByUserQuery', userId],
         queryFn,
         enabled: !isNil(userId),

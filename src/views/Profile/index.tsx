@@ -7,9 +7,9 @@ import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useDialog } from '~/shared/context/DialogContext'
 import { Route as RouteEnum } from '~/shared/enums/Route'
-import { Problem } from '~/shared/models/Problem'
 import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
+import { Problem } from '~/supabase/types'
 import ProfileHeader from '~/views/Profile/components/ProfileHeader'
 
 type Props = {

@@ -7,10 +7,8 @@ import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { getImagePath } from '~/shared/helpers/getImagePath'
 import getRatingIcons from '~/shared/helpers/getRatingIcons'
-import { Category } from '~/shared/models/Category'
-import { Problem } from '~/shared/models/Problem'
-import { CommentWithUserData } from '~/shared/types/CommentWithUserData'
 import ImagePreview from '~/shared/views/Image'
+import { Category, CommentWithUserData, Problem } from '~/supabase/types'
 
 type Props = {
     problem: Problem

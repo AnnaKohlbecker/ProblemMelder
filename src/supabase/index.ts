@@ -1,6 +1,7 @@
 import { supabaseAnonKey, supabaseUrl } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createClient } from '@supabase/supabase-js'
+import { Database } from '~/supabase/models'
 
 /**
  * Initializes and exports a Supabase client instance.
@@ -11,7 +12,7 @@ import { createClient } from '@supabase/supabase-js'
  * - `persistSession`: Persists the session across app restarts.
  * - `detectSessionInUrl`: Disables session detection in the URL.
  */
-export const supabase = createClient(
+export const supabase = createClient<Database>(
     process.env.SUPABASE_URL ?? supabaseUrl,
     process.env.SUPABASE_ANON_KEY ?? supabaseAnonKey,
     {

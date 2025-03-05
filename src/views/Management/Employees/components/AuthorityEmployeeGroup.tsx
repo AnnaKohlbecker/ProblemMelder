@@ -1,8 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { Icon, Text, TouchableRipple } from 'react-native-paper'
-import { Authority } from '~/shared/models/Authority'
-import { UserData } from '~/shared/models/UserData'
+import { Authority, UserData } from '~/supabase/types'
 import { EmployeeListItem } from '~/views/Management/Employees/components/EmployeeListItem'
 
 const styles = StyleSheet.create({

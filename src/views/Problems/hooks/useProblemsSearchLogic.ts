@@ -1,5 +1,5 @@
 import { useDeferredValue, useMemo, useState } from 'react'
-import { Problem } from '~/shared/models/Problem'
+import { Problem } from '~/supabase/types'
 
 type Props = {
     problems: Problem[]

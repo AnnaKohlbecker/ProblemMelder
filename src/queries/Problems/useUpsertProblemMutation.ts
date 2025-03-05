@@ -1,14 +1,11 @@
 import { useMutation } from '@tanstack/react-query'
 import { useCallback } from 'react'
-import { supabase } from '~/services/supabase'
-import { Table } from '~/shared/enums/Table'
-import { Problem } from '~/shared/models/Problem'
-
-type Payload = Problem
+import { supabase } from '~/supabase'
+import { Problem } from '~/supabase/types'
 
 export const useUpsertProblemMutation = () => {
-    const mutationFn = useCallback(async (data: Payload) => {
-        return await supabase.from(Table.Problems).upsert(data).throwOnError()
+    const mutationFn = useCallback(async (data: Problem) => {
+        return await supabase.from('Problems').upsert(data).throwOnError()
     }, [])
 
     return useMutation({

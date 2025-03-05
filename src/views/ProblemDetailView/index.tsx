@@ -1,7 +1,7 @@
 import { isNil } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { BackHandler, StyleSheet, View } from 'react-native'
-import { Card, Icon, IconButton, Text } from 'react-native-paper'
+import { Button, Card, Divider, Icon, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { useCategoriesQuery } from '~/queries/Categories/useCategoriesQuery'
 import { useCategoryByIdQuery } from '~/queries/Categories/useCategoryByIdQuery'
@@ -12,8 +12,8 @@ import { useAuth } from '~/shared/context/AuthContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { Role } from '~/shared/enums/Role'
 import { problemStatusToIconAndColor } from '~/shared/helpers/ProblemStatusToIconAndColor'
-import { Problem } from '~/shared/models/Problem'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
+import { Problem } from '~/supabase/types'
 import ProblemComments from '~/views/ProblemDetailView/components/ProblemComments'
 import ProblemDetails from '~/views/ProblemDetailView/components/ProblemDetails'
 import ProblemReactivation from '~/views/ProblemDetailView/components/ProblemReactivation'
@@ -30,11 +30,6 @@ const styles = StyleSheet.create({
         maxHeight: '80%',
         padding: 25,
         width: '90%',
-    },
-    closeButton: {
-        position: 'absolute',
-        right: -15,
-        top: -15,
     },
     gapBetween: {
         gap: 10,
@@ -126,15 +121,7 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
                 ) : (
                     <View style={styles.gapBetween}>
                         {currentContent === ProblemDetailViewContent.Details ? (
-                            <>
-                                <IconButton
-                                    icon='close'
-                                    onPress={onClose}
-                                    style={styles.closeButton}
-                                    size={RFValue(20)}
-                                    mode='contained'
-                                />
-
+                            <View style={globalStyles.flexRowWithSpace}>
                                 <View style={globalStyles.flexRow}>
                                     <Icon
                                         source={icon}
@@ -152,7 +139,32 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
                                         </Text>
                                     </View>
                                 </View>
-                            </>
+
+                                {canReview && (
+                                    <IconButton
+                                        icon='pencil'
+                                        onPress={onReview}
+                                        style={styles.reviewButton}
+                                        size={RFValue(20)}
+                                        mode='contained'
+                                    />
+                                )}
+                                {!canReview && canReactivate && (
+                                    <IconButton
+                                        icon='refresh'
+                                        onPress={onReactivation}
+                                        style={styles.reviewButton}
+                                        size={RFValue(20)}
+                                        mode='contained'
+                                    />
+                                )}
+                                <IconButton
+                                    icon='close'
+                                    onPress={onClose}
+                                    size={RFValue(20)}
+                                    mode='contained'
+                                />
+                            </View>
                         ) : (
                             <View style={globalStyles.flexRowWithSpace}>
                                 <IconButton
@@ -182,39 +194,12 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
                         )}
 
                         {currentContent === ProblemDetailViewContent.Details && (
-                            <>
-                                {canReview && (
-                                    <IconButton
-                                        icon='pencil'
-                                        onPress={onReview}
-                                        style={styles.reviewButton}
-                                        size={RFValue(20)}
-                                        mode='contained'
-                                    />
-                                )}
-                                {!canReview && canReactivate && (
-                                    <IconButton
-                                        icon='refresh'
-                                        onPress={onReactivation}
-                                        style={styles.reviewButton}
-                                        size={RFValue(20)}
-                                        mode='contained'
-                                    />
-                                )}
-                                <IconButton
-                                    icon='close'
-                                    onPress={onClose}
-                                    style={styles.closeButton}
-                                    size={RFValue(20)}
-                                    mode='contained'
-                                />
-                                <ProblemDetails
-                                    problem={problem}
-                                    category={category}
-                                    comments={comments ?? []}
-                                    onPressComments={onPressComments}
-                                />
-                            </>
+                            <ProblemDetails
+                                problem={problem}
+                                category={category}
+                                comments={comments ?? []}
+                                onPressComments={onPressComments}
+                            />
                         )}
                         {currentContent === ProblemDetailViewContent.Comments && (
                             <ProblemComments
@@ -236,6 +221,23 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
                                 onClose={onClose}
                             />
                         )}
+
+                        <Divider />
+                        <View style={globalStyles.flexRow}>
+                            <Button
+                                icon='thumb-up'
+                                mode='text'
+                            >
+                                Hilfreich
+                            </Button>
+                            <Text>|</Text>
+                            <Button
+                                icon='thumb-down'
+                                mode='text'
+                            >
+                                Falschmeldung
+                            </Button>
+                        </View>
                     </View>
                 )}
             </Card>

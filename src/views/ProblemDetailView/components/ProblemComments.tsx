@@ -3,9 +3,8 @@ import { useCallback } from 'react'
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { useCreateProblemCommentMutation } from '~/queries/ProblemComments/useCreateProblemCommentMutation'
 import { useAuth } from '~/shared/context/AuthContext'
-import { Problem } from '~/shared/models/Problem'
-import { CommentWithUserData } from '~/shared/types/CommentWithUserData'
 import ChatInput from '~/shared/views/Inputs/ChatInput'
+import { CommentWithUserData, Problem } from '~/supabase/types'
 import CommentCard from '~/views/ProblemDetailView/components/CommentCard'
 
 type Props = {

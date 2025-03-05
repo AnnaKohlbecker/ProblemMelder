@@ -5,8 +5,8 @@ import { Button, Text } from 'react-native-paper'
 import { useUpsertProblemMutation } from '~/queries/Problems/useUpsertProblemMutation'
 import { useDialog } from '~/shared/context/DialogContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
-import { Problem } from '~/shared/models/Problem'
 import TextInput from '~/shared/views/TextInput'
+import { Problem } from '~/supabase/types'
 
 const styles = StyleSheet.create({
     footer: {

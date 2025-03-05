@@ -5,8 +5,8 @@ import { Card, Icon, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { useUsersByAuthorityQuery } from '~/queries/Authorities/useUsersByAuthorityQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
-import { Authority } from '~/shared/models/Authority'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
+import { Authority } from '~/supabase/types'
 
 const styles = StyleSheet.create({
     buttons: {

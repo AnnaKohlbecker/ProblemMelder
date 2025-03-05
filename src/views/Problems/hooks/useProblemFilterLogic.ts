@@ -1,7 +1,7 @@
 import { isNil } from 'lodash'
 import { useMemo, useState } from 'react'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
-import { Problem } from '~/shared/models/Problem'
+import { Problem } from '~/supabase/types'
 
 type Props = {
     problems: Problem[]

@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native'
 import { Card, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { globalStyles } from '~/shared/constants/globalStyles'
-import { UserData } from '~/shared/models/UserData'
+import { UserData } from '~/supabase/types'
 
 type Props = {
     item: UserData

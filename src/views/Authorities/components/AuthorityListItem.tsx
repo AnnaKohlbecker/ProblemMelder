@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import { Card, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { globalStyles } from '~/shared/constants/globalStyles'
-import { Authority } from '~/shared/models/Authority'
+import { Authority } from '~/supabase/types'
 
 const styles = StyleSheet.create({
     card: {
