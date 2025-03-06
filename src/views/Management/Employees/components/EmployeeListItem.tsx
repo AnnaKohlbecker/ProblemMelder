@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native'
 import { Card, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { globalStyles } from '~/shared/constants/globalStyles'
-import { UserData } from '~/shared/models/UserData'
+import { UserData } from '~/supabase/types'
 
 type Props = {
     item: UserData
@@ -31,7 +31,9 @@ const styles = StyleSheet.create({
 })
 
 export const EmployeeListItem = ({ onDelete: onDeleteProp, item }: Props) => {
-    const onDelete = useCallback(() => onDeleteProp(item), [item, onDeleteProp])
+    const onDelete = useCallback(() => {
+        onDeleteProp(item)
+    }, [item, onDeleteProp])
 
     return (
         <Card style={[globalStyles.card, styles.card]}>

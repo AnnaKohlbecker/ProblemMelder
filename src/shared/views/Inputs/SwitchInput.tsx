@@ -1,3 +1,4 @@
+import { isNil } from 'lodash'
 import { useController, UseControllerProps } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
 // eslint-disable-next-line no-restricted-imports
@@ -47,7 +48,7 @@ const SwitchInput = ({ label, helperText, name, rules, disabled }: Props) => {
                     {label}
                 </Text>
             </View>
-            {(helperText || error) && (
+            {(!isNil(helperText) || !isNil(error)) && (
                 <HelperText
                     visible={true}
                     type={error ? 'error' : 'info'}

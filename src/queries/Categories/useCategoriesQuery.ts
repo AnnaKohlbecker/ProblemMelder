@@ -1,21 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
 import { useCallback } from 'react'
-import { supabase } from '~/services/supabase'
-import { Table } from '~/shared/enums/Table'
-import { Category } from '~/shared/models/Category'
+import { supabase } from '~/supabase'
 
 export const useCategoriesQuery = () => {
     const queryFn = useCallback(async () => {
-        const response = await supabase
-            .from(Table.Categories)
-            .select('*')
-            .order('id')
-            .throwOnError()
+        const response = await supabase.from('Categories').select('*').order('id').throwOnError()
 
         return response.data
     }, [])
 
-    return useQuery<Category[]>({
+    return useQuery({
         queryKey: ['categoriesQuery'],
         queryFn,
     })

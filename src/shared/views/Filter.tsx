@@ -26,8 +26,12 @@ type FilterProps = {
 const Filter = ({ value, onChangeFilter }: FilterProps) => {
     const [menuVisible, setMenuVisible] = useState(false)
 
-    const openMenu = useCallback(() => setMenuVisible(true), [])
-    const closeMenu = useCallback(() => setMenuVisible(false), [])
+    const openMenu = useCallback(() => {
+        setMenuVisible(true)
+    }, [])
+    const closeMenu = useCallback(() => {
+        setMenuVisible(false)
+    }, [])
 
     const handleFilterSelect = useCallback(
         (filter: ProblemStatus | undefined) => {
@@ -50,7 +54,9 @@ const Filter = ({ value, onChangeFilter }: FilterProps) => {
         return menuItems.map(({ filter, title }) => (
             <Menu.Item
                 key={title}
-                onPress={() => handleFilterSelect(filter)}
+                onPress={() => {
+                    handleFilterSelect(filter)
+                }}
                 title={title}
                 leadingIcon={problemStatusToIconAndColor(filter).icon}
             />

@@ -1,3 +1,4 @@
+import { isNil } from 'lodash'
 import { useMemo } from 'react'
 import { useController, UseControllerProps } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
@@ -59,7 +60,7 @@ const TextInput = ({
                 onChangeText={onChange}
                 secureTextEntry={secureTextEntry}
             />
-            {(helperText || error) && (
+            {(!isNil(helperText) || !isNil(error)) && (
                 <HelperText
                     visible={true}
                     type={error ? 'error' : 'info'}

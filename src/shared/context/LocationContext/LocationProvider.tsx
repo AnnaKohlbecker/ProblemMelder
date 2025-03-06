@@ -7,7 +7,7 @@ import { PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import { Alert } from 'react-native'
 import { LocationContext } from '~/shared/context/LocationContext'
 
-type Props = PropsWithChildren<unknown>
+type Props = PropsWithChildren
 
 const LocationProvider = ({ children }: Props) => {
     const [currentLocation, setCurrentLocation] = useState<LocationObject>()

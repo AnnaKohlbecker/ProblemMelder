@@ -107,18 +107,20 @@ const IconPicker = ({ name, label, rules }: Props) => {
                 <Button
                     icon='magnify'
                     mode='outlined'
-                    onPress={() => setVisible(true)}
+                    onPress={() => {
+                        setVisible(true)
+                    }}
                 >
                     Icon auswählen
                 </Button>
             </View>
             {error && (
                 <HelperText
+                    type='error'
                     visible={true}
-                    type={error ? 'error' : 'info'}
                     padding='none'
                 >
-                    {error?.message}
+                    {error.message}
                 </HelperText>
             )}
 
@@ -144,14 +146,18 @@ const IconPicker = ({ name, label, rules }: Props) => {
                                     <IconButton
                                         size={40}
                                         icon={item}
-                                        onPress={() => handleSelect(item)}
+                                        onPress={() => {
+                                            handleSelect(item)
+                                        }}
                                     />
                                 )}
                             />
                         </ScrollView>
                         <View style={styles.buttonWrapper}>
                             <Button
-                                onPress={() => setVisible(false)}
+                                onPress={() => {
+                                    setVisible(false)
+                                }}
                                 buttonColor={colors.secondary}
                                 mode='elevated'
                             >

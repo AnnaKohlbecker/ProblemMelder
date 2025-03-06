@@ -4,7 +4,7 @@ import { Card, IconButton, Text, TouchableRipple } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { problemStatusToIconAndColor } from '~/shared/helpers/ProblemStatusToIconAndColor'
-import { Problem } from '~/shared/models/Problem'
+import { Problem } from '~/supabase/types'
 
 type Props = {
     problem: Problem

@@ -34,7 +34,7 @@ type Props = {
     onSend: (message: string) => void
 }
 
-const ChatInput = ({ pending, disabled, onSend }: Props) => {
+const ChatInput = ({ pending, disabled = false, onSend }: Props) => {
     const [message, setMessage] = useState('')
     const [height, setHeight] = useState(40)
 

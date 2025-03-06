@@ -2,29 +2,40 @@ import eslint from '@eslint/js'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactNative from 'eslint-plugin-react-native'
+import globals from 'globals'
 import tslint from 'typescript-eslint'
 import custom from './.eslint/custom-rules.mjs'
 
 export default tslint.config(
     eslint.configs.recommended,
-    ...tslint.configs.strict,
-    ...tslint.configs.stylistic,
+    tslint.configs.strictTypeChecked,
+    tslint.configs.stylisticTypeChecked,
+    react.configs.flat.recommended,
+    react.configs.flat['jsx-runtime'],
     {
-        ...react.configs.flat.recommended,
-        ...react.configs.flat['jsx-runtime'],
+        files: ['src/**/*.{js,jsx,ts,tsx}'],
         settings: {
             react: {
                 version: 'detect',
             },
         },
-    },
-    reactNative.flat,
-    {
-        files: ['src/**/*.{js,jsx,mjs,cjs,ts,tsx}'],
-        ignores: ['src/**/*.d.ts', '**/*.config.js'],
+        languageOptions: {
+            parserOptions: {
+                project: './tsconfig.json',
+                tsconfigRootDir: import.meta.dirname,
+                sourceType: 'module',
+                ecmaFeatures: {
+                    jsx: true,
+                },
+            },
+            globals: {
+                ...globals.browser,
+            },
+        },
         plugins: {
             react,
             'react-hooks': reactHooks,
+            'react-native': reactNative,
             custom,
         },
         rules: {
@@ -87,13 +98,25 @@ export default tslint.config(
             '@typescript-eslint/restrict-template-expressions': 'off',
             '@typescript-eslint/method-signature-style': ['error', 'property'],
             '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+            // ----- TYPESCRIPT OVERKILL RULES -----
+            '@typescript-eslint/no-unsafe-call': 'off',
+            '@typescript-eslint/no-unsafe-return': 'off',
+            '@typescript-eslint/no-unsafe-argument': 'off',
+            '@typescript-eslint/no-misused-promises': 'off',
+            '@typescript-eslint/no-unsafe-assignment': 'off',
+            '@typescript-eslint/no-floating-promises': 'off',
+            '@typescript-eslint/no-non-null-assertion': 'off',
+            '@typescript-eslint/no-unsafe-member-access': 'off',
+            '@typescript-eslint/no-unsafe-enum-comparison': 'off',
+            '@typescript-eslint/no-redundant-type-constituents': 'off',
 
             // ----- REACT NATIVE BEST PRACTICES -----
             'react-native/no-unused-styles': 'error', // Detect unused styles in React Native components
-            'react-native/split-platform-components': 'warn', // Use platform-specific files (e.g. Button.ios.js)
-            'react-native/no-inline-styles': 'warn', // Discourage inline styles in React Native
-            'react-native/no-color-literals': 'warn', // Discourage color literals in styles
+            'react-native/split-platform-components': 'error', // Use platform-specific files (e.g. Button.ios.js)
+            'react-native/no-inline-styles': 'error', // Discourage inline styles in React Native
+            'react-native/no-color-literals': 'error', // Discourage color literals in styles
             'react-native/no-raw-text': 'off', // Warn if raw text is outside <Text> in React Native
+            'react-native/no-single-element-style-arrays': 'error', // Detect single element style arrays in React Native
 
             // ----- CUSTOM RULES -----
             'custom/no-direct-font-size': 'error',

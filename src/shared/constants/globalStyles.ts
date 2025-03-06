@@ -49,6 +49,16 @@ export const globalStyles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
     },
+    flexRowCenter: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+    },
+    flexRowWithGap: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        gap: 5,
+    },
     flexRowWithSpace: {
         alignItems: 'center',
         flexDirection: 'row',

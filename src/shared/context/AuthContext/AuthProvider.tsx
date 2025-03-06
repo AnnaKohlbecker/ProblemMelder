@@ -2,9 +2,9 @@ import { Session } from '@supabase/supabase-js'
 import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react'
 import { Alert, AppState } from 'react-native'
 import { useRoleByUserQuery } from '~/queries/UserData/useRoleByUserQuery'
-import { supabase } from '~/services/supabase'
 import { AuthContext } from '~/shared/context/AuthContext'
 import { Role as RoleEnum } from '~/shared/enums/Role'
+import { supabase } from '~/supabase'
 
 type Props = PropsWithChildren
 
@@ -40,10 +40,12 @@ const AuthProvider = ({ children }: Props) => {
      * Fetches the role of the current user.
      */
     const {
-        data: userRole,
+        data: userRoleRaw,
         error: roleError,
         isLoading: roleLoading,
     } = useRoleByUserQuery({ userId: session?.user.id })
+
+    const userRole = useMemo(() => userRoleRaw ?? undefined, [userRoleRaw])
 
     /**
      * Callback to check whether the current user has a specific role

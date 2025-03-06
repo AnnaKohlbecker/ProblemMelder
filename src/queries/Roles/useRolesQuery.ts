@@ -1,17 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
 import { useCallback } from 'react'
-import { supabase } from '~/services/supabase'
-import { Table } from '~/shared/enums/Table'
-import { Role } from '~/shared/models/Role'
+import { supabase } from '~/supabase'
 
 export const useRolesQuery = () => {
     const queryFn = useCallback(async () => {
-        const { data } = await supabase.from(Table.Roles).select('*').throwOnError()
+        const { data } = await supabase.from('Roles').select('*').throwOnError()
 
         return data
     }, [])
 
-    return useQuery<Role[]>({
+    return useQuery({
         queryKey: ['rolesQuery'],
         queryFn,
     })

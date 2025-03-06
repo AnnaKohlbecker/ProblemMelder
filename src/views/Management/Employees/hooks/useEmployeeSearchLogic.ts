@@ -1,5 +1,5 @@
 import { useDeferredValue, useMemo, useState } from 'react'
-import { UserData } from '~/shared/models/UserData'
+import { UserData } from '~/supabase/types'
 
 type Props = {
     employees: UserData[]

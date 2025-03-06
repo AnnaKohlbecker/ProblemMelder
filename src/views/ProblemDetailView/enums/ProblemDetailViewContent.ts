@@ -3,4 +3,5 @@ export enum ProblemDetailViewContent {
     Comments = 1,
     Review = 2,
     Reactivation = 3,
+    Rating = 4,
 }

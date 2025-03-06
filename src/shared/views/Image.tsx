@@ -13,7 +13,11 @@ const ImagePreview = ({ source, ...props }: Props) => {
 
     return (
         <>
-            <TouchableOpacity onPress={() => setVisible(true)}>
+            <TouchableOpacity
+                onPress={() => {
+                    setVisible(true)
+                }}
+            >
                 <Image
                     source={source}
                     {...props}
@@ -25,7 +29,9 @@ const ImagePreview = ({ source, ...props }: Props) => {
                     visible={true}
                     images={[source]}
                     imageIndex={0}
-                    onRequestClose={() => setVisible(false)}
+                    onRequestClose={() => {
+                        setVisible(false)
+                    }}
                 />
             )}
         </>

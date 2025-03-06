@@ -1,7 +1,7 @@
 import { Session } from '@supabase/supabase-js'
 import { createContext, useContext } from 'react'
 import { Role as RoleEnum } from '~/shared/enums/Role'
-import { Role } from '~/shared/models/Role'
+import { Role } from '~/supabase/types'
 
 type AuthContextProps = {
     session: Session | undefined

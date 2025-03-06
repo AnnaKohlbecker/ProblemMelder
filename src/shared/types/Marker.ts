@@ -1,4 +1,4 @@
 import { LatLng } from 'react-native-maps'
-import { Problem } from '~/shared/models/Problem'
+import { Problem } from '~/supabase/types'
 
 export type Marker = LatLng & Problem

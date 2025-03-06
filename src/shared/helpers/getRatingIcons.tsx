@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native'
 import { IconButton } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
+import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 
 const styles = StyleSheet.create({
     ratingIcon: {
@@ -11,7 +12,7 @@ const styles = StyleSheet.create({
 })
 
 const getRating = (status: number, rating: number) => {
-    const maxRating = status === 2 ? 5 : 3
+    const maxRating = status === ProblemStatus.Done ? 5 : 3
     const filledCount = Math.floor(rating)
 
     return Array.from({ length: maxRating }, (_, i) => {
@@ -29,8 +30,8 @@ const getRating = (status: number, rating: number) => {
             <IconButton
                 key={i}
                 icon={iconName}
-                size={RFValue(25)}
-                iconColor={status === 2 ? colors.yellow : colors.red}
+                size={RFValue(20)}
+                iconColor={status === ProblemStatus.Done ? colors.yellow : colors.red}
                 style={styles.ratingIcon}
             />
         )

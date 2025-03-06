@@ -4,7 +4,7 @@ import { Card, Icon, IconButton, Text, TouchableRipple } from 'react-native-pape
 import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
 import { useDialog } from '~/shared/context/DialogContext'
-import { Category } from '~/shared/models/Category'
+import { Category } from '~/supabase/types'
 
 const styles = StyleSheet.create({
     card: {
