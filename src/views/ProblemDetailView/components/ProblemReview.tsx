@@ -1,9 +1,9 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { StyleSheet, View } from 'react-native'
+import { Keyboard, ScrollView, StyleSheet, View } from 'react-native'
 import { Button, IconButton, Text } from 'react-native-paper'
-import { RFValue } from 'react-native-responsive-fontsize'
 import { useUpsertProblemMutation } from '~/queries/Problems/useUpsertProblemMutation'
+import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useDialog } from '~/shared/context/DialogContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
@@ -16,15 +16,17 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         marginTop: 20,
     },
-    header: {
-        gap: 10,
-        marginBottom: 10,
-    },
-    subtitle: {
-        fontSize: RFValue(14),
-        fontWeight: 'bold',
-    },
     wrapper: {
+        paddingBottom: 20,
+        gap: 15,
+    },
+    smallInputContainer: {
+        maxHeight: '45%',
+    },
+    bigInputContainer: {
+        maxHeight: '80%',
+    },
+    scrollviewItems: {
         gap: 10,
     },
 })
@@ -38,6 +40,7 @@ type Props = {
 
 const ProblemReview = ({ problem, categories, onClose, onSubmit: onSubmitProp }: Props) => {
     const confirm = useDialog()
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false)
 
     const form = useForm({
         values: {
@@ -73,55 +76,71 @@ const ProblemReview = ({ problem, categories, onClose, onSubmit: onSubmitProp }:
         [confirm, onSubmitProp, updateProblem],
     )
 
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            setKeyboardVisible(true)
+        })
+
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            setKeyboardVisible(false)
+        })
+
+        return () => {
+            keyboardDidShowListener.remove()
+            keyboardDidHideListener.remove()
+        }
+    }, [])
+
     return (
         <FormProvider {...form}>
             <View style={styles.wrapper}>
                 <View style={globalStyles.flexRow}>
                     <IconButton
-                        size={12}
+                        size={20}
                         icon='arrow-left'
                         mode='outlined'
                         onPress={onClose}
+                        iconColor={colors.primary}
                     />
-                    <Text style={styles.subtitle}>Problem prüfen</Text>
+                    <Text style={globalStyles.subtitle}>Problem prüfen</Text>
                 </View>
-                <View style={styles.header}>
-                    <Text>
-                        Passe den Status und die Kategorie des Problems an, um eine Korrektur
-                        vorzunehmen.
-                    </Text>
-                </View>
+                <ScrollView
+                    style={
+                        isKeyboardVisible ? styles.smallInputContainer : styles.bigInputContainer
+                    }
+                >
+                    <View style={styles.scrollviewItems}>
+                        <SelectMenu
+                            label='Status'
+                            name='status'
+                            options={[
+                                { label: 'Deaktiviert', value: ProblemStatus.Cancelled },
+                                { label: 'Zu Erledigen', value: ProblemStatus.ToDo },
+                                { label: 'In Bearbeitung', value: ProblemStatus.InProgress },
+                                { label: 'Erledigt', value: ProblemStatus.Done },
+                            ]}
+                        />
 
-                <SelectMenu
-                    label='Status'
-                    name='status'
-                    options={[
-                        { label: 'Deaktiviert', value: ProblemStatus.Cancelled },
-                        { label: 'Zu Erledigen', value: ProblemStatus.ToDo },
-                        { label: 'In Bearbeitung', value: ProblemStatus.InProgress },
-                        { label: 'Erledigt', value: ProblemStatus.Done },
-                    ]}
-                />
+                        <SelectMenu
+                            label='Kategorie'
+                            name='categoryId'
+                            options={categories.map((c) => ({
+                                label: c.title,
+                                value: c.id,
+                            }))}
+                        />
 
-                <SelectMenu
-                    label='Kategorie'
-                    name='categoryId'
-                    options={categories.map((c) => ({
-                        label: c.title,
-                        value: c.id,
-                    }))}
-                />
-
-                <TextInput
-                    name='reasonForDeactivation'
-                    label='Begründung'
-                    multiline={true}
-                    disabled={!isDirty}
-                    rules={{
-                        required: 'Bitte gebe eine Begründung für die Änderung ein.',
-                    }}
-                />
-
+                        <TextInput
+                            name='reasonForDeactivation'
+                            label='Begründung'
+                            multiline={true}
+                            disabled={!isDirty}
+                            rules={{
+                                required: 'Bitte gebe eine Begründung für die Änderung ein.',
+                            }}
+                        />
+                    </View>
+                </ScrollView>
                 <View style={styles.footer}>
                     <Button
                         mode='contained'

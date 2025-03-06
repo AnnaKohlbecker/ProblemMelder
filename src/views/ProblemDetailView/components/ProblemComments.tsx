@@ -1,8 +1,7 @@
 import { isNil } from 'lodash'
-import { useCallback } from 'react'
-import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
+import { useCallback, useEffect, useState } from 'react'
+import { FlatList, Keyboard, ListRenderItem, StyleSheet, View } from 'react-native'
 import { IconButton, Text } from 'react-native-paper'
-import { RFValue } from 'react-native-responsive-fontsize'
 import { useCreateProblemCommentMutation } from '~/queries/ProblemComments/useCreateProblemCommentMutation'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
@@ -19,18 +18,19 @@ type Props = {
 }
 
 const styles = StyleSheet.create({
-    contentContainer: {
+    commentsContainer: {
         backgroundColor: colors.tertiary,
         gap: 10,
-        flex: 1,
     },
-    wrapper: {
+    bigWrapper: {
+        maxHeight: '80%',
+        minHeight: 550,
+        gap: 15,
+    },
+    smallWrapper: {
         maxHeight: '80%',
         minHeight: 300,
-    },
-    subtitle: {
-        fontSize: RFValue(14),
-        fontWeight: 'bold',
+        gap: 15,
     },
     empty: {
         flex: 1,
@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
 
 const ProblemComments = ({ problem, comments, onSend: onSendProp, onClose }: Props) => {
     const { session } = useAuth()
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false)
 
     const { mutate: createComment, isPending: creatingComment } = useCreateProblemCommentMutation()
 
@@ -63,16 +64,32 @@ const ProblemComments = ({ problem, comments, onSend: onSendProp, onClose }: Pro
         return <CommentCard commentWithUserData={item} />
     }, [])
 
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            setKeyboardVisible(true)
+        })
+
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            setKeyboardVisible(false)
+        })
+
+        return () => {
+            keyboardDidShowListener.remove()
+            keyboardDidHideListener.remove()
+        }
+    }, [])
+
     return (
-        <View style={styles.wrapper}>
+        <View style={isKeyboardVisible ? styles.smallWrapper : styles.bigWrapper}>
             <View style={globalStyles.flexRow}>
                 <IconButton
-                    size={12}
+                    size={20}
                     icon='arrow-left'
                     mode='outlined'
                     onPress={onClose}
+                    iconColor={colors.primary}
                 />
-                <Text style={styles.subtitle}>Kommentare</Text>
+                <Text style={globalStyles.subtitle}>Kommentare</Text>
             </View>
             <FlatList<CommentWithUserData>
                 data={comments}
@@ -83,7 +100,7 @@ const ProblemComments = ({ problem, comments, onSend: onSendProp, onClose }: Pro
                         <Text>Keine Kommentare</Text>
                     </View>
                 )}
-                contentContainerStyle={styles.contentContainer}
+                contentContainerStyle={styles.commentsContainer}
             />
             <ChatInput
                 onSend={onSend}

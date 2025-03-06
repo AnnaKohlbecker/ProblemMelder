@@ -1,6 +1,6 @@
 import { format } from 'date-fns/format'
 import { StyleSheet, View } from 'react-native'
-import { Icon, Text } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
@@ -23,6 +23,10 @@ const styles = StyleSheet.create({
         gap: 4,
         marginBottom: 4,
     },
+    ownContent: {
+        color: colors.primary,
+        fontWeight: 'bold',
+    },
 })
 
 const CommentCard = ({ commentWithUserData }: Props) => {
@@ -31,15 +35,16 @@ const CommentCard = ({ commentWithUserData }: Props) => {
     return (
         <View>
             <View style={styles.header}>
-                <Text style={globalStyles.bold}>{commentWithUserData.UserData.name}</Text>
+                <Text
+                    style={
+                        (globalStyles.bold,
+                        session?.user.id === commentWithUserData.UserData.userId &&
+                            styles.ownContent)
+                    }
+                >
+                    {commentWithUserData.UserData.name}
+                </Text>
                 <Text>{format(commentWithUserData.timestamp, 'dd.MM.yyyy, HH:mm')} Uhr</Text>
-                {session?.user.id === commentWithUserData.UserData.userId && (
-                    <Icon
-                        size={16}
-                        source='crown'
-                        color={colors.gold}
-                    />
-                )}
             </View>
             <View style={styles.content}>
                 <Text>{commentWithUserData.content}</Text>

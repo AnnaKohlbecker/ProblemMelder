@@ -2,8 +2,8 @@ import { useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
 import { Button, IconButton, Text } from 'react-native-paper'
-import { RFValue } from 'react-native-responsive-fontsize'
 import { useUpsertProblemMutation } from '~/queries/Problems/useUpsertProblemMutation'
+import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useDialog } from '~/shared/context/DialogContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
@@ -18,10 +18,6 @@ const styles = StyleSheet.create({
     header: {
         gap: 10,
         marginBottom: 10,
-    },
-    subtitle: {
-        fontSize: RFValue(14),
-        fontWeight: 'bold',
     },
     wrapper: {
         gap: 10,
@@ -78,12 +74,13 @@ const ProblemReactivation = ({ problem, onClose, onSubmit: onSubmitProp }: Props
                 <View style={styles.header}>
                     <View style={globalStyles.flexRow}>
                         <IconButton
-                            size={12}
+                            size={20}
                             icon='arrow-left'
                             mode='outlined'
                             onPress={onClose}
+                            iconColor={colors.primary}
                         />
-                        <Text style={styles.subtitle}>Wurde das Problem nicht gelöst?</Text>
+                        <Text style={globalStyles.subtitle}>Wurde das Problem nicht gelöst?</Text>
                     </View>
                     <Text>
                         Wenn das Problem nicht zufriedenstellend gelöst wurde, kannst du es

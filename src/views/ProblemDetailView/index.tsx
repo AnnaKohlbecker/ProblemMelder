@@ -25,7 +25,7 @@ type Props = {
 
 const styles = StyleSheet.create({
     card: {
-        maxHeight: '80%',
+        height: '90%',
         padding: 15,
         width: '90%',
     },

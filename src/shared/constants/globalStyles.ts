@@ -82,4 +82,9 @@ export const globalStyles = StyleSheet.create({
         fontSize: RFValue(16),
         fontWeight: 'bold',
     },
+    subtitle: {
+        fontSize: RFValue(14),
+        fontWeight: 'bold',
+        paddingLeft: 10,
+    },
 })

@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     },
 })
 
-const StarsInput = ({
+const RatingInput = ({
     label,
     name,
     amount = 5,
@@ -86,11 +86,13 @@ const StarsInput = ({
             {label && <Text style={styles.label}>{label}</Text>}
             <View style={globalStyles.flexRowWithSpace}>
                 <View style={styles.starContainer}>{starButtons}</View>
-                <IconButton
-                    icon='trash-can'
-                    mode='outlined'
-                    onPress={onClear}
-                />
+                {!isNil(value) && (
+                    <IconButton
+                        icon='trash-can'
+                        mode='outlined'
+                        onPress={onClear}
+                    />
+                )}
             </View>
             {(!isNil(helperText) || !isNil(error)) && (
                 <HelperText
@@ -105,4 +107,4 @@ const StarsInput = ({
     )
 }
 
-export default StarsInput
+export default RatingInput

@@ -2,13 +2,13 @@ import { useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
 import { Button, IconButton, Text } from 'react-native-paper'
-import { RFValue } from 'react-native-responsive-fontsize'
 import { useUserProblemReviewQuery } from '~/queries/ProblemReviews/useUserProblemReviewQuery'
+import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
-import StarsInput from '~/shared/views/StarsInput'
+import RatingInput from '~/shared/views/RatingInput'
 import { Problem, ProblemReview } from '~/supabase/types'
 import { useReviewUpdateLogic } from '~/views/ProblemDetailView/hooks/useReviewUpdateLogic'
 
@@ -21,10 +21,6 @@ const styles = StyleSheet.create({
     header: {
         gap: 10,
         marginBottom: 10,
-    },
-    subtitle: {
-        fontSize: RFValue(14),
-        fontWeight: 'bold',
     },
     wrapper: {
         gap: 10,
@@ -94,20 +90,21 @@ const ProblemRating = ({ problem, onClose }: Props) => {
                 <View style={styles.header}>
                     <View style={globalStyles.flexRow}>
                         <IconButton
-                            size={12}
+                            size={20}
                             icon='arrow-left'
                             mode='outlined'
                             onPress={onClose}
+                            iconColor={colors.primary}
                         />
 
-                        <Text style={styles.subtitle}>
+                        <Text style={globalStyles.subtitle}>
                             {problem.status === ProblemStatus.Done
                                 ? 'Problemlösung bewerten'
                                 : 'Dringlichkeit bewerten'}
                         </Text>
                     </View>
                 </View>
-                <StarsInput
+                <RatingInput
                     name={problem.status === ProblemStatus.Done ? 'stars' : 'importance'}
                     amount={problem.status === ProblemStatus.Done ? 5 : 3}
                     emptyIcon={

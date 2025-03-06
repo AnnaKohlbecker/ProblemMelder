@@ -27,7 +27,7 @@ type Props = {
 
 const styles = StyleSheet.create({
     multiline: {
-        minHeight: 140,
+        minHeight: 230,
     },
 })
 
