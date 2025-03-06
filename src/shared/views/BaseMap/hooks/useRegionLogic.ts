@@ -49,8 +49,8 @@ export const useRegionLogic = ({ onRegionChange: onRegionChangeProp }: Props) =>
 
             if (
                 // Only change the region if the change is signigicant
-                Math.abs(newRegion.latitude - currentRegion?.latitude) <= 0.0001 ||
-                Math.abs(newRegion.longitude - currentRegion?.longitude) <= 0.0001
+                Math.abs(newRegion.latitude - currentRegion.latitude) <= 0.0001 ||
+                Math.abs(newRegion.longitude - currentRegion.longitude) <= 0.0001
             )
                 return
 

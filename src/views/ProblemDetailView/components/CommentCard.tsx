@@ -4,7 +4,7 @@ import { Icon, Text } from 'react-native-paper'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
-import { CommentWithUserData } from '~/shared/types/CommentWithUserData'
+import { CommentWithUserData } from '~/supabase/types'
 
 type Props = {
     commentWithUserData: CommentWithUserData

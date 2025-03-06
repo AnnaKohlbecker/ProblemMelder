@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { decode } from 'base64-arraybuffer'
 import { useCallback } from 'react'
-import { supabase } from '~/services/supabase'
+import { supabase } from '~/supabase'
 
 type Payload = {
     path: string

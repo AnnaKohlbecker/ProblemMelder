@@ -5,13 +5,9 @@
             "label": "tsc-watch",
             "type": "shell",
             "command": "tsc",
-            "args": [
-                "--watch"
-            ],
+            "args": ["--watch"],
             "isBackground": true,
-            "problemMatcher": [
-                "$tsc-watch"
-            ],
+            "problemMatcher": ["$tsc-watch"],
             "presentation": {
                 "reveal": "always",
                 "panel": "dedicated",

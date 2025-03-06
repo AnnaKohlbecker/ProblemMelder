@@ -6,11 +6,11 @@ import { useAuthoritiesQuery } from '~/queries/Authorities/useAuthoritiesQuery'
 import { useUpsertCategoryMutation } from '~/queries/Categories/useUpsertCategoryMutation'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useSnackbar } from '~/shared/context/SnackbarContext'
-import { Category } from '~/shared/models/Category'
 import IconPicker from '~/shared/views/Inputs/IconPicker'
 import SelectMenu from '~/shared/views/Inputs/SelectMenu'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import TextInput from '~/shared/views/TextInput'
+import { Category } from '~/supabase/types'
 import { ProblemCategoryFormData } from '~/views/Management/Categories/types/ProblemCategoryFormData'
 
 type Props = {

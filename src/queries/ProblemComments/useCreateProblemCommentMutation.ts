@@ -1,9 +1,8 @@
 import { useMutation } from '@tanstack/react-query'
 import { isNil } from 'lodash'
 import { useCallback } from 'react'
-import { supabase } from '~/services/supabase'
 import { useAuth } from '~/shared/context/AuthContext'
-import { Table } from '~/shared/enums/Table'
+import { supabase } from '~/supabase'
 
 type Payload = {
     content: string
@@ -19,7 +18,7 @@ export const useCreateProblemCommentMutation = () => {
                 throw new Error('User is not logged in -> should not be allowed to comment.')
 
             await supabase
-                .from(Table.ProblemComments)
+                .from('ProblemComments')
                 .insert({
                     userId: session.user.id,
                     problemId,

@@ -12,10 +12,10 @@ import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { Route as RouteEnum } from '~/shared/enums/Route'
-import { Problem } from '~/shared/models/Problem'
 import Filter from '~/shared/views/Filter'
 import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
+import { Problem } from '~/supabase/types'
 import ProblemDetailView from '~/views/ProblemDetailView'
 import ProblemCard from '~/views/Problems/components/ProblemCard'
 import { useProblemsFilterLogic } from '~/views/Problems/hooks/useProblemFilterLogic'
@@ -81,7 +81,7 @@ const Problems = ({ route }: Props) => {
     })
 
     const { filteredProblems, filter, setFilter } = useProblemsFilterLogic({
-        problems: searchedProblems ?? [],
+        problems: searchedProblems,
     })
 
     const onReportProblem = useCallback(() => {
@@ -101,7 +101,9 @@ const Problems = ({ route }: Props) => {
         if (problemsLoading || problemsRefetching) return
 
         setIsUserTriggeredRefetch(true)
-        refetchProblems().finally(() => setIsUserTriggeredRefetch(false))
+        refetchProblems().finally(() => {
+            setIsUserTriggeredRefetch(false)
+        })
     }, [problemsLoading, problemsRefetching, refetchProblems])
 
     if (userLoading || problemsLoading) return <LoadingSpinner />
@@ -137,7 +139,9 @@ const Problems = ({ route }: Props) => {
                         <ProblemCard
                             key={index}
                             problem={problem}
-                            onCardPress={() => onShowProblemDetails(problem)}
+                            onCardPress={() => {
+                                onShowProblemDetails(problem)
+                            }}
                         />
                     )}
                     ListFooterComponent={<View style={styles.listFooter} />}
@@ -149,11 +153,13 @@ const Problems = ({ route }: Props) => {
                     }
                 />
             )}
-            <FAB
-                icon='plus'
-                onPress={onReportProblem}
-                style={globalStyles.fab}
-            />
+            {!isNil(session) && (
+                <FAB
+                    icon='plus'
+                    onPress={onReportProblem}
+                    style={globalStyles.fab}
+                />
+            )}
             {selectedProblemDetails && (
                 <ProblemDetailView
                     problem={selectedProblemDetails}

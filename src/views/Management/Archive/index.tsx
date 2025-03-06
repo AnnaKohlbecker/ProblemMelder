@@ -10,9 +10,9 @@ import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { Route as RouteEnum } from '~/shared/enums/Route'
-import { Problem } from '~/shared/models/Problem'
 import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
+import { Problem } from '~/supabase/types'
 import ProblemDetailView from '~/views/ProblemDetailView'
 import ProblemCard from '~/views/Problems/components/ProblemCard'
 import { useProblemsSearchLogic } from '~/views/Problems/hooks/useProblemsSearchLogic'
@@ -123,7 +123,9 @@ const Archive = ({ route }: Props) => {
                                 <ProblemCard
                                     key={index}
                                     problem={problem}
-                                    onCardPress={() => onShowProblemDetails(problem)}
+                                    onCardPress={() => {
+                                        onShowProblemDetails(problem)
+                                    }}
                                 />
                             )}
                             ListFooterComponent={<View style={styles.listFooter} />}

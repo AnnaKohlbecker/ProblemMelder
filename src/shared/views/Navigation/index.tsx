@@ -30,7 +30,9 @@ const Navigation = () => {
             prevRouteName.current = currentRoute.name
         })
 
-        return () => unsubscribe()
+        return () => {
+            unsubscribe()
+        }
     }, [navigationRef, queryClient])
 
     return (

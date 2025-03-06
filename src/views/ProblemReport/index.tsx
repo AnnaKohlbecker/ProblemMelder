@@ -15,8 +15,8 @@ import { useAuth } from '~/shared/context/AuthContext'
 import { useDialog } from '~/shared/context/DialogContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { Route as RouteEnum } from '~/shared/enums/Route'
-import { Problem } from '~/shared/models/Problem'
 import Header from '~/shared/views/Header'
+import { Problem } from '~/supabase/types'
 import { REPORT_STEPS } from '~/views/ProblemReport/constants/reportSteps'
 
 type Props = {
@@ -92,7 +92,9 @@ const ProblemReport = ({ route }: Props) => {
             return true
         })
 
-        return () => subscription.remove()
+        return () => {
+            subscription.remove()
+        }
     }, [onClose])
 
     const onPrev = useCallback(() => {
@@ -127,7 +129,7 @@ const ProblemReport = ({ route }: Props) => {
                         path: imageId,
                     },
                     {
-                        onSuccess: () =>
+                        onSuccess: () => {
                             upsertProblem(
                                 {
                                     ...data,
@@ -138,7 +140,8 @@ const ProblemReport = ({ route }: Props) => {
                                         navigate(RouteEnum.MAIN)
                                     },
                                 },
-                            ),
+                            )
+                        },
                     },
                 )
             })()

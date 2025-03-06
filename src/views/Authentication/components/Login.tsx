@@ -3,10 +3,10 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { Alert, StyleSheet, View } from 'react-native'
 import { Button, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
-import { supabase } from '~/services/supabase'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import TextInput from '~/shared/views/TextInput'
+import { supabase } from '~/supabase'
 
 type LoginModel = {
     email: string

@@ -7,9 +7,9 @@ import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useDialog } from '~/shared/context/DialogContext'
 import { Route as RouteEnum } from '~/shared/enums/Route'
-import { Problem } from '~/shared/models/Problem'
 import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
+import { Problem } from '~/supabase/types'
 import ProfileHeader from '~/views/Profile/components/ProfileHeader'
 
 type Props = {
@@ -62,7 +62,13 @@ const Profile = ({ route }: Props) => {
                 <>
                     <ProfileHeader />
                     {problems && problems.length > 0 ? (
-                        <Button onPress={() => onDelete(problems[0])}>{deleteButtonText}</Button>
+                        <Button
+                            onPress={() => {
+                                onDelete(problems[0])
+                            }}
+                        >
+                            {deleteButtonText}
+                        </Button>
                     ) : (
                         <Text>{deleteButtonText}</Text>
                     )}

@@ -1,12 +1,14 @@
 import { useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
-import { Button, Text } from 'react-native-paper'
+import { Button, IconButton, Text } from 'react-native-paper'
+import { RFValue } from 'react-native-responsive-fontsize'
 import { useUpsertProblemMutation } from '~/queries/Problems/useUpsertProblemMutation'
+import { globalStyles } from '~/shared/constants/globalStyles'
 import { useDialog } from '~/shared/context/DialogContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
-import { Problem } from '~/shared/models/Problem'
 import TextInput from '~/shared/views/TextInput'
+import { Problem } from '~/supabase/types'
 
 const styles = StyleSheet.create({
     footer: {
@@ -18,6 +20,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     subtitle: {
+        fontSize: RFValue(14),
         fontWeight: 'bold',
     },
     wrapper: {
@@ -28,9 +31,10 @@ const styles = StyleSheet.create({
 type Props = {
     problem: Problem
     onClose: () => void
+    onSubmit: () => void
 }
 
-const ProblemReactivation = ({ problem, onClose }: Props) => {
+const ProblemReactivation = ({ problem, onClose, onSubmit: onSubmitProp }: Props) => {
     const confirm = useDialog()
 
     const form = useForm({
@@ -59,20 +63,28 @@ const ProblemReactivation = ({ problem, onClose }: Props) => {
                 dismissLabel: 'Abbrechen',
                 onAccept: () => {
                     updateProblem(data, {
-                        onSuccess: onClose,
-                        onError: onClose,
+                        onSuccess: onSubmitProp,
+                        onError: onSubmitProp,
                     })
                 },
             })
         },
-        [confirm, onClose, updateProblem],
+        [confirm, onSubmitProp, updateProblem],
     )
 
     return (
         <FormProvider {...form}>
             <View style={styles.wrapper}>
                 <View style={styles.header}>
-                    <Text style={styles.subtitle}>Wurde das Problem nicht gelöst?</Text>
+                    <View style={globalStyles.flexRow}>
+                        <IconButton
+                            size={12}
+                            icon='arrow-left'
+                            mode='outlined'
+                            onPress={onClose}
+                        />
+                        <Text style={styles.subtitle}>Wurde das Problem nicht gelöst?</Text>
+                    </View>
                     <Text>
                         Wenn das Problem nicht zufriedenstellend gelöst wurde, kannst du es
                         reaktivieren.

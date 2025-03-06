@@ -5,9 +5,9 @@ import { Button, Dialog, Portal } from 'react-native-paper'
 import { useUpsertAuthorityMutation } from '~/queries/Authorities/useUpsertAuthorityMutation'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useSnackbar } from '~/shared/context/SnackbarContext'
-import { Authority } from '~/shared/models/Authority'
 import SwitchInput from '~/shared/views/Inputs/SwitchInput'
 import TextInput from '~/shared/views/TextInput'
+import { Authority } from '~/supabase/types'
 import { AuthorityFormData } from '~/views/Management/Authorities/types/AuthorityFormData'
 
 type Props = {

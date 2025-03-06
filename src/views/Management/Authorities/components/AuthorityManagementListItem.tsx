@@ -5,8 +5,8 @@ import { Card, Icon, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { useUsersByAuthorityQuery } from '~/queries/Authorities/useUsersByAuthorityQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
-import { Authority } from '~/shared/models/Authority'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
+import { Authority } from '~/supabase/types'
 
 const styles = StyleSheet.create({
     buttons: {
@@ -45,8 +45,12 @@ const AuthorityManagementListItem = ({
     onEdit: onEditProp,
     onDelete: onDeleteProp,
 }: Props) => {
-    const onEdit = useCallback(() => onEditProp(item), [item, onEditProp])
-    const onDelete = useCallback(() => onDeleteProp(item), [item, onDeleteProp])
+    const onEdit = useCallback(() => {
+        onEditProp(item)
+    }, [item, onEditProp])
+    const onDelete = useCallback(() => {
+        onDeleteProp(item)
+    }, [item, onDeleteProp])
 
     const { data: staffMembers, isLoading: staffLoading } = useUsersByAuthorityQuery(item.id)
 

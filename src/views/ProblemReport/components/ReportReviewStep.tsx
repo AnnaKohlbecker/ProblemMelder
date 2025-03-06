@@ -8,9 +8,9 @@ import { RFValue } from 'react-native-responsive-fontsize'
 import { useCategoriesQuery } from '~/queries/Categories/useCategoriesQuery'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
-import { Problem } from '~/shared/models/Problem'
 import ImagePreview from '~/shared/views/Image'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
+import { Problem } from '~/supabase/types'
 import { ReportStepProps } from '~/views/ProblemReport/types/ReportStepProps'
 
 const styles = StyleSheet.create({

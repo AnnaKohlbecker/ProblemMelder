@@ -1,13 +1,14 @@
 import { useQuery } from '@tanstack/react-query'
 import { isNil } from 'lodash'
 import { useCallback } from 'react'
-import { supabase } from '~/services/supabase'
-import { Table } from '~/shared/enums/Table'
+import { supabase } from '~/supabase'
 
 export const useUsersByAuthorityQuery = (authorityId: number | undefined) => {
     const queryFn = useCallback(async () => {
+        if (isNil(authorityId)) return null
+
         const response = await supabase
-            .from(Table.UserData)
+            .from('UserData')
             .select('*')
             .eq('authorityId', authorityId)
             .throwOnError()
