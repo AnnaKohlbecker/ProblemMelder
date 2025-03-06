@@ -19,7 +19,7 @@ const icons = [
     'fire',
     'gas-cylinder',
     'power-plug-off',
-    'road',
+    'lightbulb',
     'traffic-light',
     'human-male-female',
     'tree-outline',
