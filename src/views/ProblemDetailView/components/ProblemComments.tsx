@@ -33,9 +33,9 @@ const styles = StyleSheet.create({
         gap: 15,
     },
     empty: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        minHeight: 400,
     },
 })
 
@@ -95,11 +95,7 @@ const ProblemComments = ({ problem, comments, onSend: onSendProp, onClose }: Pro
                 data={comments}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
-                ListEmptyComponent={() => (
-                    <View style={styles.empty}>
-                        <Text>Keine Kommentare</Text>
-                    </View>
-                )}
+                ListEmptyComponent={() => <View style={styles.empty} />}
                 contentContainerStyle={styles.commentsContainer}
             />
             <ChatInput

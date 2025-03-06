@@ -159,7 +159,7 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
                                 />
                             </View>
                         </View>
-                        <Divider />
+                        <Divider style={globalStyles.divider} />
 
                         {currentContent === ProblemDetailViewContent.Details && (
                             <ProblemDetails

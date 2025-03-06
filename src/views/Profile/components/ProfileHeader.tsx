@@ -1,7 +1,7 @@
 import { isNil } from 'lodash'
 import { useMemo } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
-import { Card, Divider, Text } from 'react-native-paper'
+import { Card, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { useUserByIdQuery } from '~/queries/UserData/useUserByIdQuery'
 import { colors } from '~/shared/constants/colors'
@@ -82,7 +82,6 @@ const ProfileHeader = () => {
                         </Text>
                         {role.name !== 'admin' && role.name !== 'manager' && (
                             <>
-                                <Divider />
                                 <Text style={styles.infoText}>
                                     Rolle:{' '}
                                     <Text style={[globalStyles.bold, styles.infoText]}>

@@ -2,7 +2,7 @@ import * as Location from 'expo-location'
 import { isNil } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { Button, Divider, Icon, Text, TouchableRipple } from 'react-native-paper'
+import { Button, Icon, Text, TouchableRipple } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { useProblemReviewsQuery } from '~/queries/ProblemReviews/useProblemReviewsQuery'
 import { useUserProblemReviewQuery } from '~/queries/ProblemReviews/useUserProblemReviewQuery'
@@ -36,10 +36,10 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     image: {
-        borderRadius: 20,
-        height: RFValue(80),
+        borderRadius: 10,
+        height: RFValue(120),
         maxWidth: '100%',
-        width: RFValue(80),
+        width: RFValue(90),
     },
     imageWrapper: {
         gap: 10,
@@ -49,10 +49,12 @@ const styles = StyleSheet.create({
         height: 100,
     },
     details: {
-        gap: 10,
+        gap: 20,
     },
     description: {
-        maxHeight: 200,
+        height: 160,
+        borderWidth: 0.5,
+        borderRadius: 10,
     },
     wrapper: {
         padding: 5,
@@ -61,6 +63,13 @@ const styles = StyleSheet.create({
     ripple: {
         paddingVertical: 2,
         paddingHorizontal: 4,
+        borderRadius: 10,
+    },
+    detailsText: {
+        fontSize: RFValue(14),
+    },
+    problemContent: {
+        backgroundColor: colors.tertiary,
         borderRadius: 10,
     },
 })
@@ -127,81 +136,85 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
 
     return (
         <View style={styles.wrapper}>
-            <View style={[globalStyles.flexRow, styles.imageWrapper]}>
-                {problem.image ? (
-                    <ImagePreview
-                        source={{ uri: getImagePath(problem.image) }}
-                        style={styles.image}
-                    />
-                ) : (
-                    <Text style={globalStyles.noDataText}>Kein Bild vorhanden</Text>
-                )}
+            <View style={styles.problemContent}>
+                <View style={[globalStyles.flexRow, styles.imageWrapper]}>
+                    {problem.image ? (
+                        <ImagePreview
+                            source={{ uri: getImagePath(problem.image) }}
+                            style={styles.image}
+                        />
+                    ) : (
+                        <Text style={globalStyles.noDataText}>Kein Bild vorhanden</Text>
+                    )}
+
+                    <View style={styles.details}>
+                        <View style={globalStyles.flexRowWithGap}>
+                            <View style={styles.icon}>
+                                <Icon
+                                    source={category.icon}
+                                    color={colors.black}
+                                    size={RFValue(20)}
+                                />
+                            </View>
+                            <Text style={styles.detailsText}>{category.title}</Text>
+                        </View>
+                        <View style={globalStyles.flexRowWithGap}>
+                            <View style={styles.icon}>
+                                <Icon
+                                    source='calendar'
+                                    size={RFValue(20)}
+                                    color={colors.black}
+                                />
+                            </View>
+                            <Text style={styles.detailsText}>{formattedDate}</Text>
+                        </View>
+                        <View style={globalStyles.flexRowWithGap}>
+                            <View style={styles.icon}>
+                                <Icon
+                                    source='account-edit'
+                                    size={RFValue(20)}
+                                    color={colors.black}
+                                />
+                            </View>
+                            <Text style={styles.detailsText}>{author?.name}</Text>
+                        </View>
+                    </View>
+                </View>
 
                 <View style={styles.details}>
-                    <View style={globalStyles.flexRowWithGap}>
+                    <View style={globalStyles.flexRow}>
                         <View style={styles.icon}>
                             <Icon
-                                source={category.icon}
-                                color={colors.black}
-                                size={RFValue(20)}
-                            />
-                        </View>
-                        <Text>{category.title}</Text>
-                    </View>
-                    <View style={globalStyles.flexRowWithGap}>
-                        <View style={styles.icon}>
-                            <Icon
-                                source='calendar'
+                                source='map-marker'
                                 size={RFValue(20)}
                                 color={colors.black}
                             />
                         </View>
-                        <Text>{formattedDate}</Text>
-                    </View>
-                    <View style={globalStyles.flexRowWithGap}>
-                        <View style={styles.icon}>
-                            <Icon
-                                source='account-edit'
-                                size={RFValue(20)}
-                                color={colors.black}
-                            />
-                        </View>
-                        <Text>{author?.name}</Text>
+                        <Text
+                            numberOfLines={2}
+                            lineBreakMode='tail'
+                            style={[styles.flexText, styles.detailsText]}
+                        >
+                            {address}
+                        </Text>
                     </View>
                 </View>
-            </View>
 
-            <View style={globalStyles.flexRow}>
-                <View style={styles.icon}>
-                    <Icon
-                        source='map-marker'
-                        size={RFValue(20)}
-                        color={colors.black}
-                    />
+                <View style={globalStyles.flexRow}>
+                    <View style={styles.icon}>
+                        <Icon
+                            source='text-long'
+                            size={RFValue(20)}
+                            color={colors.black}
+                        />
+                    </View>
+                    <ScrollView style={styles.description}>
+                        <Text style={[styles.flexText, styles.detailsText]}>
+                            {problem.description}
+                        </Text>
+                    </ScrollView>
                 </View>
-                <Text
-                    numberOfLines={2}
-                    lineBreakMode='tail'
-                    style={styles.flexText}
-                >
-                    {address}
-                </Text>
             </View>
-
-            <View style={globalStyles.flexRow}>
-                <View style={styles.icon}>
-                    <Icon
-                        source='text-long'
-                        size={RFValue(20)}
-                        color={colors.black}
-                    />
-                </View>
-                <ScrollView style={styles.description}>
-                    <Text style={styles.flexText}>{problem.description}</Text>
-                </ScrollView>
-            </View>
-
-            <Divider />
 
             <View style={globalStyles.flexRowWithSpace}>
                 <TouchableRipple
@@ -242,12 +255,12 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                 </TouchableRipple>
             </View>
 
-            <View style={globalStyles.flexRowCenter}>
+            <View style={globalStyles.flexRowWithGap}>
                 <Button
                     icon='thumb-up'
-                    mode='text'
-                    labelStyle={userReview?.helpful === true ? globalStyles.bold : undefined}
-                    textColor={userReview?.helpful === true ? colors.primary : colors.black}
+                    mode='contained'
+                    textColor={userReview?.helpful === true ? colors.primary : colors.secondary}
+                    buttonColor={colors.tertiary}
                     onPress={() => {
                         onHelpful(userReview?.helpful ? null : true)
                     }}
@@ -259,12 +272,11 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                 >
                     Hilfreich ({helpful})
                 </Button>
-                <Text>|</Text>
                 <Button
                     icon='thumb-down'
                     mode='text'
-                    labelStyle={userReview?.helpful === false ? globalStyles.bold : undefined}
-                    textColor={userReview?.helpful === false ? colors.primary : colors.black}
+                    textColor={userReview?.helpful === true ? colors.secondary : colors.primary}
+                    buttonColor={colors.tertiary}
                     onPress={() => {
                         onHelpful(userReview?.helpful === false ? null : false)
                     }}

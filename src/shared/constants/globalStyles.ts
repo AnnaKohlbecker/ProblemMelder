@@ -87,4 +87,7 @@ export const globalStyles = StyleSheet.create({
         fontWeight: 'bold',
         paddingLeft: 10,
     },
+    divider: {
+        borderWidth: 0.2,
+    },
 })
