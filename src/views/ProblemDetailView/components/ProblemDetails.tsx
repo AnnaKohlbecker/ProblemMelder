@@ -207,6 +207,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                 <TouchableRipple
                     borderless={true}
                     style={styles.ripple}
+                    disabled={isNil(session)}
                     onPress={goTo(ProblemDetailViewContent.Comments)}
                 >
                     <View style={globalStyles.flexRowWithGap}>
@@ -222,6 +223,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                 <TouchableRipple
                     borderless={true}
                     style={styles.ripple}
+                    disabled={isNil(session)}
                     onPress={goTo(ProblemDetailViewContent.Rating)}
                 >
                     <View style={globalStyles.flexRow}>
