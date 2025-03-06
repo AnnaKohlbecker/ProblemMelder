@@ -20,7 +20,6 @@ export const useReviewUpdateLogic = ({ problemId, userId, userReview, refetch }:
             if (isNil(userReview))
                 upsertReview(
                     {
-                        id: 0,
                         userId,
                         problemId,
                         stars: rating,
@@ -56,7 +55,6 @@ export const useReviewUpdateLogic = ({ problemId, userId, userReview, refetch }:
             if (isNil(userReview))
                 upsertReview(
                     {
-                        id: 0,
                         userId,
                         problemId,
                         importance: rating,
@@ -92,7 +90,6 @@ export const useReviewUpdateLogic = ({ problemId, userId, userReview, refetch }:
             if (isNil(userReview))
                 upsertReview(
                     {
-                        id: 0,
                         userId,
                         problemId,
                         helpful,
