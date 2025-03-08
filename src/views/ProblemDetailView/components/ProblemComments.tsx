@@ -18,24 +18,29 @@ type Props = {
 }
 
 const styles = StyleSheet.create({
-    commentsContainer: {
+    smallCommentsContainer: {
+        padding: 10,
         backgroundColor: colors.tertiary,
         gap: 10,
+        minHeight: 130,
+        borderRadius: 10,
+    },
+    bigCommentsContainer: {
+        padding: 10,
+        backgroundColor: colors.tertiary,
+        gap: 10,
+        minHeight: 430,
+        borderRadius: 10,
     },
     bigWrapper: {
         maxHeight: '80%',
-        minHeight: 550,
+        minHeight: 600,
         gap: 15,
     },
     smallWrapper: {
         maxHeight: '80%',
         minHeight: 300,
         gap: 15,
-    },
-    empty: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: 400,
     },
 })
 
@@ -95,8 +100,9 @@ const ProblemComments = ({ problem, comments, onSend: onSendProp, onClose }: Pro
                 data={comments}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
-                ListEmptyComponent={() => <View style={styles.empty} />}
-                contentContainerStyle={styles.commentsContainer}
+                contentContainerStyle={
+                    isKeyboardVisible ? styles.smallCommentsContainer : styles.bigCommentsContainer
+                }
             />
             <ChatInput
                 onSend={onSend}

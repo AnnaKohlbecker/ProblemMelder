@@ -53,8 +53,6 @@ const styles = StyleSheet.create({
     },
     description: {
         height: 160,
-        borderWidth: 0.5,
-        borderRadius: 10,
     },
     wrapper: {
         padding: 5,
@@ -260,7 +258,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                     icon='thumb-up'
                     mode='contained'
                     textColor={userReview?.helpful === true ? colors.primary : colors.secondary}
-                    buttonColor={colors.tertiary}
+                    buttonColor={colors.white}
                     onPress={() => {
                         onHelpful(userReview?.helpful ? null : true)
                     }}
@@ -270,13 +268,13 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                         problem.status === ProblemStatus.Cancelled
                     }
                 >
-                    Hilfreich ({helpful})
+                    Hilfreich <Text>{helpful}</Text>
                 </Button>
                 <Button
                     icon='thumb-down'
                     mode='text'
                     textColor={userReview?.helpful === true ? colors.secondary : colors.primary}
-                    buttonColor={colors.tertiary}
+                    buttonColor={colors.white}
                     onPress={() => {
                         onHelpful(userReview?.helpful === false ? null : false)
                     }}
@@ -286,7 +284,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                         problem.status === ProblemStatus.Cancelled
                     }
                 >
-                    Falschmeldung ({unhelpful})
+                    Falschmeldung <Text>{unhelpful}</Text>
                 </Button>
             </View>
         </View>
