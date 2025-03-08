@@ -14,20 +14,16 @@ import { Category, Problem } from '~/supabase/types'
 const styles = StyleSheet.create({
     footer: {
         alignItems: 'flex-end',
-        marginTop: 20,
     },
-    wrapper: {
-        paddingBottom: 20,
+    bigWrapper: {
+        maxHeight: '80%',
+        minHeight: 600,
         gap: 15,
     },
-    smallInputContainer: {
-        maxHeight: '45%',
-    },
-    bigInputContainer: {
+    smallWrapper: {
         maxHeight: '80%',
-    },
-    scrollviewItems: {
-        gap: 10,
+        minHeight: 300,
+        gap: 15,
     },
 })
 
@@ -93,7 +89,7 @@ const ProblemReview = ({ problem, categories, onClose, onSubmit: onSubmitProp }:
 
     return (
         <FormProvider {...form}>
-            <View style={styles.wrapper}>
+            <View style={isKeyboardVisible ? styles.smallWrapper : styles.bigWrapper}>
                 <View style={globalStyles.flexRow}>
                     <IconButton
                         size={20}
@@ -102,14 +98,10 @@ const ProblemReview = ({ problem, categories, onClose, onSubmit: onSubmitProp }:
                         onPress={onClose}
                         iconColor={colors.primary}
                     />
-                    <Text style={globalStyles.subtitle}>Problem prüfen</Text>
+                    <Text style={globalStyles.subtitle}>Überprüfung</Text>
                 </View>
-                <ScrollView
-                    style={
-                        isKeyboardVisible ? styles.smallInputContainer : styles.bigInputContainer
-                    }
-                >
-                    <View style={styles.scrollviewItems}>
+                <ScrollView>
+                    <View style={globalStyles.gap}>
                         <SelectMenu
                             label='Status'
                             name='status'
@@ -136,8 +128,9 @@ const ProblemReview = ({ problem, categories, onClose, onSubmit: onSubmitProp }:
                             multiline={true}
                             disabled={!isDirty}
                             rules={{
-                                required: 'Bitte gebe eine Begründung für die Änderung ein.',
+                                required: 'Bitte gebe eine Begründung an.',
                             }}
+                            multilineHeight={isKeyboardVisible ? 150 : 300}
                         />
                     </View>
                 </ScrollView>

@@ -74,11 +74,9 @@ export const globalStyles = StyleSheet.create({
     },
     searchBar: {
         backgroundColor: colors.white,
-        color: colors.black,
         flex: 1,
     },
     title: {
-        color: colors.black,
         fontSize: RFValue(16),
         fontWeight: 'bold',
     },
@@ -89,5 +87,9 @@ export const globalStyles = StyleSheet.create({
     },
     divider: {
         borderWidth: 0.2,
+        borderColor: colors.secondary,
+    },
+    gap: {
+        gap: 15,
     },
 })

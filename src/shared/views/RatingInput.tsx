@@ -1,5 +1,5 @@
 import { isNil } from 'lodash'
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useController, UseControllerProps } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
 import { HelperText, IconButton, Text } from 'react-native-paper'
@@ -64,7 +64,7 @@ const RatingInput = ({
             return (
                 <IconButton
                     key={key}
-                    size={40}
+                    size={50}
                     disabled={disabled}
                     style={styles.starButton}
                     onPress={() => {
@@ -77,22 +77,11 @@ const RatingInput = ({
         })
     }, [amount, disabled, value, emptyIcon, filledIcon, onChange])
 
-    const onClear = useCallback(() => {
-        onChange(null)
-    }, [onChange])
-
     return (
         <View>
             {label && <Text style={styles.label}>{label}</Text>}
             <View style={globalStyles.flexRowWithSpace}>
                 <View style={styles.starContainer}>{starButtons}</View>
-                {!isNil(value) && (
-                    <IconButton
-                        icon='trash-can'
-                        mode='outlined'
-                        onPress={onClear}
-                    />
-                )}
             </View>
             {(!isNil(helperText) || !isNil(error)) && (
                 <HelperText

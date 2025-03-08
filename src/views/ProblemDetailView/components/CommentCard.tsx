@@ -12,7 +12,7 @@ type Props = {
 
 const styles = StyleSheet.create({
     content: {
-        borderLeftColor: colors.gray,
+        borderLeftColor: colors.secondary,
         borderLeftWidth: 2,
         marginLeft: 2,
         paddingLeft: 6,

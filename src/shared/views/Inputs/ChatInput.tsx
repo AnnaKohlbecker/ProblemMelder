@@ -7,24 +7,19 @@ import { colors } from '~/shared/constants/colors'
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
-        backgroundColor: colors.secondary,
+        backgroundColor: colors.tertiary,
         borderRadius: 30,
         flexDirection: 'row',
-        margin: 10,
         paddingLeft: 10,
         paddingVertical: 5,
-    },
-    disabled: {
-        backgroundColor: colors.gray,
-        borderColor: colors.black,
     },
     input: {
         flex: 1,
         fontSize: RFValue(12),
-        paddingBottom: 8,
+        paddingVertical: 8,
         paddingHorizontal: 10,
-        paddingTop: 8,
         textAlignVertical: 'center',
+        color: colors.primary,
     },
 })
 
@@ -47,7 +42,7 @@ const ChatInput = ({ pending, disabled = false, onSend }: Props) => {
     }
 
     return (
-        <View style={[styles.container, disabled ? styles.disabled : undefined]}>
+        <View style={styles.container}>
             <TextInput
                 editable={!disabled && !pending}
                 value={message}
@@ -58,12 +53,14 @@ const ChatInput = ({ pending, disabled = false, onSend }: Props) => {
                 }}
                 placeholder={disabled ? 'Bitte anmelden' : 'Kommentar'}
                 style={[styles.input, { height }]}
+                placeholderTextColor={colors.secondary}
             />
             <IconButton
                 icon='send'
                 onPress={handleSend}
                 loading={pending}
                 disabled={pending || disabled || !message.trim()}
+                iconColor={colors.primary}
             />
         </View>
     )

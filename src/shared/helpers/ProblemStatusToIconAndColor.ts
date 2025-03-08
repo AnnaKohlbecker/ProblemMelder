@@ -5,9 +5,9 @@ import { never } from '~/shared/helpers/never'
 export const problemStatusToIconAndColor = (status: ProblemStatus | undefined) => {
     switch (status) {
         case undefined:
-            return { icon: 'filter-remove', color: colors.gray, markerColor: 'orange' }
+            return { icon: 'filter-remove', color: colors.secondary, markerColor: 'orange' }
         case ProblemStatus.Cancelled:
-            return { icon: 'cancel', color: colors.gray, markerColor: 'orange' }
+            return { icon: 'cancel', color: colors.secondary, markerColor: 'orange' }
         case ProblemStatus.ToDo:
             return { icon: 'alert-circle', color: colors.red, markerColor: 'red' }
         case ProblemStatus.InProgress:

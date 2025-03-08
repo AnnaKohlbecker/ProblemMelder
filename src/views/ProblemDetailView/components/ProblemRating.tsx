@@ -1,3 +1,4 @@
+import { isNil } from 'lodash'
 import { useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
@@ -23,14 +24,17 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     wrapper: {
-        gap: 10,
-    },
-    footer: {
-        alignItems: 'flex-end',
-        marginTop: 20,
+        maxHeight: '80%',
+        minHeight: 600,
+        gap: 15,
     },
     loading: {
         height: 100,
+    },
+    ratingIcons: {
+        alignItems: 'center',
+        minHeight: 470,
+        justifyContent: 'center',
     },
 })
 
@@ -77,6 +81,11 @@ const ProblemRating = ({ problem, onClose }: Props) => {
         [onClose, onImportanceRating, onStarRating, problem.status],
     )
 
+    const onClear = useCallback(() => {
+        if (problem.status === ProblemStatus.Done) onStarRating(null)
+        else onImportanceRating(null)
+    }, [onImportanceRating, onStarRating, problem.status])
+
     if (userReviewLoading)
         return (
             <View style={styles.loading}>
@@ -99,22 +108,33 @@ const ProblemRating = ({ problem, onClose }: Props) => {
 
                         <Text style={globalStyles.subtitle}>
                             {problem.status === ProblemStatus.Done
-                                ? 'Problemlösung bewerten'
+                                ? 'Lösung bewerten'
                                 : 'Dringlichkeit bewerten'}
                         </Text>
                     </View>
                 </View>
-                <RatingInput
-                    name={problem.status === ProblemStatus.Done ? 'stars' : 'importance'}
-                    amount={problem.status === ProblemStatus.Done ? 5 : 3}
-                    emptyIcon={
-                        problem.status === ProblemStatus.Done
-                            ? 'star-outline'
-                            : 'alert-circle-outline'
-                    }
-                    filledIcon={problem.status === ProblemStatus.Done ? 'star' : 'alert-circle'}
-                />
-                <View style={styles.footer}>
+                <View style={styles.ratingIcons}>
+                    <RatingInput
+                        name={problem.status === ProblemStatus.Done ? 'stars' : 'importance'}
+                        amount={problem.status === ProblemStatus.Done ? 5 : 3}
+                        emptyIcon={
+                            problem.status === ProblemStatus.Done
+                                ? 'star-outline'
+                                : 'alert-circle-outline'
+                        }
+                        filledIcon={problem.status === ProblemStatus.Done ? 'star' : 'alert-circle'}
+                    />
+                </View>
+                <View style={globalStyles.flexRowWithSpace}>
+                    <Button
+                        mode='contained'
+                        disabled={
+                            isNil(form.getValues('importance')) && isNil(form.getValues('stars'))
+                        }
+                        onPress={onClear}
+                    >
+                        Löschen
+                    </Button>
                     <Button
                         mode='contained'
                         disabled={!isDirty}

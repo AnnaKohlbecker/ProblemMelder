@@ -15,10 +15,11 @@ export const HeaderStyles = StyleSheet.create({
     title: {
         color: colors.primary,
         fontSize: RFValue(18),
+        fontWeight: 'bold',
     },
     wrapper: {
         backgroundColor: colors.white,
-        color: colors.black,
+        color: colors.primary,
     },
 })
 

@@ -23,12 +23,11 @@ type Props = {
      * @default false
      */
     multiline?: boolean
+    multilineHeight?: number
 }
 
 const styles = StyleSheet.create({
-    multiline: {
-        minHeight: 230,
-    },
+    multiline: {},
 })
 
 const TextInput = ({
@@ -39,13 +38,21 @@ const TextInput = ({
     secureTextEntry = false,
     multiline = false,
     disabled,
+    multilineHeight = 200,
 }: Props) => {
     const {
         field: { value, onChange },
         fieldState: { error },
     } = useController({ name, rules })
 
-    const style = useMemo(() => (multiline ? styles.multiline : undefined), [multiline])
+    const style = useMemo(() => {
+        if (!multiline) return undefined
+
+        return {
+            ...styles.multiline,
+            minHeight: multilineHeight,
+        }
+    }, [multiline, multilineHeight])
 
     return (
         <View>

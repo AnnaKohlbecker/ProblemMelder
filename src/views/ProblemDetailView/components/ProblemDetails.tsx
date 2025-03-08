@@ -150,7 +150,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                             <View style={styles.icon}>
                                 <Icon
                                     source={category.icon}
-                                    color={colors.black}
+                                    color={colors.primary}
                                     size={RFValue(20)}
                                 />
                             </View>
@@ -161,7 +161,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                                 <Icon
                                     source='calendar'
                                     size={RFValue(20)}
-                                    color={colors.black}
+                                    color={colors.primary}
                                 />
                             </View>
                             <Text style={styles.detailsText}>{formattedDate}</Text>
@@ -171,7 +171,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                                 <Icon
                                     source='account-edit'
                                     size={RFValue(20)}
-                                    color={colors.black}
+                                    color={colors.primary}
                                 />
                             </View>
                             <Text style={styles.detailsText}>{author?.name}</Text>
@@ -185,7 +185,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                             <Icon
                                 source='map-marker'
                                 size={RFValue(20)}
-                                color={colors.black}
+                                color={colors.primary}
                             />
                         </View>
                         <Text
@@ -203,7 +203,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                         <Icon
                             source='text-long'
                             size={RFValue(20)}
-                            color={colors.black}
+                            color={colors.primary}
                         />
                     </View>
                     <ScrollView style={styles.description}>
