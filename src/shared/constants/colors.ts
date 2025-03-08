@@ -4,8 +4,8 @@
  * Also enables us to easier change the color scheme of the app by changing the colors here.
  */
 export const colors = {
-    primary: '#0073e6',
-    secondary: '#b0d1f1',
+    primary: '#0a66c2',
+    secondary: '#9bbfe1',
     tertiary: '#f2f6f9',
     white: '#ffffff',
     backdrop: '#00000044',
