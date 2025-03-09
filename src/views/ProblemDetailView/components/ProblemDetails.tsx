@@ -37,38 +37,45 @@ const styles = StyleSheet.create({
     },
     image: {
         borderRadius: 10,
-        height: RFValue(120),
+        height: RFValue(140),
         maxWidth: '100%',
         width: RFValue(90),
     },
-    imageWrapper: {
-        gap: 10,
-        marginBottom: 10,
-    },
     loading: {
         height: 100,
-    },
-    details: {
-        gap: 20,
     },
     description: {
         height: 160,
     },
     wrapper: {
-        padding: 5,
-        rowGap: 10,
+        maxHeight: '80%',
+        minHeight: 600,
+        gap: 15,
     },
-    ripple: {
-        paddingVertical: 2,
-        paddingHorizontal: 4,
-        borderRadius: 10,
-    },
-    detailsText: {
+    text: {
         fontSize: RFValue(14),
     },
     problemContent: {
         backgroundColor: colors.tertiary,
         borderRadius: 10,
+        padding: 7,
+        rowGap: 15,
+        marginBottom: 40,
+    },
+    ripple: {
+        paddingHorizontal: 20,
+        borderRadius: 30,
+        height: RFValue(40),
+        justifyContent: 'center',
+    },
+    buttonContent: {
+        height: RFValue(40),
+        borderRadius: 30,
+    },
+    activeButtonContent: {
+        height: RFValue(40),
+        borderRadius: 30,
+        backgroundColor: colors.secondary,
     },
 })
 
@@ -135,7 +142,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
     return (
         <View style={styles.wrapper}>
             <View style={styles.problemContent}>
-                <View style={[globalStyles.flexRow, styles.imageWrapper]}>
+                <View style={[globalStyles.flexRow, globalStyles.gap]}>
                     {problem.image ? (
                         <ImagePreview
                             source={{ uri: getImagePath(problem.image) }}
@@ -145,53 +152,53 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                         <Text style={globalStyles.noDataText}>Kein Bild vorhanden</Text>
                     )}
 
-                    <View style={styles.details}>
+                    <View style={globalStyles.gap}>
                         <View style={globalStyles.flexRowWithGap}>
                             <View style={styles.icon}>
                                 <Icon
                                     source={category.icon}
                                     color={colors.primary}
-                                    size={RFValue(20)}
+                                    size={RFValue(23)}
                                 />
                             </View>
-                            <Text style={styles.detailsText}>{category.title}</Text>
+                            <Text style={styles.text}>{category.title}</Text>
                         </View>
                         <View style={globalStyles.flexRowWithGap}>
                             <View style={styles.icon}>
                                 <Icon
                                     source='calendar'
-                                    size={RFValue(20)}
+                                    size={RFValue(23)}
                                     color={colors.primary}
                                 />
                             </View>
-                            <Text style={styles.detailsText}>{formattedDate}</Text>
+                            <Text style={styles.text}>{formattedDate}</Text>
                         </View>
                         <View style={globalStyles.flexRowWithGap}>
                             <View style={styles.icon}>
                                 <Icon
                                     source='account-edit'
-                                    size={RFValue(20)}
+                                    size={RFValue(23)}
                                     color={colors.primary}
                                 />
                             </View>
-                            <Text style={styles.detailsText}>{author?.name}</Text>
+                            <Text style={styles.text}>{author?.name}</Text>
                         </View>
                     </View>
                 </View>
 
-                <View style={styles.details}>
+                <View style={globalStyles.gap}>
                     <View style={globalStyles.flexRow}>
                         <View style={styles.icon}>
                             <Icon
                                 source='map-marker'
-                                size={RFValue(20)}
+                                size={RFValue(23)}
                                 color={colors.primary}
                             />
                         </View>
                         <Text
                             numberOfLines={2}
                             lineBreakMode='tail'
-                            style={[styles.flexText, styles.detailsText]}
+                            style={[styles.flexText, styles.text]}
                         >
                             {address}
                         </Text>
@@ -202,35 +209,33 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                     <View style={styles.icon}>
                         <Icon
                             source='text-long'
-                            size={RFValue(20)}
+                            size={RFValue(23)}
                             color={colors.primary}
                         />
                     </View>
                     <ScrollView style={styles.description}>
-                        <Text style={[styles.flexText, styles.detailsText]}>
-                            {problem.description}
-                        </Text>
+                        <Text style={[styles.flexText, styles.text]}>{problem.description}</Text>
                     </ScrollView>
                 </View>
             </View>
 
             <View style={globalStyles.flexRowWithSpace}>
-                <TouchableRipple
-                    borderless={true}
-                    style={styles.ripple}
-                    disabled={isNil(session)}
+                <Button
+                    mode='contained'
+                    buttonColor={colors.white}
                     onPress={goTo(ProblemDetailViewContent.Comments)}
-                >
-                    <View style={globalStyles.flexRowWithGap}>
+                    disabled={isNil(session)}
+                    textColor={colors.primary}
+                    contentStyle={styles.buttonContent}
+                    icon={() => (
                         <Icon
                             source='comment'
-                            size={RFValue(20)}
-                            color={colors.primary}
+                            size={RFValue(23)}
                         />
-                        <Text>{comments.length}</Text>
-                    </View>
-                </TouchableRipple>
-
+                    )}
+                >
+                    <Text style={styles.text}>{comments.length}</Text>
+                </Button>
                 <TouchableRipple
                     borderless={true}
                     style={styles.ripple}
@@ -241,21 +246,20 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                         {problem.status === ProblemStatus.Done ? (
                             <>
                                 {getRatingIcons(problem.status, stars)}
-                                <Text>{amountOfStars}</Text>
+                                <Text style={styles.text}>{amountOfStars}</Text>
                             </>
                         ) : (
                             <>
                                 {getRatingIcons(problem.status, importance)}
-                                <Text>{amountOfImportance}</Text>
+                                <Text style={styles.text}>{amountOfImportance}</Text>
                             </>
                         )}
                     </View>
                 </TouchableRipple>
             </View>
 
-            <View style={globalStyles.flexRowWithGap}>
+            <View style={globalStyles.flexRowWithSpace}>
                 <Button
-                    icon='thumb-up'
                     mode='contained'
                     textColor={userReview?.helpful === true ? colors.primary : colors.secondary}
                     buttonColor={colors.white}
@@ -267,12 +271,22 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                         problem.status === ProblemStatus.Done ||
                         problem.status === ProblemStatus.Cancelled
                     }
+                    icon={() => (
+                        <Icon
+                            source='thumb-up'
+                            size={RFValue(23)}
+                        />
+                    )}
+                    contentStyle={
+                        userReview?.helpful === true
+                            ? styles.activeButtonContent
+                            : styles.buttonContent
+                    }
                 >
-                    Hilfreich <Text>{helpful}</Text>
+                    <Text style={styles.text}>Hilfreich {helpful}</Text>
                 </Button>
                 <Button
-                    icon='thumb-down'
-                    mode='text'
+                    mode='contained'
                     textColor={userReview?.helpful === true ? colors.secondary : colors.primary}
                     buttonColor={colors.white}
                     onPress={() => {
@@ -283,8 +297,19 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                         problem.status === ProblemStatus.Done ||
                         problem.status === ProblemStatus.Cancelled
                     }
+                    icon={() => (
+                        <Icon
+                            source='thumb-down'
+                            size={RFValue(23)}
+                        />
+                    )}
+                    contentStyle={
+                        userReview?.helpful === true
+                            ? styles.buttonContent
+                            : styles.activeButtonContent
+                    }
                 >
-                    Falschmeldung <Text>{unhelpful}</Text>
+                    <Text style={styles.text}>Irrtum {unhelpful}</Text>
                 </Button>
             </View>
         </View>

@@ -33,9 +33,9 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     title: {
-        fontSize: RFValue(16),
+        fontSize: RFValue(14),
         fontWeight: 'bold',
-        maxWidth: '100%',
+        maxWidth: '80%',
     },
     wrapper: {
         alignItems: 'center',

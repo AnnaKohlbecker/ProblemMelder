@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Card, Icon, IconButton, Text } from 'react-native-paper'
-import { RFValue } from 'react-native-responsive-fontsize'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { Authority, Category } from '~/supabase/types'
 
@@ -17,9 +16,6 @@ const styles = StyleSheet.create({
     },
     gap: {
         gap: 4,
-    },
-    title: {
-        fontSize: RFValue(16),
     },
     wrapper: {
         alignItems: 'center',
@@ -68,7 +64,7 @@ const CategoryListItem = ({
                                 source='select'
                             />
                         )}
-                        <Text style={styles.title}>{item.title}</Text>
+                        <Text style={globalStyles.title}>{item.title}</Text>
                     </View>
                     <Text>{authority?.name}</Text>
                 </View>

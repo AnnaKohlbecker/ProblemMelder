@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         marginTop: RFValue(15),
     },
     name: {
-        fontSize: RFValue(23),
+        fontSize: RFValue(18),
         paddingBottom: 5,
     },
 })

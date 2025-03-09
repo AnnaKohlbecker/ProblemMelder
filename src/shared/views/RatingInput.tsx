@@ -3,7 +3,6 @@ import { useMemo } from 'react'
 import { useController, UseControllerProps } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
 import { HelperText, IconButton, Text } from 'react-native-paper'
-import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 
@@ -24,10 +23,6 @@ type Props = {
 }
 
 const styles = StyleSheet.create({
-    label: {
-        fontSize: RFValue(16),
-        fontWeight: 'bold',
-    },
     starButton: {
         margin: 0,
         padding: 0,
@@ -79,7 +74,7 @@ const RatingInput = ({
 
     return (
         <View>
-            {label && <Text style={styles.label}>{label}</Text>}
+            {label && <Text style={globalStyles.title}>{label}</Text>}
             <View style={globalStyles.flexRowWithSpace}>
                 <View style={styles.starContainer}>{starButtons}</View>
             </View>

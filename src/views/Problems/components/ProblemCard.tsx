@@ -27,7 +27,11 @@ const ProblemCard = ({ problem, onCardPress }: Props) => {
                             iconColor={iconAndColor.color}
                             size={RFValue(30)}
                         />
-                        <Text style={globalStyles.title}>{problem.title}</Text>
+                        <Text style={globalStyles.title}>
+                            {problem.title.length > 25
+                                ? `${problem.title.slice(0, 25)}...`
+                                : problem.title}
+                        </Text>
                     </View>
                 </View>
             </TouchableRipple>
