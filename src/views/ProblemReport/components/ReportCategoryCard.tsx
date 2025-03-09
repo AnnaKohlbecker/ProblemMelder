@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native'
 import { Card, Icon, IconButton, Text, TouchableRipple } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
+import { globalStyles } from '~/shared/constants/globalStyles'
 import { useDialog } from '~/shared/context/DialogContext'
 import { Category } from '~/supabase/types'
 
@@ -32,11 +33,6 @@ const styles = StyleSheet.create({
         right: 0,
         top: 0,
     },
-    subtitle: {
-        fontSize: RFValue(10),
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
 })
 
 type Props = {
@@ -62,8 +58,7 @@ const ReportCategoryCard = ({ item, onPress, selected }: Props) => {
                         source={item.icon}
                         color={colors.primary}
                     />
-
-                    <Text style={styles.subtitle}>{item.title}</Text>
+                    <Text style={globalStyles.subtitle}>{item.title}</Text>
                     <IconButton
                         style={styles.infoButton}
                         icon='information'

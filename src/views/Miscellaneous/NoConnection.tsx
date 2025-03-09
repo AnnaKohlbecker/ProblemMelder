@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native'
 import { Icon, Text } from 'react-native-paper'
-import { RFValue } from 'react-native-responsive-fontsize'
+import { globalStyles } from '~/shared/constants/globalStyles'
 
 const styles = StyleSheet.create({
     container: {
@@ -9,14 +9,6 @@ const styles = StyleSheet.create({
         gap: 20,
         justifyContent: 'center',
         paddingHorizontal: 30,
-    },
-    subtitle: {
-        fontSize: RFValue(14),
-        textAlign: 'center',
-    },
-    title: {
-        fontSize: RFValue(20),
-        textAlign: 'center',
     },
 })
 
@@ -27,8 +19,8 @@ const NoConnection = () => {
                 size={48}
                 source='connection'
             />
-            <Text style={styles.title}>Keine Verbindung</Text>
-            <Text style={styles.subtitle}>
+            <Text style={globalStyles.title}>Keine Verbindung</Text>
+            <Text style={globalStyles.subtitle}>
                 Es konnte keine Verbindung zum Server hergestellt werden, bitte prüfe deine
                 Netzwerkverbindung.
             </Text>

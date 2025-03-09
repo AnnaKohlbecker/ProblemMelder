@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 20,
     },
-    header: {
+    view: {
         padding: 20,
     },
     image: {
@@ -60,7 +60,7 @@ const ProfileHeader = () => {
     }, [user?.points])
 
     return (
-        <View style={styles.header}>
+        <View style={styles.view}>
             {isNil(user) || userLoading || isNil(role) ? (
                 <LoadingSpinner />
             ) : (
