@@ -17,6 +17,13 @@ const ProblemCard = ({ problem, onCardPress }: Props) => {
         [problem.status],
     )
 
+    const truncatedTitle = useMemo(() => {
+        const maxLength = 25
+        return problem.title.length > maxLength
+            ? `${problem.title.slice(0, maxLength)}...`
+            : problem.title
+    }, [problem.title])
+
     return (
         <Card style={globalStyles.card}>
             <TouchableRipple onPress={onCardPress}>
@@ -27,11 +34,7 @@ const ProblemCard = ({ problem, onCardPress }: Props) => {
                             iconColor={iconAndColor.color}
                             size={RFValue(30)}
                         />
-                        <Text style={globalStyles.title}>
-                            {problem.title.length > 25
-                                ? `${problem.title.slice(0, 25)}...`
-                                : problem.title}
-                        </Text>
+                        <Text style={globalStyles.title}>{truncatedTitle}</Text>
                     </View>
                 </View>
             </TouchableRipple>

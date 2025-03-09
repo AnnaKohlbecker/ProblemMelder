@@ -36,11 +36,11 @@ const CommentCard = ({ commentWithUserData }: Props) => {
         <View>
             <View style={styles.header}>
                 <Text
-                    style={
-                        (globalStyles.bold,
+                    style={[
+                        globalStyles.bold,
                         session?.user.id === commentWithUserData.UserData.userId &&
-                            styles.ownContent)
-                    }
+                            styles.ownContent,
+                    ]}
                 >
                     {commentWithUserData.UserData.name}
                 </Text>

@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { Keyboard, ScrollView, StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import { Button, IconButton, Text } from 'react-native-paper'
 import { useUpsertProblemMutation } from '~/queries/Problems/useUpsertProblemMutation'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useDialog } from '~/shared/context/DialogContext'
+import { useKeyboard } from '~/shared/context/KeyboardContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import SelectMenu from '~/shared/views/Inputs/SelectMenu'
 import TextInput from '~/shared/views/TextInput'
@@ -36,7 +37,7 @@ type Props = {
 
 const ProblemReview = ({ problem, categories, onClose, onSubmit: onSubmitProp }: Props) => {
     const confirm = useDialog()
-    const [isKeyboardVisible, setKeyboardVisible] = useState(false)
+    const { isKeyboardVisible } = useKeyboard()
 
     const form = useForm({
         values: {
@@ -71,21 +72,6 @@ const ProblemReview = ({ problem, categories, onClose, onSubmit: onSubmitProp }:
         },
         [confirm, onSubmitProp, updateProblem],
     )
-
-    useEffect(() => {
-        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-            setKeyboardVisible(true)
-        })
-
-        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-            setKeyboardVisible(false)
-        })
-
-        return () => {
-            keyboardDidShowListener.remove()
-            keyboardDidHideListener.remove()
-        }
-    }, [])
 
     return (
         <FormProvider {...form}>

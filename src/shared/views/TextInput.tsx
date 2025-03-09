@@ -1,7 +1,7 @@
 import { isNil } from 'lodash'
 import { useMemo } from 'react'
 import { useController, UseControllerProps } from 'react-hook-form'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 // eslint-disable-next-line no-restricted-imports
 import { TextInput as BaseInput, HelperText } from 'react-native-paper'
 
@@ -26,10 +26,6 @@ type Props = {
     multilineHeight?: number
 }
 
-const styles = StyleSheet.create({
-    multiline: {},
-})
-
 const TextInput = ({
     label,
     helperText,
@@ -49,7 +45,6 @@ const TextInput = ({
         if (!multiline) return undefined
 
         return {
-            ...styles.multiline,
             minHeight: multilineHeight,
         }
     }, [multiline, multilineHeight])

@@ -3,7 +3,6 @@ import { useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
 import { Button, IconButton, Text } from 'react-native-paper'
-import { useDeleteProblemReviewMutation } from '~/queries/ProblemReviews/useDeleteProblemReviewQuery'
 import { useUserProblemReviewQuery } from '~/queries/ProblemReviews/useUserProblemReviewQuery'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
@@ -37,15 +36,10 @@ const styles = StyleSheet.create({
         minHeight: 470,
         justifyContent: 'center',
     },
-    footer: {
-        alignItems: 'flex-end',
-    },
 })
 
 const ProblemRating = ({ problem, onClose }: Props) => {
     const { session } = useAuth()
-
-    const { mutate: deleteReview } = useDeleteProblemReviewMutation()
 
     const {
         data: userReview,
@@ -87,18 +81,23 @@ const ProblemRating = ({ problem, onClose }: Props) => {
         [onClose, onImportanceRating, onStarRating, problem.status],
     )
 
-    const onDelete = useCallback(
+    const onReset = useCallback(
         (data: Partial<ProblemReview>) => {
-            if (isNil(data.id)) return
+            if (problem.status === ProblemStatus.Done) {
+                data = {
+                    ...data,
+                    stars: null,
+                }
+            } else {
+                data = {
+                    ...data,
+                    importance: null,
+                }
+            }
 
-            deleteReview(data.id, {
-                onSuccess: () => {
-                    refetchUserReview()
-                    onClose()
-                },
-            })
+            onSubmit(data)
         },
-        [deleteReview, refetchUserReview, onClose],
+        [problem.status, onSubmit],
     )
 
     if (userReviewLoading)
@@ -140,16 +139,20 @@ const ProblemRating = ({ problem, onClose }: Props) => {
                         filledIcon={problem.status === ProblemStatus.Done ? 'star' : 'alert-circle'}
                     />
                 </View>
-                <View style={styles.footer}>
+                <View style={globalStyles.flexRowWithSpace}>
                     <Button
                         mode='contained'
-                        onPress={
-                            isNil(userReview?.id) || isDirty
-                                ? handleSubmit(onSubmit)
-                                : handleSubmit(onDelete)
-                        }
+                        onPress={handleSubmit(onReset)}
+                        disabled={isNil(userReview?.id)}
                     >
-                        {isNil(userReview?.id) || isDirty ? 'Speichern' : 'Löschen'}
+                        Löschen
+                    </Button>
+                    <Button
+                        mode='contained'
+                        onPress={handleSubmit(onSubmit)}
+                        disabled={!isDirty}
+                    >
+                        Speichern
                     </Button>
                 </View>
             </View>

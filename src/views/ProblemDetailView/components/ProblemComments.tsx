@@ -1,11 +1,12 @@
 import { isNil } from 'lodash'
-import { useCallback, useEffect, useState } from 'react'
-import { FlatList, Keyboard, ListRenderItem, StyleSheet, View } from 'react-native'
+import { useCallback } from 'react'
+import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { IconButton, Text } from 'react-native-paper'
 import { useCreateProblemCommentMutation } from '~/queries/ProblemComments/useCreateProblemCommentMutation'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
+import { useKeyboard } from '~/shared/context/KeyboardContext'
 import ChatInput from '~/shared/views/Inputs/ChatInput'
 import { CommentWithUserData, Problem } from '~/supabase/types'
 import CommentCard from '~/views/ProblemDetailView/components/CommentCard'
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
 
 const ProblemComments = ({ problem, comments, onSend: onSendProp, onClose }: Props) => {
     const { session } = useAuth()
-    const [isKeyboardVisible, setKeyboardVisible] = useState(false)
+    const { isKeyboardVisible } = useKeyboard()
 
     const { mutate: createComment, isPending: creatingComment } = useCreateProblemCommentMutation()
 
@@ -67,21 +68,6 @@ const ProblemComments = ({ problem, comments, onSend: onSendProp, onClose }: Pro
 
     const renderItem = useCallback<ListRenderItem<CommentWithUserData>>(({ item }) => {
         return <CommentCard commentWithUserData={item} />
-    }, [])
-
-    useEffect(() => {
-        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-            setKeyboardVisible(true)
-        })
-
-        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-            setKeyboardVisible(false)
-        })
-
-        return () => {
-            keyboardDidShowListener.remove()
-            keyboardDidHideListener.remove()
-        }
     }, [])
 
     return (
