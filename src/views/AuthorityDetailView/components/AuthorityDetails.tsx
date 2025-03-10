@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, StyleSheet, View } from 'react-native'
+import { FlatList, StyleSheet, View } from 'react-native'
 import { Icon, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
@@ -25,10 +25,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.tertiary,
         borderRadius: 10,
         padding: 7,
-        rowGap: 15,
         marginBottom: 40,
-    },
-    categories: {
         height: 200,
     },
 })
@@ -45,13 +42,11 @@ const AuthorityDetails = ({ authority, categories }: Props) => {
                             color={colors.primary}
                         />
                     </View>
-                    <ScrollView style={styles.categories}>
-                        <FlatList
-                            data={categories}
-                            keyExtractor={(item) => item.id.toString()}
-                            renderItem={({ item }) => <CategoryListItem item={item} />}
-                        />
-                    </ScrollView>
+                    <FlatList
+                        data={categories}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={({ item }) => <CategoryListItem item={item} />}
+                    />
                 </View>
             </View>
             <Text>{authority.name}</Text>
