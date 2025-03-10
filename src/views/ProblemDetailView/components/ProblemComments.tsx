@@ -19,29 +19,14 @@ type Props = {
 }
 
 const styles = StyleSheet.create({
-    smallCommentsContainer: {
+    commentsContainer: {
         padding: 10,
-        backgroundColor: colors.tertiary,
+        backgroundColor: colors.transparent,
         gap: 10,
-        minHeight: 130,
-        borderRadius: 10,
     },
-    bigCommentsContainer: {
-        padding: 10,
-        backgroundColor: colors.tertiary,
-        gap: 10,
-        minHeight: 430,
-        borderRadius: 10,
-    },
-    bigWrapper: {
-        maxHeight: '80%',
-        minHeight: 600,
-        gap: 15,
-    },
-    smallWrapper: {
-        maxHeight: '80%',
-        minHeight: 300,
-        gap: 15,
+    chatInput: {
+        marginTop: 15,
+        backgroundColor: colors.transparent,
     },
 })
 
@@ -71,8 +56,14 @@ const ProblemComments = ({ problem, comments, onSend: onSendProp, onClose }: Pro
     }, [])
 
     return (
-        <View style={isKeyboardVisible ? styles.smallWrapper : styles.bigWrapper}>
-            <View style={globalStyles.flexRow}>
+        <View
+            style={
+                isKeyboardVisible
+                    ? globalStyles.contentWrapperWithKeyboard
+                    : globalStyles.contentWrapper
+            }
+        >
+            <View style={globalStyles.cardSubtitle}>
                 <IconButton
                     size={20}
                     icon='arrow-left'
@@ -86,15 +77,15 @@ const ProblemComments = ({ problem, comments, onSend: onSendProp, onClose }: Pro
                 data={comments}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
-                contentContainerStyle={
-                    isKeyboardVisible ? styles.smallCommentsContainer : styles.bigCommentsContainer
-                }
+                contentContainerStyle={styles.commentsContainer}
             />
-            <ChatInput
-                onSend={onSend}
-                disabled={isNil(session)}
-                pending={creatingComment}
-            />
+            <View style={styles.chatInput}>
+                <ChatInput
+                    onSend={onSend}
+                    disabled={isNil(session)}
+                    pending={creatingComment}
+                />
+            </View>
         </View>
     )
 }
