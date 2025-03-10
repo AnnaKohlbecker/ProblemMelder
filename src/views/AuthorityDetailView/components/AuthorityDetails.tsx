@@ -41,26 +41,34 @@ const AuthorityDetails = ({ authority }: Props) => {
     return (
         <View style={styles.wrapper}>
             <View style={styles.authorityContent}>
-                <View style={globalStyles.flexRow}>
-                    <View style={styles.icon}>
-                        <Icon
-                            source='email'
-                            size={RFValue(23)}
-                            color={colors.primary}
-                        />
+                <View style={globalStyles.gap}>
+                    <View style={globalStyles.flexRowWithGap}>
+                        <View style={styles.icon}>
+                            <Icon
+                                source='email'
+                                size={RFValue(23)}
+                                color={colors.primary}
+                            />
+                        </View>
+                        <Text
+                            numberOfLines={2}
+                            lineBreakMode='tail'
+                            style={[styles.flexText, styles.text]}
+                        >
+                            {authority.domain}
+                        </Text>
                     </View>
-                    <Text style={styles.text}>{authority.domain}</Text>
                 </View>
-                <View style={globalStyles.flexRow}>
+                <View style={globalStyles.flexRowWithGap}>
                     <View style={styles.icon}>
                         <Icon
-                            source='text-long'
+                            source='briefcase'
                             size={RFValue(23)}
                             color={colors.primary}
                         />
                     </View>
                     <ScrollView style={styles.description}>
-                        <Text style={[styles.flexText, styles.text]}>{authority.name}</Text>
+                        <Text style={[styles.flexText, styles.text]}>{authority.domain}</Text>
                     </ScrollView>
                 </View>
             </View>

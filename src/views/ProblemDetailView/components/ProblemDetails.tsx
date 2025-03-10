@@ -142,7 +142,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
     return (
         <View style={styles.wrapper}>
             <View style={styles.problemContent}>
-                <View style={[globalStyles.flexRow, globalStyles.gap]}>
+                <View style={globalStyles.flexRowWithGap}>
                     {problem.image ? (
                         <ImagePreview
                             source={{ uri: getImagePath(problem.image) }}
@@ -186,26 +186,24 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                     </View>
                 </View>
 
-                <View style={globalStyles.gap}>
-                    <View style={globalStyles.flexRow}>
-                        <View style={styles.icon}>
-                            <Icon
-                                source='map-marker'
-                                size={RFValue(23)}
-                                color={colors.primary}
-                            />
-                        </View>
-                        <Text
-                            numberOfLines={2}
-                            lineBreakMode='tail'
-                            style={[styles.flexText, styles.text]}
-                        >
-                            {address}
-                        </Text>
+                <View style={globalStyles.flexRowWithGap}>
+                    <View style={styles.icon}>
+                        <Icon
+                            source='map-marker'
+                            size={RFValue(23)}
+                            color={colors.primary}
+                        />
                     </View>
+                    <Text
+                        numberOfLines={2}
+                        lineBreakMode='tail'
+                        style={[styles.flexText, styles.text]}
+                    >
+                        {address}
+                    </Text>
                 </View>
 
-                <View style={globalStyles.flexRow}>
+                <View style={globalStyles.flexRowWithGap}>
                     <View style={styles.icon}>
                         <Icon
                             source='text-long'
