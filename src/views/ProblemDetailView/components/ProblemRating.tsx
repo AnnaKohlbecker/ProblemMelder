@@ -19,15 +19,22 @@ type Props = {
 }
 
 const styles = StyleSheet.create({
+    header: {
+        gap: 10,
+        marginBottom: 10,
+    },
+    wrapper: {
+        maxHeight: '80%',
+        minHeight: 600,
+        gap: 15,
+    },
     loading: {
         height: 100,
     },
     ratingIcons: {
         alignItems: 'center',
+        minHeight: 470,
         justifyContent: 'center',
-    },
-    limitedHeight: {
-        height: 300,
     },
 })
 
@@ -102,8 +109,8 @@ const ProblemRating = ({ problem, onClose }: Props) => {
 
     return (
         <FormProvider {...form}>
-            <View style={[globalStyles.contentWrapper, styles.limitedHeight]}>
-                <View style={globalStyles.cardSubtitle}>
+            <View style={styles.wrapper}>
+                <View style={styles.header}>
                     <View style={globalStyles.flexRow}>
                         <IconButton
                             size={20}
@@ -136,11 +143,7 @@ const ProblemRating = ({ problem, onClose }: Props) => {
                     <Button
                         mode='contained'
                         onPress={handleSubmit(onReset)}
-                        disabled={
-                            isNil(userReview?.id) || problem.status === ProblemStatus.Done
-                                ? isNil(userReview?.stars)
-                                : isNil(userReview.importance)
-                        }
+                        disabled={isNil(userReview?.id)}
                     >
                         Löschen
                     </Button>

@@ -47,8 +47,20 @@ const styles = StyleSheet.create({
     description: {
         height: 160,
     },
+    wrapper: {
+        maxHeight: '80%',
+        minHeight: 600,
+        gap: 15,
+    },
     text: {
         fontSize: RFValue(14),
+    },
+    problemContent: {
+        backgroundColor: colors.tertiary,
+        borderRadius: 10,
+        padding: 7,
+        rowGap: 15,
+        marginBottom: 40,
     },
     ripple: {
         paddingHorizontal: 20,
@@ -65,15 +77,6 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         backgroundColor: colors.secondary,
     },
-    disabledButtonContent: {
-        height: RFValue(40),
-        borderRadius: 30,
-        backgroundColor: colors.tertiary,
-    },
-    disabledText: {
-        fontSize: RFValue(14),
-        color: colors.secondary,
-    },
 })
 
 const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
@@ -88,14 +91,6 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
     const formattedDate = useMemo(
         () => new Date(problem.date).toLocaleDateString('de-DE'),
         [problem.date],
-    )
-
-    const isDisabled = useMemo(
-        () =>
-            isNil(session) ||
-            problem.status === ProblemStatus.Done ||
-            problem.status === ProblemStatus.Cancelled,
-        [problem.status, session],
     )
 
     const {
@@ -137,7 +132,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
         })
     }, [problem.location])
 
-    if (reviewsLoading || userReviewLoading || authorLoading || isNil(problem.image))
+    if (reviewsLoading || userReviewLoading || authorLoading)
         return (
             <View style={styles.loading}>
                 <LoadingSpinner size={50} />
@@ -145,13 +140,18 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
         )
 
     return (
-        <View style={globalStyles.contentWrapper}>
-            <View style={globalStyles.gap}>
-                <View style={[globalStyles.flexRow, globalStyles.gap]}>
-                    <ImagePreview
-                        source={{ uri: getImagePath(problem.image) }}
-                        style={styles.image}
-                    />
+        <View style={styles.wrapper}>
+            <View style={styles.problemContent}>
+                <View style={globalStyles.flexRowWithGap}>
+                    {problem.image ? (
+                        <ImagePreview
+                            source={{ uri: getImagePath(problem.image) }}
+                            style={styles.image}
+                        />
+                    ) : (
+                        <Text style={globalStyles.noDataText}>Kein Bild vorhanden</Text>
+                    )}
+
                     <View style={globalStyles.gap}>
                         <View style={globalStyles.flexRowWithGap}>
                             <View style={styles.icon}>
@@ -220,7 +220,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
             <View style={globalStyles.flexRowWithSpace}>
                 <Button
                     mode='contained'
-                    buttonColor={colors.transparent}
+                    buttonColor={colors.white}
                     onPress={goTo(ProblemDetailViewContent.Comments)}
                     disabled={isNil(session)}
                     textColor={colors.primary}
@@ -228,7 +228,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                     icon={() => (
                         <Icon
                             source='comment'
-                            size={RFValue(18)}
+                            size={RFValue(23)}
                         />
                     )}
                 >
@@ -259,55 +259,55 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
             <View style={globalStyles.flexRowWithSpace}>
                 <Button
                     mode='contained'
-                    buttonColor={colors.transparent}
+                    textColor={userReview?.helpful === true ? colors.primary : colors.secondary}
+                    buttonColor={colors.white}
                     onPress={() => {
                         onHelpful(userReview?.helpful ? null : true)
                     }}
-                    disabled={isDisabled}
+                    disabled={
+                        isNil(session) ||
+                        problem.status === ProblemStatus.Done ||
+                        problem.status === ProblemStatus.Cancelled
+                    }
                     icon={() => (
                         <Icon
                             source='thumb-up'
-                            size={RFValue(18)}
-                            color={isDisabled ? colors.secondary : colors.primary}
+                            size={RFValue(23)}
                         />
                     )}
                     contentStyle={
-                        isDisabled
-                            ? styles.disabledButtonContent
-                            : userReview?.helpful === true && !isNil(userReview)
-                              ? styles.activeButtonContent
-                              : styles.buttonContent
+                        userReview?.helpful === true
+                            ? styles.activeButtonContent
+                            : styles.buttonContent
                     }
                 >
-                    <Text style={isDisabled ? styles.disabledText : styles.text}>
-                        Hilfreich {helpful}
-                    </Text>
+                    <Text style={styles.text}>Hilfreich {helpful}</Text>
                 </Button>
                 <Button
                     mode='contained'
-                    buttonColor={colors.transparent}
+                    textColor={userReview?.helpful === true ? colors.secondary : colors.primary}
+                    buttonColor={colors.white}
                     onPress={() => {
                         onHelpful(userReview?.helpful === false ? null : false)
                     }}
-                    disabled={isDisabled}
+                    disabled={
+                        isNil(session) ||
+                        problem.status === ProblemStatus.Done ||
+                        problem.status === ProblemStatus.Cancelled
+                    }
                     icon={() => (
                         <Icon
                             source='thumb-down'
-                            size={RFValue(18)}
-                            color={isDisabled ? colors.secondary : colors.primary}
+                            size={RFValue(23)}
                         />
                     )}
                     contentStyle={
-                        isDisabled
-                            ? styles.disabledButtonContent
-                            : userReview?.helpful === false && !isNil(userReview)
-                              ? styles.activeButtonContent
-                              : styles.buttonContent
+                        userReview?.helpful === true
+                            ? styles.buttonContent
+                            : styles.activeButtonContent
                     }
                 >
-                    <Text style={isDisabled ? styles.disabledText : styles.text}>
-                        Irrtum {unhelpful}
-                    </Text>
+                    <Text style={styles.text}>Irrtum {unhelpful}</Text>
                 </Button>
             </View>
         </View>

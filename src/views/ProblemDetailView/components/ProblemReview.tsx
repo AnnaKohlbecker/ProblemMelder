@@ -15,7 +15,16 @@ import { Category, Problem } from '~/supabase/types'
 const styles = StyleSheet.create({
     footer: {
         alignItems: 'flex-end',
-        marginTop: 15,
+    },
+    bigWrapper: {
+        maxHeight: '80%',
+        minHeight: 600,
+        gap: 15,
+    },
+    smallWrapper: {
+        maxHeight: '80%',
+        minHeight: 300,
+        gap: 15,
     },
 })
 
@@ -66,14 +75,8 @@ const ProblemReview = ({ problem, categories, onClose, onSubmit: onSubmitProp }:
 
     return (
         <FormProvider {...form}>
-            <View
-                style={
-                    isKeyboardVisible
-                        ? globalStyles.contentWrapperWithKeyboard
-                        : globalStyles.contentWrapper
-                }
-            >
-                <View style={globalStyles.cardSubtitle}>
+            <View style={isKeyboardVisible ? styles.smallWrapper : styles.bigWrapper}>
+                <View style={globalStyles.flexRow}>
                     <IconButton
                         size={20}
                         icon='arrow-left'
