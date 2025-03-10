@@ -77,6 +77,15 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         backgroundColor: colors.secondary,
     },
+    disabledButtonContent: {
+        height: RFValue(40),
+        borderRadius: 30,
+        backgroundColor: colors.tertiary,
+    },
+    disabledText: {
+        fontSize: RFValue(14),
+        color: colors.secondary,
+    },
 })
 
 const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
@@ -91,6 +100,14 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
     const formattedDate = useMemo(
         () => new Date(problem.date).toLocaleDateString('de-DE'),
         [problem.date],
+    )
+
+    const isDisabled = useMemo(
+        () =>
+            isNil(session) ||
+            problem.status === ProblemStatus.Done ||
+            problem.status === ProblemStatus.Cancelled,
+        [problem.status, session],
     )
 
     const {
@@ -261,55 +278,55 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
             <View style={globalStyles.flexRowWithSpace}>
                 <Button
                     mode='contained'
-                    textColor={userReview?.helpful === true ? colors.primary : colors.secondary}
                     buttonColor={colors.white}
                     onPress={() => {
                         onHelpful(userReview?.helpful ? null : true)
                     }}
-                    disabled={
-                        isNil(session) ||
-                        problem.status === ProblemStatus.Done ||
-                        problem.status === ProblemStatus.Cancelled
-                    }
+                    disabled={isDisabled}
                     icon={() => (
                         <Icon
                             source='thumb-up'
                             size={RFValue(23)}
+                            color={isDisabled ? colors.secondary : colors.primary}
                         />
                     )}
                     contentStyle={
-                        userReview?.helpful === true
-                            ? styles.activeButtonContent
-                            : styles.buttonContent
+                        isDisabled
+                            ? styles.disabledButtonContent
+                            : userReview?.helpful !== true || isNil(userReview)
+                              ? styles.buttonContent
+                              : styles.activeButtonContent
                     }
                 >
-                    <Text style={styles.text}>Hilfreich {helpful}</Text>
+                    <Text style={isDisabled ? styles.disabledText : styles.text}>
+                        Hilfreich {helpful}
+                    </Text>
                 </Button>
                 <Button
                     mode='contained'
-                    textColor={userReview?.helpful === true ? colors.secondary : colors.primary}
                     buttonColor={colors.white}
                     onPress={() => {
                         onHelpful(userReview?.helpful === false ? null : false)
                     }}
-                    disabled={
-                        isNil(session) ||
-                        problem.status === ProblemStatus.Done ||
-                        problem.status === ProblemStatus.Cancelled
-                    }
+                    disabled={isDisabled}
                     icon={() => (
                         <Icon
                             source='thumb-down'
                             size={RFValue(23)}
+                            color={isDisabled ? colors.secondary : colors.primary}
                         />
                     )}
                     contentStyle={
-                        userReview?.helpful === true
-                            ? styles.buttonContent
-                            : styles.activeButtonContent
+                        isDisabled
+                            ? styles.disabledButtonContent
+                            : userReview?.helpful === true || isNil(userReview)
+                              ? styles.buttonContent
+                              : styles.activeButtonContent
                     }
                 >
-                    <Text style={styles.text}>Irrtum {unhelpful}</Text>
+                    <Text style={isDisabled ? styles.disabledText : styles.text}>
+                        Irrtum {unhelpful}
+                    </Text>
                 </Button>
             </View>
         </View>
