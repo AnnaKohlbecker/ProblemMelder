@@ -11,14 +11,13 @@ export const useCategoryByAuthorityQuery = ({ authorityId }: Props) => {
     const queryFn = useCallback(async () => {
         if (isNil(authorityId)) return null
 
-        const response = await supabase
+        const { data: categories } = await supabase
             .from('Categories')
             .select('*')
             .eq('authorityId', authorityId)
-            .single()
             .throwOnError()
 
-        return response.data
+        return categories
     }, [authorityId])
 
     return useQuery({

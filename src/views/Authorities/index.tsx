@@ -94,7 +94,7 @@ const Authorities = ({ route }: Props) => {
                 </View>
             ) : (
                 <FlatList
-                    data={authorities}
+                    data={searchedAuthorities}
                     style={styles.list}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item: authority, index }) => (

@@ -2,8 +2,10 @@ import { useEffect } from 'react'
 import { BackHandler, StyleSheet, View } from 'react-native'
 import { Card, Divider, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
+import { useCategoryByAuthorityQuery } from '~/queries/Categories/useCategoryByAuthorityQuery'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import { Authority } from '~/supabase/types'
 import AuthorityDetails from '~/views/AuthorityDetailView/components/AuthorityDetails'
 
@@ -49,6 +51,10 @@ const styles = StyleSheet.create({
 })
 
 const AuthorityDetailView = ({ authority, onClose }: Props) => {
+    const { data: categories, isLoading: categoriesLoading } = useCategoryByAuthorityQuery({
+        authorityId: authority.id,
+    })
+
     useEffect(() => {
         const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
             onClose()
@@ -63,30 +69,39 @@ const AuthorityDetailView = ({ authority, onClose }: Props) => {
     return (
         <View style={[StyleSheet.absoluteFillObject, styles.wrapper]}>
             <Card style={[globalStyles.bgWhite, styles.card]}>
-                <View style={styles.gapBetween}>
-                    <View style={styles.header}>
-                        <View style={[globalStyles.flexRow, styles.headerWrapper]}>
-                            <Text
-                                style={styles.title}
-                                numberOfLines={2}
-                                ellipsizeMode='tail'
-                            >
-                                {authority.name}
-                            </Text>
-                        </View>
-
-                        <View style={styles.buttons}>
-                            <IconButton
-                                icon='close'
-                                onPress={onClose}
-                                size={RFValue(20)}
-                                mode='contained'
-                            />
-                        </View>
+                {categoriesLoading ? (
+                    <View style={globalStyles.flexRow}>
+                        <LoadingSpinner size={70} />
                     </View>
-                    <Divider style={globalStyles.divider} />
-                    <AuthorityDetails authority={authority} />
-                </View>
+                ) : (
+                    <View style={styles.gapBetween}>
+                        <View style={styles.header}>
+                            <View style={[globalStyles.flexRow, styles.headerWrapper]}>
+                                <Text
+                                    style={styles.title}
+                                    numberOfLines={2}
+                                    ellipsizeMode='tail'
+                                >
+                                    {authority.name}
+                                </Text>
+                            </View>
+
+                            <View style={styles.buttons}>
+                                <IconButton
+                                    icon='close'
+                                    onPress={onClose}
+                                    size={RFValue(20)}
+                                    mode='contained'
+                                />
+                            </View>
+                        </View>
+                        <Divider style={globalStyles.divider} />
+                        <AuthorityDetails
+                            authority={authority}
+                            categories={categories ?? []}
+                        />
+                    </View>
+                )}
             </Card>
         </View>
     )

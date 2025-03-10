@@ -1,33 +1,26 @@
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { FlatList, ScrollView, StyleSheet, View } from 'react-native'
 import { Icon, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
-import { Authority } from '~/supabase/types'
+import { Authority, Category } from '~/supabase/types'
+import CategoryListItem from '~/views/AuthorityDetailView/components/CategoryListItem'
 
 type Props = {
     authority: Authority
+    categories: Category[]
 }
 
 const styles = StyleSheet.create({
-    flexText: {
-        flexShrink: 1,
-        flexWrap: 'wrap',
-    },
     icon: {
         alignSelf: 'flex-start',
-    },
-    description: {
-        height: 160,
     },
     wrapper: {
         maxHeight: '80%',
         minHeight: 600,
         gap: 15,
     },
-    text: {
-        fontSize: RFValue(14),
-    },
+
     authorityContent: {
         backgroundColor: colors.tertiary,
         borderRadius: 10,
@@ -35,43 +28,33 @@ const styles = StyleSheet.create({
         rowGap: 15,
         marginBottom: 40,
     },
+    categories: {
+        height: 200,
+    },
 })
 
-const AuthorityDetails = ({ authority }: Props) => {
+const AuthorityDetails = ({ authority, categories }: Props) => {
     return (
         <View style={styles.wrapper}>
             <View style={styles.authorityContent}>
-                <View style={globalStyles.gap}>
-                    <View style={globalStyles.flexRowWithGap}>
-                        <View style={styles.icon}>
-                            <Icon
-                                source='email'
-                                size={RFValue(23)}
-                                color={colors.primary}
-                            />
-                        </View>
-                        <Text
-                            numberOfLines={2}
-                            lineBreakMode='tail'
-                            style={[styles.flexText, styles.text]}
-                        >
-                            {authority.domain}
-                        </Text>
-                    </View>
-                </View>
                 <View style={globalStyles.flexRowWithGap}>
                     <View style={styles.icon}>
                         <Icon
-                            source='briefcase'
+                            source='book'
                             size={RFValue(23)}
                             color={colors.primary}
                         />
                     </View>
-                    <ScrollView style={styles.description}>
-                        <Text style={[styles.flexText, styles.text]}>{authority.domain}</Text>
+                    <ScrollView style={styles.categories}>
+                        <FlatList
+                            data={categories}
+                            keyExtractor={(item) => item.id.toString()}
+                            renderItem={({ item }) => <CategoryListItem item={item} />}
+                        />
                     </ScrollView>
                 </View>
             </View>
+            <Text>{authority.name}</Text>
         </View>
     )
 }
