@@ -16,24 +16,26 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     wrapper: {
-        maxHeight: '80%',
-        minHeight: 600,
+        height: '80%',
         gap: 15,
-    },
-
-    authorityContent: {
         backgroundColor: colors.tertiary,
         borderRadius: 10,
-        padding: 7,
-        marginBottom: 40,
+        padding: 10,
+    },
+    categories: {
         height: 200,
+    },
+    categoriesList: {
+        backgroundColor: colors.secondary,
+        borderRadius: 10,
+        margin: 5,
     },
 })
 
 const AuthorityDetails = ({ authority, categories }: Props) => {
     return (
         <View style={styles.wrapper}>
-            <View style={styles.authorityContent}>
+            <View style={styles.categories}>
                 <View style={globalStyles.flexRowWithGap}>
                     <View style={styles.icon}>
                         <Icon
@@ -42,14 +44,16 @@ const AuthorityDetails = ({ authority, categories }: Props) => {
                             color={colors.primary}
                         />
                     </View>
-                    <FlatList
-                        data={categories}
-                        keyExtractor={(item) => item.id.toString()}
-                        renderItem={({ item }) => <CategoryListItem item={item} />}
-                    />
+                    <Text style={globalStyles.subtitle}>Zuständigkeiten</Text>
                 </View>
+                <FlatList
+                    data={categories}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => <CategoryListItem item={item} />}
+                    style={styles.categoriesList}
+                />
             </View>
-            <Text>{authority.name}</Text>
+            <Text style={globalStyles.subtitle}>TODO: Bewertung von {authority.name}</Text>
         </View>
     )
 }

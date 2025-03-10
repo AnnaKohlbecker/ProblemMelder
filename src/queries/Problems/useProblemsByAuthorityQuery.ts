@@ -7,21 +7,21 @@ type Props = {
     authorityId: number | undefined
 }
 
-export const useCategoryByAuthorityQuery = ({ authorityId }: Props) => {
+export const useProblemsByAuthorityQuery = ({ authorityId }: Props) => {
     const queryFn = useCallback(async () => {
         if (isNil(authorityId)) return null
 
-        const { data: categories } = await supabase
-            .from('Categories')
+        const { data: Problems } = await supabase
+            .from('Problems')
             .select('*')
             .eq('authorityId', authorityId)
             .throwOnError()
 
-        return categories
+        return Problems
     }, [authorityId])
 
     return useQuery({
-        queryKey: ['categoryByAuthorityQuery', authorityId],
+        queryKey: ['ProblemByAuthorityQuery', authorityId],
         queryFn,
         enabled: !isNil(authorityId),
     })

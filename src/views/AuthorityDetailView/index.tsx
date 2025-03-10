@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { BackHandler, StyleSheet, View } from 'react-native'
 import { Card, Divider, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
-import { useCategoryByAuthorityQuery } from '~/queries/Categories/useCategoryByAuthorityQuery'
+import { useCategoriesByAuthorityQuery } from '~/queries/Categories/useCategoriesByAuthorityQuery'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
 })
 
 const AuthorityDetailView = ({ authority, onClose }: Props) => {
-    const { data: categories, isLoading: categoriesLoading } = useCategoryByAuthorityQuery({
+    const { data: categories, isLoading: categoriesLoading } = useCategoriesByAuthorityQuery({
         authorityId: authority.id,
     })
 

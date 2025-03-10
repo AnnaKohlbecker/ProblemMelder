@@ -1,13 +1,15 @@
 import { StyleSheet, View } from 'react-native'
 import { Card, Icon, Text } from 'react-native-paper'
+import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { Category } from '~/supabase/types'
 
 const styles = StyleSheet.create({
     card: {
-        margin: 20,
+        margin: 10,
         paddingHorizontal: 20,
         paddingVertical: 10,
+        backgroundColor: colors.tertiary,
     },
     gap: {
         gap: 4,
@@ -40,7 +42,7 @@ const CategoryListItem = ({ item }: Props) => {
                                 source='select'
                             />
                         )}
-                        <Text style={globalStyles.title}>{item.title}</Text>
+                        <Text style={globalStyles.subtitle}>{item.title}</Text>
                     </View>
                 </View>
             </View>

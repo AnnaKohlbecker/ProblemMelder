@@ -84,7 +84,7 @@ export const globalStyles = StyleSheet.create({
     subtitle: {
         fontSize: RFValue(14),
         fontWeight: 'bold',
-        textAlign: 'center',
+        width: '80%',
     },
     divider: {
         borderWidth: 0.2,
