@@ -93,4 +93,25 @@ export const globalStyles = StyleSheet.create({
     gap: {
         gap: 15,
     },
+    contentWrapper: {
+        height: 600,
+        backgroundColor: colors.tertiary,
+        borderRadius: 10,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        padding: 10,
+    },
+    contentWrapperWithKeyboard: {
+        height: 300,
+        backgroundColor: colors.tertiary,
+        borderRadius: 10,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        padding: 10,
+    },
+    cardSubtitle: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        paddingBottom: 10,
+    },
 })
