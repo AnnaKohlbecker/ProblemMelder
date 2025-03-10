@@ -74,17 +74,44 @@ export const globalStyles = StyleSheet.create({
     },
     searchBar: {
         backgroundColor: colors.white,
-        color: colors.black,
         flex: 1,
     },
-    separator: {
-        backgroundColor: colors.secondary,
-        height: 1,
-        width: '100%',
-    },
     title: {
-        color: colors.black,
         fontSize: RFValue(16),
         fontWeight: 'bold',
+        width: '80%',
+    },
+    subtitle: {
+        fontSize: RFValue(14),
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    divider: {
+        borderWidth: 0.2,
+        borderColor: colors.secondary,
+    },
+    gap: {
+        gap: 15,
+    },
+    contentWrapper: {
+        height: 600,
+        backgroundColor: colors.tertiary,
+        borderRadius: 10,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        padding: 10,
+    },
+    contentWrapperWithKeyboard: {
+        height: 300,
+        backgroundColor: colors.tertiary,
+        borderRadius: 10,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        padding: 10,
+    },
+    cardSubtitle: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        paddingBottom: 10,
     },
 })

@@ -1,9 +1,8 @@
 import { isNil } from 'lodash'
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useController, UseControllerProps } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
 import { HelperText, IconButton, Text } from 'react-native-paper'
-import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 
@@ -24,10 +23,6 @@ type Props = {
 }
 
 const styles = StyleSheet.create({
-    label: {
-        fontSize: RFValue(16),
-        fontWeight: 'bold',
-    },
     starButton: {
         margin: 0,
         padding: 0,
@@ -39,7 +34,7 @@ const styles = StyleSheet.create({
     },
 })
 
-const StarsInput = ({
+const RatingInput = ({
     label,
     name,
     amount = 5,
@@ -64,7 +59,7 @@ const StarsInput = ({
             return (
                 <IconButton
                     key={key}
-                    size={40}
+                    size={50}
                     disabled={disabled}
                     style={styles.starButton}
                     onPress={() => {
@@ -77,20 +72,11 @@ const StarsInput = ({
         })
     }, [amount, disabled, value, emptyIcon, filledIcon, onChange])
 
-    const onClear = useCallback(() => {
-        onChange(null)
-    }, [onChange])
-
     return (
         <View>
-            {label && <Text style={styles.label}>{label}</Text>}
+            {label && <Text style={globalStyles.title}>{label}</Text>}
             <View style={globalStyles.flexRowWithSpace}>
                 <View style={styles.starContainer}>{starButtons}</View>
-                <IconButton
-                    icon='trash-can'
-                    mode='outlined'
-                    onPress={onClear}
-                />
             </View>
             {(!isNil(helperText) || !isNil(error)) && (
                 <HelperText
@@ -105,4 +91,4 @@ const StarsInput = ({
     )
 }
 
-export default StarsInput
+export default RatingInput

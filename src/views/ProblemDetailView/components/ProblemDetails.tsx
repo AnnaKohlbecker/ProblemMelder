@@ -2,7 +2,7 @@ import * as Location from 'expo-location'
 import { isNil } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { Button, Divider, Icon, Text, TouchableRipple } from 'react-native-paper'
+import { Button, Icon, Text, TouchableRipple } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { useProblemReviewsQuery } from '~/queries/ProblemReviews/useProblemReviewsQuery'
 import { useUserProblemReviewQuery } from '~/queries/ProblemReviews/useUserProblemReviewQuery'
@@ -36,32 +36,43 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     image: {
-        borderRadius: 20,
-        height: RFValue(80),
+        borderRadius: 10,
+        height: RFValue(140),
         maxWidth: '100%',
-        width: RFValue(80),
-    },
-    imageWrapper: {
-        gap: 10,
-        marginBottom: 10,
+        width: RFValue(90),
     },
     loading: {
         height: 100,
     },
-    details: {
-        gap: 10,
-    },
     description: {
-        maxHeight: 200,
+        height: 160,
     },
-    wrapper: {
-        padding: 5,
-        rowGap: 10,
+    text: {
+        fontSize: RFValue(14),
     },
     ripple: {
-        paddingVertical: 2,
-        paddingHorizontal: 4,
-        borderRadius: 10,
+        paddingHorizontal: 20,
+        borderRadius: 30,
+        height: RFValue(40),
+        justifyContent: 'center',
+    },
+    buttonContent: {
+        height: RFValue(40),
+        borderRadius: 30,
+    },
+    activeButtonContent: {
+        height: RFValue(40),
+        borderRadius: 30,
+        backgroundColor: colors.secondary,
+    },
+    disabledButtonContent: {
+        height: RFValue(40),
+        borderRadius: 30,
+        backgroundColor: colors.tertiary,
+    },
+    disabledText: {
+        fontSize: RFValue(14),
+        color: colors.secondary,
     },
 })
 
@@ -77,6 +88,14 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
     const formattedDate = useMemo(
         () => new Date(problem.date).toLocaleDateString('de-DE'),
         [problem.date],
+    )
+
+    const isDisabled = useMemo(
+        () =>
+            isNil(session) ||
+            problem.status === ProblemStatus.Done ||
+            problem.status === ProblemStatus.Cancelled,
+        [problem.status, session],
     )
 
     const {
@@ -118,7 +137,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
         })
     }, [problem.location])
 
-    if (reviewsLoading || userReviewLoading || authorLoading)
+    if (reviewsLoading || userReviewLoading || authorLoading || isNil(problem.image))
         return (
             <View style={styles.loading}>
                 <LoadingSpinner size={50} />
@@ -126,100 +145,97 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
         )
 
     return (
-        <View style={styles.wrapper}>
-            <View style={[globalStyles.flexRow, styles.imageWrapper]}>
-                {problem.image ? (
+        <View style={globalStyles.contentWrapper}>
+            <View style={globalStyles.gap}>
+                <View style={[globalStyles.flexRow, globalStyles.gap]}>
                     <ImagePreview
                         source={{ uri: getImagePath(problem.image) }}
                         style={styles.image}
                     />
-                ) : (
-                    <Text style={globalStyles.noDataText}>Kein Bild vorhanden</Text>
-                )}
-
-                <View style={styles.details}>
-                    <View style={globalStyles.flexRowWithGap}>
-                        <View style={styles.icon}>
-                            <Icon
-                                source={category.icon}
-                                color={colors.black}
-                                size={RFValue(20)}
-                            />
+                    <View style={globalStyles.gap}>
+                        <View style={globalStyles.flexRowWithGap}>
+                            <View style={styles.icon}>
+                                <Icon
+                                    source={category.icon}
+                                    color={colors.primary}
+                                    size={RFValue(23)}
+                                />
+                            </View>
+                            <Text style={styles.text}>{category.title}</Text>
                         </View>
-                        <Text>{category.title}</Text>
-                    </View>
-                    <View style={globalStyles.flexRowWithGap}>
-                        <View style={styles.icon}>
-                            <Icon
-                                source='calendar'
-                                size={RFValue(20)}
-                                color={colors.black}
-                            />
+                        <View style={globalStyles.flexRowWithGap}>
+                            <View style={styles.icon}>
+                                <Icon
+                                    source='calendar'
+                                    size={RFValue(23)}
+                                    color={colors.primary}
+                                />
+                            </View>
+                            <Text style={styles.text}>{formattedDate}</Text>
                         </View>
-                        <Text>{formattedDate}</Text>
-                    </View>
-                    <View style={globalStyles.flexRowWithGap}>
-                        <View style={styles.icon}>
-                            <Icon
-                                source='account-edit'
-                                size={RFValue(20)}
-                                color={colors.black}
-                            />
+                        <View style={globalStyles.flexRowWithGap}>
+                            <View style={styles.icon}>
+                                <Icon
+                                    source='account-edit'
+                                    size={RFValue(23)}
+                                    color={colors.primary}
+                                />
+                            </View>
+                            <Text style={styles.text}>{author?.name}</Text>
                         </View>
-                        <Text>{author?.name}</Text>
                     </View>
                 </View>
-            </View>
 
-            <View style={globalStyles.flexRow}>
-                <View style={styles.icon}>
-                    <Icon
-                        source='map-marker'
-                        size={RFValue(20)}
-                        color={colors.black}
-                    />
+                <View style={globalStyles.gap}>
+                    <View style={globalStyles.flexRow}>
+                        <View style={styles.icon}>
+                            <Icon
+                                source='map-marker'
+                                size={RFValue(23)}
+                                color={colors.primary}
+                            />
+                        </View>
+                        <Text
+                            numberOfLines={2}
+                            lineBreakMode='tail'
+                            style={[styles.flexText, styles.text]}
+                        >
+                            {address}
+                        </Text>
+                    </View>
                 </View>
-                <Text
-                    numberOfLines={2}
-                    lineBreakMode='tail'
-                    style={styles.flexText}
-                >
-                    {address}
-                </Text>
-            </View>
 
-            <View style={globalStyles.flexRow}>
-                <View style={styles.icon}>
-                    <Icon
-                        source='text-long'
-                        size={RFValue(20)}
-                        color={colors.black}
-                    />
-                </View>
-                <ScrollView style={styles.description}>
-                    <Text style={styles.flexText}>{problem.description}</Text>
-                </ScrollView>
-            </View>
-
-            <Divider />
-
-            <View style={globalStyles.flexRowWithSpace}>
-                <TouchableRipple
-                    borderless={true}
-                    style={styles.ripple}
-                    disabled={isNil(session)}
-                    onPress={goTo(ProblemDetailViewContent.Comments)}
-                >
-                    <View style={globalStyles.flexRowWithGap}>
+                <View style={globalStyles.flexRow}>
+                    <View style={styles.icon}>
                         <Icon
-                            source='comment'
-                            size={RFValue(20)}
+                            source='text-long'
+                            size={RFValue(23)}
                             color={colors.primary}
                         />
-                        <Text>{comments.length}</Text>
                     </View>
-                </TouchableRipple>
+                    <ScrollView style={styles.description}>
+                        <Text style={[styles.flexText, styles.text]}>{problem.description}</Text>
+                    </ScrollView>
+                </View>
+            </View>
 
+            <View style={globalStyles.flexRowWithSpace}>
+                <Button
+                    mode='contained'
+                    buttonColor={colors.transparent}
+                    onPress={goTo(ProblemDetailViewContent.Comments)}
+                    disabled={isNil(session)}
+                    textColor={colors.primary}
+                    contentStyle={styles.buttonContent}
+                    icon={() => (
+                        <Icon
+                            source='comment'
+                            size={RFValue(18)}
+                        />
+                    )}
+                >
+                    <Text style={styles.text}>{comments.length}</Text>
+                </Button>
                 <TouchableRipple
                     borderless={true}
                     style={styles.ripple}
@@ -230,51 +246,70 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                         {problem.status === ProblemStatus.Done ? (
                             <>
                                 {getRatingIcons(problem.status, stars)}
-                                <Text>{amountOfStars}</Text>
+                                <Text style={styles.text}>{amountOfStars}</Text>
                             </>
                         ) : (
                             <>
                                 {getRatingIcons(problem.status, importance)}
-                                <Text>{amountOfImportance}</Text>
+                                <Text style={styles.text}>{amountOfImportance}</Text>
                             </>
                         )}
                     </View>
                 </TouchableRipple>
             </View>
 
-            <View style={globalStyles.flexRowCenter}>
+            <View style={globalStyles.flexRowWithSpace}>
                 <Button
-                    icon='thumb-up'
-                    mode='text'
-                    labelStyle={userReview?.helpful === true ? globalStyles.bold : undefined}
-                    textColor={userReview?.helpful === true ? colors.primary : colors.black}
+                    mode='contained'
+                    buttonColor={colors.transparent}
                     onPress={() => {
                         onHelpful(userReview?.helpful ? null : true)
                     }}
-                    disabled={
-                        isNil(session) ||
-                        problem.status === ProblemStatus.Done ||
-                        problem.status === ProblemStatus.Cancelled
+                    disabled={isDisabled}
+                    icon={() => (
+                        <Icon
+                            source='thumb-up'
+                            size={RFValue(18)}
+                            color={isDisabled ? colors.secondary : colors.primary}
+                        />
+                    )}
+                    contentStyle={
+                        isDisabled
+                            ? styles.disabledButtonContent
+                            : userReview?.helpful === true && !isNil(userReview)
+                              ? styles.activeButtonContent
+                              : styles.buttonContent
                     }
                 >
-                    Hilfreich ({helpful})
+                    <Text style={isDisabled ? styles.disabledText : styles.text}>
+                        Hilfreich {helpful}
+                    </Text>
                 </Button>
-                <Text>|</Text>
                 <Button
-                    icon='thumb-down'
-                    mode='text'
-                    labelStyle={userReview?.helpful === false ? globalStyles.bold : undefined}
-                    textColor={userReview?.helpful === false ? colors.primary : colors.black}
+                    mode='contained'
+                    buttonColor={colors.transparent}
                     onPress={() => {
                         onHelpful(userReview?.helpful === false ? null : false)
                     }}
-                    disabled={
-                        isNil(session) ||
-                        problem.status === ProblemStatus.Done ||
-                        problem.status === ProblemStatus.Cancelled
+                    disabled={isDisabled}
+                    icon={() => (
+                        <Icon
+                            source='thumb-down'
+                            size={RFValue(18)}
+                            color={isDisabled ? colors.secondary : colors.primary}
+                        />
+                    )}
+                    contentStyle={
+                        isDisabled
+                            ? styles.disabledButtonContent
+                            : userReview?.helpful === false && !isNil(userReview)
+                              ? styles.activeButtonContent
+                              : styles.buttonContent
                     }
                 >
-                    Falschmeldung ({unhelpful})
+                    <Text style={isDisabled ? styles.disabledText : styles.text}>
+                        Irrtum {unhelpful}
+                    </Text>
                 </Button>
             </View>
         </View>

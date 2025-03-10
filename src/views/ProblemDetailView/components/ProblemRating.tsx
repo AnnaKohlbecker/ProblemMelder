@@ -1,14 +1,15 @@
+import { isNil } from 'lodash'
 import { useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
 import { Button, IconButton, Text } from 'react-native-paper'
-import { RFValue } from 'react-native-responsive-fontsize'
 import { useUserProblemReviewQuery } from '~/queries/ProblemReviews/useUserProblemReviewQuery'
+import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
-import StarsInput from '~/shared/views/StarsInput'
+import RatingInput from '~/shared/views/RatingInput'
 import { Problem, ProblemReview } from '~/supabase/types'
 import { useReviewUpdateLogic } from '~/views/ProblemDetailView/hooks/useReviewUpdateLogic'
 
@@ -18,23 +19,15 @@ type Props = {
 }
 
 const styles = StyleSheet.create({
-    header: {
-        gap: 10,
-        marginBottom: 10,
-    },
-    subtitle: {
-        fontSize: RFValue(14),
-        fontWeight: 'bold',
-    },
-    wrapper: {
-        gap: 10,
-    },
-    footer: {
-        alignItems: 'flex-end',
-        marginTop: 20,
-    },
     loading: {
         height: 100,
+    },
+    ratingIcons: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    limitedHeight: {
+        height: 300,
     },
 })
 
@@ -81,6 +74,25 @@ const ProblemRating = ({ problem, onClose }: Props) => {
         [onClose, onImportanceRating, onStarRating, problem.status],
     )
 
+    const onReset = useCallback(
+        (data: Partial<ProblemReview>) => {
+            if (problem.status === ProblemStatus.Done) {
+                data = {
+                    ...data,
+                    stars: null,
+                }
+            } else {
+                data = {
+                    ...data,
+                    importance: null,
+                }
+            }
+
+            onSubmit(data)
+        },
+        [problem.status, onSubmit],
+    )
+
     if (userReviewLoading)
         return (
             <View style={styles.loading}>
@@ -90,38 +102,52 @@ const ProblemRating = ({ problem, onClose }: Props) => {
 
     return (
         <FormProvider {...form}>
-            <View style={styles.wrapper}>
-                <View style={styles.header}>
+            <View style={[globalStyles.contentWrapper, styles.limitedHeight]}>
+                <View style={globalStyles.cardSubtitle}>
                     <View style={globalStyles.flexRow}>
                         <IconButton
-                            size={12}
+                            size={20}
                             icon='arrow-left'
                             mode='outlined'
                             onPress={onClose}
+                            iconColor={colors.primary}
                         />
 
-                        <Text style={styles.subtitle}>
+                        <Text style={globalStyles.subtitle}>
                             {problem.status === ProblemStatus.Done
-                                ? 'Problemlösung bewerten'
+                                ? 'Lösung bewerten'
                                 : 'Dringlichkeit bewerten'}
                         </Text>
                     </View>
                 </View>
-                <StarsInput
-                    name={problem.status === ProblemStatus.Done ? 'stars' : 'importance'}
-                    amount={problem.status === ProblemStatus.Done ? 5 : 3}
-                    emptyIcon={
-                        problem.status === ProblemStatus.Done
-                            ? 'star-outline'
-                            : 'alert-circle-outline'
-                    }
-                    filledIcon={problem.status === ProblemStatus.Done ? 'star' : 'alert-circle'}
-                />
-                <View style={styles.footer}>
+                <View style={styles.ratingIcons}>
+                    <RatingInput
+                        name={problem.status === ProblemStatus.Done ? 'stars' : 'importance'}
+                        amount={problem.status === ProblemStatus.Done ? 5 : 3}
+                        emptyIcon={
+                            problem.status === ProblemStatus.Done
+                                ? 'star-outline'
+                                : 'alert-circle-outline'
+                        }
+                        filledIcon={problem.status === ProblemStatus.Done ? 'star' : 'alert-circle'}
+                    />
+                </View>
+                <View style={globalStyles.flexRowWithSpace}>
                     <Button
                         mode='contained'
-                        disabled={!isDirty}
+                        onPress={handleSubmit(onReset)}
+                        disabled={
+                            isNil(userReview?.id) || problem.status === ProblemStatus.Done
+                                ? isNil(userReview?.stars)
+                                : isNil(userReview.importance)
+                        }
+                    >
+                        Löschen
+                    </Button>
+                    <Button
+                        mode='contained'
                         onPress={handleSubmit(onSubmit)}
+                        disabled={!isDirty}
                     >
                         Speichern
                     </Button>

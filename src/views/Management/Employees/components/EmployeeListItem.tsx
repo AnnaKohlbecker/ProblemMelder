@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Card, IconButton, Text } from 'react-native-paper'
-import { RFValue } from 'react-native-responsive-fontsize'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { UserData } from '~/supabase/types'
 
@@ -20,9 +19,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10,
     },
-    title: {
-        fontSize: RFValue(16),
-    },
     wrapper: {
         alignItems: 'center',
         flexDirection: 'row',
@@ -39,7 +35,7 @@ export const EmployeeListItem = ({ onDelete: onDeleteProp, item }: Props) => {
         <Card style={[globalStyles.card, styles.card]}>
             <View style={styles.wrapper}>
                 <View style={globalStyles.flexBox}>
-                    <Text style={styles.title}>{item.name}</Text>
+                    <Text style={globalStyles.title}>{item.name}</Text>
                 </View>
                 <View style={styles.buttons}>
                     <IconButton

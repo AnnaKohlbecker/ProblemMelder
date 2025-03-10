@@ -4,7 +4,6 @@ import { isNil } from 'lodash'
 import { useCallback, useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Card, Icon, Text, TouchableRipple } from 'react-native-paper'
-import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { RouteInformation } from '~/shared/constants/routeInformation'
@@ -20,21 +19,22 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
         borderRadius: 10,
     },
-    content: {
-        aspectRatio: 1,
-        borderRadius: 10,
-        height: RFValue(130),
-        width: RFValue(130),
-    },
     wrapper: {
         alignItems: 'center',
-        flex: 1,
         gap: 5,
         justifyContent: 'center',
+        flexDirection: 'row',
+        padding: 20,
+    },
+    view: {
+        padding: 20,
+    },
+    ripple: {
+        borderRadius: 10,
     },
 })
 
-const ManagementCard = ({ route }: Props) => {
+const ProfileCard = ({ route }: Props) => {
     const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 
     const routeInfo = useMemo(() => RouteInformation[route], [route])
@@ -44,29 +44,31 @@ const ManagementCard = ({ route }: Props) => {
     }, [navigate, route])
 
     return (
-        <Card style={styles.card}>
-            {isNil(routeInfo) ? (
-                <View style={styles.wrapper}>
-                    <LoadingSpinner />
-                </View>
-            ) : (
-                <TouchableRipple
-                    borderless={true}
-                    style={styles.content}
-                    onPress={onPress}
-                >
+        <View style={styles.view}>
+            <Card style={styles.card}>
+                {isNil(routeInfo) ? (
                     <View style={styles.wrapper}>
-                        <Icon
-                            color={colors.primary}
-                            source={routeInfo.focusedIcon}
-                            size={50}
-                        />
-                        <Text style={globalStyles.subtitle}>{routeInfo.title}</Text>
+                        <LoadingSpinner />
                     </View>
-                </TouchableRipple>
-            )}
-        </Card>
+                ) : (
+                    <TouchableRipple
+                        borderless={true}
+                        style={styles.ripple}
+                        onPress={onPress}
+                    >
+                        <View style={styles.wrapper}>
+                            <Icon
+                                color={colors.primary}
+                                source={routeInfo.focusedIcon}
+                                size={50}
+                            />
+                            <Text style={globalStyles.subtitle}>{routeInfo.title}</Text>
+                        </View>
+                    </TouchableRipple>
+                )}
+            </Card>
+        </View>
     )
 }
 
-export default ManagementCard
+export default ProfileCard

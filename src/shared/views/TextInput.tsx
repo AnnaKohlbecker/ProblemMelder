@@ -1,7 +1,7 @@
 import { isNil } from 'lodash'
 import { useMemo } from 'react'
 import { useController, UseControllerProps } from 'react-hook-form'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 // eslint-disable-next-line no-restricted-imports
 import { TextInput as BaseInput, HelperText } from 'react-native-paper'
 
@@ -23,13 +23,8 @@ type Props = {
      * @default false
      */
     multiline?: boolean
+    multilineHeight?: number
 }
-
-const styles = StyleSheet.create({
-    multiline: {
-        minHeight: 140,
-    },
-})
 
 const TextInput = ({
     label,
@@ -39,13 +34,20 @@ const TextInput = ({
     secureTextEntry = false,
     multiline = false,
     disabled,
+    multilineHeight = 200,
 }: Props) => {
     const {
         field: { value, onChange },
         fieldState: { error },
     } = useController({ name, rules })
 
-    const style = useMemo(() => (multiline ? styles.multiline : undefined), [multiline])
+    const style = useMemo(() => {
+        if (!multiline) return undefined
+
+        return {
+            minHeight: multilineHeight,
+        }
+    }, [multiline, multilineHeight])
 
     return (
         <View>

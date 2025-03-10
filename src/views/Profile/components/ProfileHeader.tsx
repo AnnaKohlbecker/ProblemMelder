@@ -4,6 +4,7 @@ import { Image, StyleSheet, View } from 'react-native'
 import { Card, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { useUserByIdQuery } from '~/queries/UserData/useUserByIdQuery'
+import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { PrestiegeInformation } from '~/shared/constants/prestiegeInformation'
 import { useAuth } from '~/shared/context/AuthContext'
@@ -18,11 +19,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 20,
     },
-    greeting: {
-        fontSize: RFValue(14),
-        paddingBottom: 5,
-    },
-    header: {
+    view: {
         padding: 20,
     },
     image: {
@@ -33,12 +30,24 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
     },
     infoText: {
-        fontSize: RFValue(10),
+        fontSize: RFValue(15),
+    },
+    infoTextBlue: {
+        color: colors.secondary,
+        fontSize: RFValue(15),
+    },
+    infoWrapper: {
+        gap: 15,
+        marginTop: RFValue(15),
+    },
+    name: {
+        fontSize: RFValue(18),
+        paddingBottom: 5,
     },
 })
 
 const ProfileHeader = () => {
-    const { session } = useAuth()
+    const { session, role } = useAuth()
 
     const { data: user, isLoading: userLoading } = useUserByIdQuery({ userId: session?.user.id })
 
@@ -51,40 +60,53 @@ const ProfileHeader = () => {
     }, [user?.points])
 
     return (
-        <View style={styles.header}>
-            <Card style={[globalStyles.card, styles.card]}>
-                <View style={styles.cardWrapper}>
-                    <View style={styles.imageWrapper}>
-                        <Image
-                            source={prestiegeInfo.image}
-                            style={styles.image}
-                        />
+        <View style={styles.view}>
+            {isNil(user) || userLoading || isNil(role) ? (
+                <LoadingSpinner />
+            ) : (
+                <Card style={[globalStyles.card, styles.card]}>
+                    <View style={styles.cardWrapper}>
+                        <View style={styles.imageWrapper}>
+                            <Image
+                                source={prestiegeInfo.image}
+                                style={styles.image}
+                            />
+                        </View>
+
+                        <Text style={[globalStyles.bold, styles.name]}>{user.name}</Text>
                     </View>
-                    <View>
-                        {isNil(user) || userLoading ? (
-                            <LoadingSpinner />
-                        ) : (
+
+                    <View style={styles.infoWrapper}>
+                        <Text style={styles.infoText}>
+                            <Text style={styles.infoText}>{role.displayName}</Text>
+                        </Text>
+                        {role.name !== 'admin' && role.name !== 'manager' && (
                             <>
-                                <Text style={[globalStyles.bold, styles.greeting]}>
-                                    Hallo, {user.name}!
-                                </Text>
                                 <Text style={styles.infoText}>
-                                    Deine Rolle:{' '}
+                                    Rolle:{' '}
                                     <Text style={[globalStyles.bold, styles.infoText]}>
                                         {prestiegeInfo.role}
                                     </Text>
                                 </Text>
                                 <Text style={styles.infoText}>
+                                    Punkte:{' '}
                                     <Text style={[globalStyles.bold, styles.infoText]}>
-                                        {user.points} von {prestiegeInfo.nextRolePoints}
-                                    </Text>{' '}
-                                    Punkten zur nächsten Rolle!
+                                        {user.points}
+                                    </Text>
                                 </Text>
+                                {isNil(prestiegeInfo.nextRolePoints) ? (
+                                    <Text style={styles.infoTextBlue}>Höchste Rolle erreicht!</Text>
+                                ) : (
+                                    <Text style={styles.infoTextBlue}>
+                                        {prestiegeInfo.nextRole} ab {prestiegeInfo.nextRolePoints}{' '}
+                                        Punkten!
+                                    </Text>
+                                )}
                             </>
                         )}
                     </View>
-                </View>
-            </Card>
+                </Card>
+            )}
         </View>
     )
 }

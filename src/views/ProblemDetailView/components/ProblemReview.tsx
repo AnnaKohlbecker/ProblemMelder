@@ -1,11 +1,12 @@
 import { useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import { Button, IconButton, Text } from 'react-native-paper'
-import { RFValue } from 'react-native-responsive-fontsize'
 import { useUpsertProblemMutation } from '~/queries/Problems/useUpsertProblemMutation'
+import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useDialog } from '~/shared/context/DialogContext'
+import { useKeyboard } from '~/shared/context/KeyboardContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import SelectMenu from '~/shared/views/Inputs/SelectMenu'
 import TextInput from '~/shared/views/TextInput'
@@ -14,18 +15,7 @@ import { Category, Problem } from '~/supabase/types'
 const styles = StyleSheet.create({
     footer: {
         alignItems: 'flex-end',
-        marginTop: 20,
-    },
-    header: {
-        gap: 10,
-        marginBottom: 10,
-    },
-    subtitle: {
-        fontSize: RFValue(14),
-        fontWeight: 'bold',
-    },
-    wrapper: {
-        gap: 10,
+        marginTop: 15,
     },
 })
 
@@ -38,6 +28,7 @@ type Props = {
 
 const ProblemReview = ({ problem, categories, onClose, onSubmit: onSubmitProp }: Props) => {
     const confirm = useDialog()
+    const { isKeyboardVisible } = useKeyboard()
 
     const form = useForm({
         values: {
@@ -75,53 +66,57 @@ const ProblemReview = ({ problem, categories, onClose, onSubmit: onSubmitProp }:
 
     return (
         <FormProvider {...form}>
-            <View style={styles.wrapper}>
-                <View style={globalStyles.flexRow}>
+            <View
+                style={
+                    isKeyboardVisible
+                        ? globalStyles.contentWrapperWithKeyboard
+                        : globalStyles.contentWrapper
+                }
+            >
+                <View style={globalStyles.cardSubtitle}>
                     <IconButton
-                        size={12}
+                        size={20}
                         icon='arrow-left'
                         mode='outlined'
                         onPress={onClose}
+                        iconColor={colors.primary}
                     />
-                    <Text style={styles.subtitle}>Problem prüfen</Text>
+                    <Text style={globalStyles.subtitle}>Überprüfung</Text>
                 </View>
-                <View style={styles.header}>
-                    <Text>
-                        Passe den Status und die Kategorie des Problems an, um eine Korrektur
-                        vorzunehmen.
-                    </Text>
-                </View>
+                <ScrollView>
+                    <View style={globalStyles.gap}>
+                        <SelectMenu
+                            label='Status'
+                            name='status'
+                            options={[
+                                { label: 'Deaktiviert', value: ProblemStatus.Cancelled },
+                                { label: 'Zu Erledigen', value: ProblemStatus.ToDo },
+                                { label: 'In Bearbeitung', value: ProblemStatus.InProgress },
+                                { label: 'Erledigt', value: ProblemStatus.Done },
+                            ]}
+                        />
 
-                <SelectMenu
-                    label='Status'
-                    name='status'
-                    options={[
-                        { label: 'Deaktiviert', value: ProblemStatus.Cancelled },
-                        { label: 'Zu Erledigen', value: ProblemStatus.ToDo },
-                        { label: 'In Bearbeitung', value: ProblemStatus.InProgress },
-                        { label: 'Erledigt', value: ProblemStatus.Done },
-                    ]}
-                />
+                        <SelectMenu
+                            label='Kategorie'
+                            name='categoryId'
+                            options={categories.map((c) => ({
+                                label: c.title,
+                                value: c.id,
+                            }))}
+                        />
 
-                <SelectMenu
-                    label='Kategorie'
-                    name='categoryId'
-                    options={categories.map((c) => ({
-                        label: c.title,
-                        value: c.id,
-                    }))}
-                />
-
-                <TextInput
-                    name='reasonForDeactivation'
-                    label='Begründung'
-                    multiline={true}
-                    disabled={!isDirty}
-                    rules={{
-                        required: 'Bitte gebe eine Begründung für die Änderung ein.',
-                    }}
-                />
-
+                        <TextInput
+                            name='reasonForDeactivation'
+                            label='Begründung'
+                            multiline={true}
+                            disabled={!isDirty}
+                            rules={{
+                                required: 'Bitte gebe eine Begründung an.',
+                            }}
+                            multilineHeight={isKeyboardVisible ? 150 : 300}
+                        />
+                    </View>
+                </ScrollView>
                 <View style={styles.footer}>
                     <Button
                         mode='contained'

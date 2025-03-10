@@ -1,6 +1,5 @@
 import { StyleSheet, View } from 'react-native'
 import { Card, Text } from 'react-native-paper'
-import { RFValue } from 'react-native-responsive-fontsize'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { Authority } from '~/supabase/types'
 
@@ -9,9 +8,6 @@ const styles = StyleSheet.create({
         margin: 20,
         paddingHorizontal: 20,
         paddingVertical: 10,
-    },
-    title: {
-        fontSize: RFValue(16),
     },
     wrapper: {
         alignItems: 'center',
@@ -29,7 +25,7 @@ const AuthorityListItem = ({ item }: Props) => {
         <Card style={[globalStyles.card, styles.card]}>
             <View style={styles.wrapper}>
                 <View style={globalStyles.flexBox}>
-                    <Text style={styles.title}>{item.name}</Text>
+                    <Text style={globalStyles.title}>{item.name}</Text>
                     <View style={globalStyles.flexRow}>
                         <Text>Hier noch mehr Details / Details on Click</Text>
                     </View>

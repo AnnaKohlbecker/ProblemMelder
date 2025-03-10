@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { IconButton, Menu } from 'react-native-paper'
+import { Icon, IconButton, Menu } from 'react-native-paper'
+import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { problemStatusToIconAndColor } from '~/shared/helpers/ProblemStatusToIconAndColor'
@@ -58,7 +59,13 @@ const Filter = ({ value, onChangeFilter }: FilterProps) => {
                     handleFilterSelect(filter)
                 }}
                 title={title}
-                leadingIcon={problemStatusToIconAndColor(filter).icon}
+                leadingIcon={() => (
+                    <Icon
+                        source={problemStatusToIconAndColor(filter).icon}
+                        color={colors.primary}
+                        size={RFValue(20)}
+                    />
+                )}
             />
         ))
     }, [handleFilterSelect])

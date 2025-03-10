@@ -2,7 +2,6 @@ import { isNil } from 'lodash'
 import { useCallback } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Card, Icon, IconButton, Text } from 'react-native-paper'
-import { RFValue } from 'react-native-responsive-fontsize'
 import { useUsersByAuthorityQuery } from '~/queries/Authorities/useUsersByAuthorityQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
@@ -23,9 +22,6 @@ const styles = StyleSheet.create({
     },
     loadingSpinner: {
         padding: 14,
-    },
-    title: {
-        fontSize: RFValue(16),
     },
     wrapper: {
         alignItems: 'center',
@@ -58,7 +54,7 @@ const AuthorityManagementListItem = ({
         <Card style={[globalStyles.card, styles.card]}>
             <View style={styles.wrapper}>
                 <View style={globalStyles.flexBox}>
-                    <Text style={styles.title}>{item.name}</Text>
+                    <Text style={globalStyles.title}>{item.name}</Text>
                     <View style={[globalStyles.flexRow, styles.domain]}>
                         {item.allowSignup ? (
                             <Icon

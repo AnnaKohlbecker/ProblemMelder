@@ -1,7 +1,7 @@
 import { isNil } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { BackHandler, StyleSheet, View } from 'react-native'
-import { Card, Divider, Icon, IconButton, Text } from 'react-native-paper'
+import { Card, Icon, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { useCategoriesQuery } from '~/queries/Categories/useCategoriesQuery'
 import { useProblemCommentsByProblemQuery } from '~/queries/ProblemComments/useProblemCommentsByProblemQuery'
@@ -25,17 +25,15 @@ type Props = {
 
 const styles = StyleSheet.create({
     card: {
-        maxHeight: '80%',
         padding: 15,
+        backgroundColor: colors.white,
         width: '90%',
-    },
-    gapBetween: {
-        gap: 10,
+        maxHeight: '90%',
     },
     title: {
-        fontSize: RFValue(16),
+        fontSize: RFValue(14),
         fontWeight: 'bold',
-        maxWidth: '100%',
+        width: '50%',
     },
     wrapper: {
         alignItems: 'center',
@@ -43,19 +41,16 @@ const styles = StyleSheet.create({
         elevation: 1000,
         justifyContent: 'center',
     },
-    header: {
-        flexDirection: 'row',
-    },
-    headerWrapper: {
-        width: '70%',
-        gap: 4,
-        flexDirection: 'row',
-    },
-    buttons: {
+    cardTitle: {
         alignItems: 'center',
-        justifyContent: 'flex-end',
-        width: '30%',
         flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingBottom: 10,
+    },
+    cardTitleButtons: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        width: 110,
     },
 })
 
@@ -103,102 +98,93 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
         }
     }, [onClose])
 
+    if (categoriesLoading || commentsLoading || isNil(category))
+        return (
+            <View style={globalStyles.flexBox}>
+                <LoadingSpinner />
+            </View>
+        )
+
     return (
         <View style={[StyleSheet.absoluteFillObject, styles.wrapper]}>
-            <Card style={[globalStyles.bgWhite, styles.card]}>
-                {categoriesLoading || commentsLoading || isNil(category) ? (
-                    <View style={globalStyles.flexRow}>
-                        <LoadingSpinner size={70} />
-                    </View>
-                ) : (
-                    <View style={styles.gapBetween}>
-                        <View style={styles.header}>
-                            <View style={[globalStyles.flexRow, styles.headerWrapper]}>
-                                <Icon
-                                    source={icon}
-                                    color={color}
-                                    size={RFValue(35)}
-                                />
-                                <Text
-                                    style={styles.title}
-                                    numberOfLines={2}
-                                    ellipsizeMode='tail'
-                                >
-                                    {problem.title}
-                                </Text>
-                            </View>
+            <Card style={styles.card}>
+                <View style={styles.cardTitle}>
+                    <Icon
+                        source={icon}
+                        color={color}
+                        size={RFValue(30)}
+                    />
+                    <Text
+                        style={styles.title}
+                        numberOfLines={2}
+                        ellipsizeMode='tail'
+                    >
+                        {problem.title}
+                    </Text>
 
-                            <View style={styles.buttons}>
-                                {currentContent === ProblemDetailViewContent.Details && (
-                                    <>
-                                        {canReview && (
-                                            <IconButton
-                                                icon='pencil'
-                                                onPress={goTo(ProblemDetailViewContent.Review)}
-                                                size={RFValue(20)}
-                                                mode='contained'
-                                            />
-                                        )}
-                                        {!canReview && canReactivate && (
-                                            <IconButton
-                                                icon='refresh'
-                                                onPress={goTo(
-                                                    ProblemDetailViewContent.Reactivation,
-                                                )}
-                                                size={RFValue(20)}
-                                                mode='contained'
-                                            />
-                                        )}
-                                    </>
-                                )}
-                                <IconButton
-                                    icon='close'
-                                    onPress={onClose}
-                                    size={RFValue(20)}
-                                    mode='contained'
-                                />
-                            </View>
-                        </View>
-                        <Divider />
-
+                    <View style={styles.cardTitleButtons}>
                         {currentContent === ProblemDetailViewContent.Details && (
-                            <ProblemDetails
-                                problem={problem}
-                                category={category}
-                                comments={comments ?? []}
-                                goTo={goTo}
-                            />
+                            <>
+                                {canReview && (
+                                    <IconButton
+                                        icon='pencil'
+                                        onPress={goTo(ProblemDetailViewContent.Review)}
+                                        mode='contained'
+                                    />
+                                )}
+                                {!canReview && canReactivate && (
+                                    <IconButton
+                                        icon='refresh'
+                                        onPress={goTo(ProblemDetailViewContent.Reactivation)}
+                                        mode='contained'
+                                    />
+                                )}
+                            </>
                         )}
-                        {currentContent === ProblemDetailViewContent.Comments && (
-                            <ProblemComments
-                                problem={problem}
-                                onClose={goTo(ProblemDetailViewContent.Details)}
-                                onSend={refetchComments}
-                                comments={comments ?? []}
-                            />
-                        )}
-                        {currentContent === ProblemDetailViewContent.Review && (
-                            <ProblemReview
-                                problem={problem}
-                                onClose={goTo(ProblemDetailViewContent.Details)}
-                                onSubmit={onClose}
-                                categories={categories ?? []}
-                            />
-                        )}
-                        {currentContent === ProblemDetailViewContent.Reactivation && (
-                            <ProblemReactivation
-                                problem={problem}
-                                onClose={goTo(ProblemDetailViewContent.Details)}
-                                onSubmit={onClose}
-                            />
-                        )}
-                        {currentContent === ProblemDetailViewContent.Rating && (
-                            <ProblemRating
-                                problem={problem}
-                                onClose={goTo(ProblemDetailViewContent.Details)}
-                            />
-                        )}
+                        <IconButton
+                            icon='close'
+                            onPress={onClose}
+                            mode='contained'
+                        />
                     </View>
+                </View>
+
+                {currentContent === ProblemDetailViewContent.Details && (
+                    <ProblemDetails
+                        problem={problem}
+                        category={category}
+                        comments={comments ?? []}
+                        goTo={goTo}
+                    />
+                )}
+                {currentContent === ProblemDetailViewContent.Comments && (
+                    <ProblemComments
+                        problem={problem}
+                        onClose={goTo(ProblemDetailViewContent.Details)}
+                        onSend={refetchComments}
+                        comments={comments ?? []}
+                    />
+                )}
+                {currentContent === ProblemDetailViewContent.Review && (
+                    <ProblemReview
+                        problem={problem}
+                        onClose={goTo(ProblemDetailViewContent.Details)}
+                        onSubmit={onClose}
+                        categories={categories ?? []}
+                    />
+                )}
+                {currentContent === ProblemDetailViewContent.Reactivation && (
+                    <ProblemReactivation
+                        problem={problem}
+                        onClose={goTo(ProblemDetailViewContent.Details)}
+                        onSubmit={onClose}
+                    />
+                )}
+                {currentContent === ProblemDetailViewContent.Rating && (
+                    <ProblemRating
+                        problem={problem}
+                        onClose={goTo(ProblemDetailViewContent.Details)}
+                    />
                 )}
             </Card>
         </View>

@@ -8,6 +8,7 @@ import { globalStyles } from '~/shared/constants/globalStyles'
 import { theme } from '~/shared/constants/theme'
 import AuthProvider from '~/shared/context/AuthContext/AuthProvider'
 import DialogProvider from '~/shared/context/DialogContext/DialogProvider'
+import KeyboardProvider from '~/shared/context/KeyboardContext/KeyboardProvider'
 import LocationProvider from '~/shared/context/LocationContext/LocationProvider'
 import SnackbarProvider from '~/shared/context/SnackbarContext/SnackbarProvider'
 
@@ -31,27 +32,29 @@ const App = () => {
     })
 
     return (
-        <SafeAreaView style={globalStyles.flexBox}>
-            <QueryClientProvider client={queryClient}>
-                <AuthProvider>
-                    <PaperProvider theme={theme}>
-                        <StatusBar
-                            animated
-                            style='dark'
-                            hidden={false}
-                            backgroundColor={colors.white}
-                        />
-                        <LocationProvider>
-                            <DialogProvider>
-                                <SnackbarProvider>
-                                    <Main />
-                                </SnackbarProvider>
-                            </DialogProvider>
-                        </LocationProvider>
-                    </PaperProvider>
-                </AuthProvider>
-            </QueryClientProvider>
-        </SafeAreaView>
+        <KeyboardProvider>
+            <SafeAreaView style={globalStyles.flexBox}>
+                <QueryClientProvider client={queryClient}>
+                    <AuthProvider>
+                        <PaperProvider theme={theme}>
+                            <StatusBar
+                                animated
+                                style='dark'
+                                hidden={false}
+                                backgroundColor={colors.white}
+                            />
+                            <LocationProvider>
+                                <DialogProvider>
+                                    <SnackbarProvider>
+                                        <Main />
+                                    </SnackbarProvider>
+                                </DialogProvider>
+                            </LocationProvider>
+                        </PaperProvider>
+                    </AuthProvider>
+                </QueryClientProvider>
+            </SafeAreaView>
+        </KeyboardProvider>
     )
 }
 

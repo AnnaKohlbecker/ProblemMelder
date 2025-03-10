@@ -8,7 +8,9 @@ import { FlatList, RefreshControl, StyleSheet, View } from 'react-native'
 import { Searchbar, Text } from 'react-native-paper'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import { useAuth } from '~/shared/context/AuthContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
+import { Role } from '~/shared/enums/Role'
 import { Route as RouteEnum } from '~/shared/enums/Route'
 import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
@@ -43,12 +45,13 @@ const styles = StyleSheet.create({
 })
 
 const Archive = ({ route }: Props) => {
+    const { hasRole } = useAuth()
     const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
     const [selectedProblemDetails, setSelectedProblemDetails] = useState<Problem>()
 
     const onClose = useCallback(() => {
-        navigate(RouteEnum.MANAGEMENT)
-    }, [navigate])
+        navigate(hasRole(Role.Admin) ? RouteEnum.MANAGEMENT : RouteEnum.PROFILE)
+    }, [navigate, hasRole])
 
     const {
         data: problems,

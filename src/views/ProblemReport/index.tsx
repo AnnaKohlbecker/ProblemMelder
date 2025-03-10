@@ -66,7 +66,7 @@ const ProblemReport = ({ route }: Props) => {
 
         if (isNil(step)) {
             setCurrentStepSerial(1)
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+             
             return REPORT_STEPS.find((x) => x.serial === 1)!
         }
 
@@ -159,7 +159,6 @@ const ProblemReport = ({ route }: Props) => {
                 <View>
                     <Header
                         route={route}
-                        seperator={false}
                         onClose={onClose}
                     />
                     <ProgressBar

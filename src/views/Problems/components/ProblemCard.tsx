@@ -27,7 +27,13 @@ const ProblemCard = ({ problem, onCardPress }: Props) => {
                             iconColor={iconAndColor.color}
                             size={RFValue(30)}
                         />
-                        <Text style={globalStyles.title}>{problem.title}</Text>
+                        <Text
+                            style={globalStyles.title}
+                            numberOfLines={1}
+                            ellipsizeMode='tail'
+                        >
+                            {problem.title}
+                        </Text>
                     </View>
                 </View>
             </TouchableRipple>

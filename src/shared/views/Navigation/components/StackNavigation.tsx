@@ -2,8 +2,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Route } from '~/shared/enums/Route'
 import TabNavigation from '~/shared/views/Navigation/components/TabNavigation'
 import { NavigationParamList } from '~/shared/views/Navigation/types/NavigationParamList'
+import Archive from '~/views/Archive'
 import Authentication from '~/views/Authentication'
-import Archive from '~/views/Management/Archive'
 import AuthoritiesManagement from '~/views/Management/Authorities'
 import CategoriesManagement from '~/views/Management/Categories'
 import EmployeeManagement from '~/views/Management/Employees'
@@ -35,6 +35,13 @@ const StackNavigation = () => {
                 options={{ headerShown: false }}
             />
 
+            {/* Archive */}
+            <Stack.Screen
+                name={Route.ARCHIVE}
+                component={Archive}
+                options={{ headerShown: false }}
+            />
+
             {/* Management Views */}
             <Stack.Screen
                 name={Route.AUTHORITIES_MANAGEMENT}
@@ -49,11 +56,6 @@ const StackNavigation = () => {
             <Stack.Screen
                 name={Route.EMPLOYEES_MANAGEMENT}
                 component={EmployeeManagement}
-                options={{ headerShown: false }}
-            />
-            <Stack.Screen
-                name={Route.ARCHIVE}
-                component={Archive}
                 options={{ headerShown: false }}
             />
         </Stack.Navigator>

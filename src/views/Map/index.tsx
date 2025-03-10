@@ -64,16 +64,16 @@ const Map = ({ route }: Props) => {
                         onFabPress={onReportProblem}
                     />
                 )}
-                {markerDetails && (
-                    <ProblemDetailView
-                        problem={markerDetails}
-                        onClose={() => {
-                            refetchProblems()
-                            setMarkerDetails(undefined)
-                        }}
-                    />
-                )}
             </View>
+            {markerDetails && (
+                <ProblemDetailView
+                    problem={markerDetails}
+                    onClose={() => {
+                        refetchProblems()
+                        setMarkerDetails(undefined)
+                    }}
+                />
+            )}
         </>
     )
 }

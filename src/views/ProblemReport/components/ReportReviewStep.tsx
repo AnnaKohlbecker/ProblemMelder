@@ -112,7 +112,7 @@ const ReportReviewStep = ({ isLoading }: ReportStepProps) => {
                     <Icon
                         source='text-long'
                         size={RFValue(25)}
-                        color={colors.black}
+                        color={colors.primary}
                     />
                 </View>
                 <Text
@@ -128,7 +128,7 @@ const ReportReviewStep = ({ isLoading }: ReportStepProps) => {
                     <Icon
                         source='map-marker'
                         size={RFValue(25)}
-                        color={colors.black}
+                        color={colors.primary}
                     />
                 </View>
                 <Text
