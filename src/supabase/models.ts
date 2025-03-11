@@ -140,15 +140,11 @@ export type Database = {
                     id: number
                     image: string
                     location: string
-                    priority: number | null
-                    priorityVotesCount: number
                     reasonForDeactivation: string | null
                     reasonForReactivation: string | null
-                    stars: number | null
-                    starsVotesCount: number
                     status: number
                     title: string
-                    userId: string | null
+                    userId: string
                 }
                 Insert: {
                     authorityId: number
@@ -159,15 +155,11 @@ export type Database = {
                     id?: number
                     image: string
                     location: string
-                    priority?: number | null
-                    priorityVotesCount?: number
                     reasonForDeactivation?: string | null
                     reasonForReactivation?: string | null
-                    stars?: number | null
-                    starsVotesCount?: number
                     status?: number
                     title: string
-                    userId?: string | null
+                    userId: string
                 }
                 Update: {
                     authorityId?: number
@@ -178,15 +170,11 @@ export type Database = {
                     id?: number
                     image?: string
                     location?: string
-                    priority?: number | null
-                    priorityVotesCount?: number
                     reasonForDeactivation?: string | null
                     reasonForReactivation?: string | null
-                    stars?: number | null
-                    starsVotesCount?: number
                     status?: number
                     title?: string
-                    userId?: string | null
+                    userId?: string
                 }
                 Relationships: [
                     {
@@ -226,6 +214,7 @@ export type Database = {
             UserData: {
                 Row: {
                     authorityId: number | null
+                    email: string | null
                     id: number
                     name: string
                     points: number
@@ -234,6 +223,7 @@ export type Database = {
                 }
                 Insert: {
                     authorityId?: number | null
+                    email?: string | null
                     id?: number
                     name: string
                     points: number
@@ -242,6 +232,7 @@ export type Database = {
                 }
                 Update: {
                     authorityId?: number | null
+                    email?: string | null
                     id?: number
                     name?: string
                     points?: number
