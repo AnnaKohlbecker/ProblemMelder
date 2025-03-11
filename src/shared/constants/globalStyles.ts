@@ -114,4 +114,38 @@ export const globalStyles = StyleSheet.create({
         flexDirection: 'row',
         paddingBottom: 10,
     },
+    cardView: {
+        padding: 15,
+        backgroundColor: colors.white,
+        width: '90%',
+        maxHeight: '90%',
+    },
+    dialogWrapper: {
+        alignItems: 'center',
+        backgroundColor: colors.backdrop,
+        elevation: 1000,
+        justifyContent: 'center',
+    },
+    cardHeader: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingBottom: 10,
+    },
+    cardHeaderButtons: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        width: 110,
+    },
+    cardHeaderTitle: {
+        fontSize: RFValue(14),
+        fontWeight: 'bold',
+        width: '50%',
+    },
+    dialogCard: {
+        padding: 15,
+        backgroundColor: colors.white,
+        width: '90%',
+        maxHeight: '90%',
+    },
 })

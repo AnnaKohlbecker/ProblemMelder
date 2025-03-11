@@ -79,6 +79,8 @@ const CategoriesManagement = ({ route }: Props) => {
         [categoriesLoading, authoritiesLoading],
     )
 
+    if (loading) return <LoadingSpinner />
+
     return (
         <View style={globalStyles.flexBoxWithColor}>
             <Header
@@ -86,31 +88,27 @@ const CategoriesManagement = ({ route }: Props) => {
                 onClose={onClose}
             />
             <View style={globalStyles.flexBox}>
-                {loading ? (
-                    <LoadingSpinner />
-                ) : (
-                    <>
-                        <View style={[globalStyles.flexBox, styles.list]}>
-                            <FlatList
-                                data={categories}
-                                keyExtractor={(item) => item.id.toString()}
-                                renderItem={({ item }) => (
-                                    <CategoryListItem
-                                        item={item}
-                                        authorities={authorities ?? []}
-                                        onEdit={onEdit}
-                                        onDelete={onDelete}
-                                    />
-                                )}
-                            />
-                        </View>
-                        <FAB
-                            icon='plus'
-                            onPress={onAdd}
-                            style={globalStyles.fab}
+                <>
+                    <View style={[globalStyles.flexBox, styles.list]}>
+                        <FlatList
+                            data={categories}
+                            keyExtractor={(item) => item.id.toString()}
+                            renderItem={({ item }) => (
+                                <CategoryListItem
+                                    item={item}
+                                    authorities={authorities ?? []}
+                                    onEdit={onEdit}
+                                    onDelete={onDelete}
+                                />
+                            )}
                         />
-                    </>
-                )}
+                    </View>
+                    <FAB
+                        icon='plus'
+                        onPress={onAdd}
+                        style={globalStyles.fab}
+                    />
+                </>
             </View>
             {editInfo && (
                 <AddOrEditCategoryModal

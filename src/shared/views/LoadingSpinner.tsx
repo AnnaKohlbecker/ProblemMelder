@@ -1,24 +1,26 @@
 import { StyleSheet, View } from 'react-native'
 import { ActivityIndicator } from 'react-native-paper'
+import { RFValue } from 'react-native-responsive-fontsize'
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center',
-        flex: 1,
         justifyContent: 'center',
+        elevation: 3000,
+    },
+    icon: {
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignSelf: 'center',
     },
 })
 
-type Props = {
-    size?: 'small' | 'large' | number
-}
-
-const LoadingSpinner = ({ size = 'large' }: Props) => {
+const LoadingSpinner = () => {
     return (
-        <View style={styles.container}>
+        <View style={[StyleSheet.absoluteFill, styles.container]}>
             <ActivityIndicator
                 animating={true}
-                size={size}
+                size={RFValue(50)}
+                style={styles.icon}
             />
         </View>
     )

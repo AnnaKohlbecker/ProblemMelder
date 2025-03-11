@@ -41,9 +41,6 @@ const styles = StyleSheet.create({
         maxWidth: '100%',
         width: RFValue(90),
     },
-    loading: {
-        height: 100,
-    },
     description: {
         height: 160,
     },
@@ -138,11 +135,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
     }, [problem.location])
 
     if (reviewsLoading || userReviewLoading || authorLoading || isNil(problem.image))
-        return (
-            <View style={styles.loading}>
-                <LoadingSpinner size={50} />
-            </View>
-        )
+        return <LoadingSpinner />
 
     return (
         <View style={globalStyles.contentWrapper}>

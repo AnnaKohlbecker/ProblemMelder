@@ -5,7 +5,6 @@ import { Card, Icon, IconButton, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { useCategoriesQuery } from '~/queries/Categories/useCategoriesQuery'
 import { useProblemCommentsByProblemQuery } from '~/queries/ProblemComments/useProblemCommentsByProblemQuery'
-import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { problemStatusToIconAndColor } from '~/shared/helpers/ProblemStatusToIconAndColor'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
@@ -22,37 +21,6 @@ type Props = {
     problem: Problem
     onClose: () => void
 }
-
-const styles = StyleSheet.create({
-    card: {
-        padding: 15,
-        backgroundColor: colors.white,
-        width: '90%',
-        maxHeight: '90%',
-    },
-    title: {
-        fontSize: RFValue(14),
-        fontWeight: 'bold',
-        width: '50%',
-    },
-    wrapper: {
-        alignItems: 'center',
-        backgroundColor: colors.backdrop,
-        elevation: 1000,
-        justifyContent: 'center',
-    },
-    cardTitle: {
-        alignItems: 'center',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingBottom: 10,
-    },
-    cardTitleButtons: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        width: 110,
-    },
-})
 
 const ProblemDetailView = ({ problem, onClose }: Props) => {
     const { canReactivate, canReview } = useProblemPermissions({ problem })
@@ -98,31 +66,26 @@ const ProblemDetailView = ({ problem, onClose }: Props) => {
         }
     }, [onClose])
 
-    if (categoriesLoading || commentsLoading || isNil(category))
-        return (
-            <View style={globalStyles.flexBox}>
-                <LoadingSpinner />
-            </View>
-        )
+    if (categoriesLoading || commentsLoading || isNil(category)) return <LoadingSpinner />
 
     return (
-        <View style={[StyleSheet.absoluteFillObject, styles.wrapper]}>
-            <Card style={styles.card}>
-                <View style={styles.cardTitle}>
+        <View style={[StyleSheet.absoluteFillObject, globalStyles.dialogWrapper]}>
+            <Card style={globalStyles.dialogCard}>
+                <View style={globalStyles.cardHeader}>
                     <Icon
                         source={icon}
                         color={color}
                         size={RFValue(30)}
                     />
                     <Text
-                        style={styles.title}
+                        style={globalStyles.cardHeaderTitle}
                         numberOfLines={2}
                         ellipsizeMode='tail'
                     >
                         {problem.title}
                     </Text>
 
-                    <View style={styles.cardTitleButtons}>
+                    <View style={globalStyles.cardHeaderButtons}>
                         {currentContent === ProblemDetailViewContent.Details && (
                             <>
                                 {canReview && (

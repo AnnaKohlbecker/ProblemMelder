@@ -66,42 +66,40 @@ const EmployeeManagement = ({ route }: Props) => {
         [filteredEmployees, onDelete, search],
     )
 
+    if (employeesLoading || authoritiesLoading) return <LoadingSpinner />
+
     return (
         <View style={globalStyles.flexBoxWithColor}>
             <Header
                 route={route}
                 onClose={onClose}
             />
-            {employeesLoading || authoritiesLoading ? (
-                <LoadingSpinner />
-            ) : (
-                <View style={globalStyles.flexBox}>
-                    <View style={styles.filterWrapper}>
-                        <Searchbar
-                            style={globalStyles.searchBar}
-                            value={search}
-                            onChangeText={setSearch}
-                            placeholder='Suchen'
-                        />
-                    </View>
-                    <View style={globalStyles.flexBox}>
-                        {filteredEmployees.length === 0 ? (
-                            <View style={globalStyles.flexCenter}>
-                                <Text style={globalStyles.noDataText}>
-                                    Keine Mitarbeitenden gefunden
-                                </Text>
-                            </View>
-                        ) : (
-                            <FlatList<Authority>
-                                data={authorities ?? []}
-                                renderItem={renderItem}
-                                keyExtractor={(dep) => dep.id.toString()}
-                                contentContainerStyle={styles.list}
-                            />
-                        )}
-                    </View>
+            <View style={globalStyles.flexBox}>
+                <View style={styles.filterWrapper}>
+                    <Searchbar
+                        style={globalStyles.searchBar}
+                        value={search}
+                        onChangeText={setSearch}
+                        placeholder='Suchen'
+                    />
                 </View>
-            )}
+                <View style={globalStyles.flexBox}>
+                    {filteredEmployees.length === 0 ? (
+                        <View style={globalStyles.flexCenter}>
+                            <Text style={globalStyles.noDataText}>
+                                Keine Mitarbeitenden gefunden
+                            </Text>
+                        </View>
+                    ) : (
+                        <FlatList<Authority>
+                            data={authorities ?? []}
+                            renderItem={renderItem}
+                            keyExtractor={(dep) => dep.id.toString()}
+                            contentContainerStyle={styles.list}
+                        />
+                    )}
+                </View>
+            </View>
         </View>
     )
 }
