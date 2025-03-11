@@ -77,10 +77,6 @@ const PictureSelection = ({ name }: Props) => {
         requestPermission()
     }, [permission, requestPermission])
 
-    if (imageLoading) {
-        return <LoadingSpinner />
-    }
-
     return (
         <View style={globalStyles.flexBox}>
             {error && <Text style={globalStyles.error}>{error.message}</Text>}
@@ -119,15 +115,19 @@ const PictureSelection = ({ name }: Props) => {
                     </TouchableOpacity>
                     <View style={[globalStyles.flexBox, styles.buttonContainer]}>
                         <TouchableOpacity>
-                            <IconButton
-                                mode='contained'
-                                icon='camera'
-                                size={40}
-                                onPress={() => {
-                                    setImageLoading(true)
-                                    takePicture()
-                                }}
-                            />
+                            {imageLoading ? (
+                                <LoadingSpinner />
+                            ) : (
+                                <IconButton
+                                    mode='contained'
+                                    icon='camera'
+                                    size={40}
+                                    onPress={() => {
+                                        setImageLoading(true)
+                                        takePicture()
+                                    }}
+                                />
+                            )}
                         </TouchableOpacity>
                     </View>
                 </CameraView>

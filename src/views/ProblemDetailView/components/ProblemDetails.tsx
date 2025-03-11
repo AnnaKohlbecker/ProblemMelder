@@ -62,14 +62,9 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         backgroundColor: colors.secondary,
     },
-    disabledButtonContent: {
-        height: RFValue(40),
-        borderRadius: 30,
-        backgroundColor: colors.tertiary,
-    },
-    disabledText: {
-        fontSize: RFValue(14),
-        color: colors.secondary,
+    footer: {
+        height: '20%',
+        alignItems: 'flex-start',
     },
 })
 
@@ -251,60 +246,63 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                 </TouchableRipple>
             </View>
 
-            <View style={globalStyles.flexRowWithSpace}>
-                <Button
-                    mode='contained'
-                    buttonColor={colors.transparent}
-                    onPress={() => {
-                        onHelpful(userReview?.helpful ? null : true)
-                    }}
-                    disabled={isDisabled}
-                    icon={() => (
-                        <Icon
-                            source='thumb-up'
-                            size={RFValue(18)}
-                            color={isDisabled ? colors.secondary : colors.primary}
-                        />
-                    )}
-                    contentStyle={
-                        isDisabled
-                            ? styles.disabledButtonContent
-                            : userReview?.helpful === true && !isNil(userReview)
-                              ? styles.activeButtonContent
-                              : styles.buttonContent
-                    }
-                >
-                    <Text style={isDisabled ? styles.disabledText : styles.text}>
-                        Hilfreich {helpful}
+            {isDisabled ? (
+                <View style={styles.footer}>
+                    <Text style={globalStyles.subtitle}>
+                        {problem.status === ProblemStatus.Done
+                            ? 'Problem gelöst:'
+                            : 'Problem belöscht:'}
                     </Text>
-                </Button>
-                <Button
-                    mode='contained'
-                    buttonColor={colors.transparent}
-                    onPress={() => {
-                        onHelpful(userReview?.helpful === false ? null : false)
-                    }}
-                    disabled={isDisabled}
-                    icon={() => (
-                        <Icon
-                            source='thumb-down'
-                            size={RFValue(18)}
-                            color={isDisabled ? colors.secondary : colors.primary}
-                        />
-                    )}
-                    contentStyle={
-                        isDisabled
-                            ? styles.disabledButtonContent
-                            : userReview?.helpful === false && !isNil(userReview)
-                              ? styles.activeButtonContent
-                              : styles.buttonContent
-                    }
-                >
-                    <Text style={isDisabled ? styles.disabledText : styles.text}>
-                        Irrtum {unhelpful}
-                    </Text>
-                </Button>
-            </View>
+                    <Text style={styles.text}>{problem.reasonForDeactivation}</Text>
+                </View>
+            ) : (
+                <View style={globalStyles.flexRowWithSpace}>
+                    <Button
+                        mode='contained'
+                        buttonColor={colors.transparent}
+                        onPress={() => {
+                            onHelpful(userReview?.helpful ? null : true)
+                        }}
+                        disabled={isDisabled}
+                        icon={() => (
+                            <Icon
+                                source='thumb-up'
+                                size={RFValue(18)}
+                                color={colors.primary}
+                            />
+                        )}
+                        contentStyle={
+                            userReview?.helpful === true && !isNil(userReview)
+                                ? styles.activeButtonContent
+                                : styles.buttonContent
+                        }
+                    >
+                        <Text style={styles.text}>Hilfreich {helpful}</Text>
+                    </Button>
+                    <Button
+                        mode='contained'
+                        buttonColor={colors.transparent}
+                        onPress={() => {
+                            onHelpful(userReview?.helpful === false ? null : false)
+                        }}
+                        disabled={isDisabled}
+                        icon={() => (
+                            <Icon
+                                source='thumb-down'
+                                size={RFValue(18)}
+                                color={colors.primary}
+                            />
+                        )}
+                        contentStyle={
+                            userReview?.helpful === false && !isNil(userReview)
+                                ? styles.activeButtonContent
+                                : styles.buttonContent
+                        }
+                    >
+                        <Text style={styles.text}>Irrtum {unhelpful}</Text>
+                    </Button>
+                </View>
+            )}
         </View>
     )
 }

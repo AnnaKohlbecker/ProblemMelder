@@ -1,11 +1,15 @@
-import { useEffect } from 'react'
+import { isNil } from 'lodash'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { BackHandler, StyleSheet, View } from 'react-native'
 import { Card, IconButton, Text } from 'react-native-paper'
+import { useProblemsWithReviewByAuthorityQuery } from '~/queries/Authorities/useProblemsWithReviewByAuthorityQuery'
 import { useCategoriesByAuthorityQuery } from '~/queries/Categories/useCategoriesByAuthorityQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import { Authority } from '~/supabase/types'
 import AuthorityDetails from '~/views/AuthorityDetailView/components/AuthorityDetails'
+import AuthorityReview from '~/views/AuthorityDetailView/components/AuthorityReview'
+import { AuthorityDetailViewContent } from '~/views/AuthorityDetailView/enums/AuthorityDetailViewContent'
 
 type Props = {
     authority: Authority
@@ -13,6 +17,30 @@ type Props = {
 }
 
 const AuthorityDetailView = ({ authority, onClose }: Props) => {
+    const [currentContent, setCurrentContent] = useState<AuthorityDetailViewContent>(
+        AuthorityDetailViewContent.Details,
+    )
+
+    const { data: problems, isLoading: problemsLoading } = useProblemsWithReviewByAuthorityQuery({
+        authorityId: authority.id,
+    })
+
+    const averageRating = useMemo(() => {
+        let ratingSum = 0
+        let ratingCount = 0
+
+        problems?.forEach((problem) => {
+            problem.SanitizedProblemReviews.forEach((review) => {
+                if (isNil(review.stars)) return
+
+                ratingSum += review.stars
+                ratingCount++
+            })
+        })
+
+        return ratingSum / ratingCount
+    }, [problems])
+
     const { data: categories, isLoading: categoriesLoading } = useCategoriesByAuthorityQuery({
         authorityId: authority.id,
     })
@@ -28,7 +56,14 @@ const AuthorityDetailView = ({ authority, onClose }: Props) => {
         }
     }, [onClose])
 
-    if (categoriesLoading) return <LoadingSpinner />
+    const goTo = useCallback(
+        (content: AuthorityDetailViewContent) => () => {
+            setCurrentContent(content)
+        },
+        [],
+    )
+
+    if (categoriesLoading || problemsLoading) return <LoadingSpinner />
 
     return (
         <View style={[StyleSheet.absoluteFillObject, globalStyles.dialogWrapper]}>
@@ -50,10 +85,20 @@ const AuthorityDetailView = ({ authority, onClose }: Props) => {
                         />
                     </View>
                 </View>
-                <AuthorityDetails
-                    authority={authority}
-                    categories={categories ?? []}
-                />
+                {currentContent === AuthorityDetailViewContent.Details && (
+                    <AuthorityDetails
+                        averageRating={averageRating}
+                        categories={categories ?? []}
+                        onReviewPress={goTo(AuthorityDetailViewContent.Review)}
+                    />
+                )}
+                {currentContent === AuthorityDetailViewContent.Review && (
+                    <AuthorityReview
+                        problems={problems ?? []}
+                        categories={categories ?? []}
+                        onClose={goTo(AuthorityDetailViewContent.Details)}
+                    />
+                )}
             </Card>
         </View>
     )

@@ -9,8 +9,12 @@ export type Table<T extends keyof Database['public']['Tables']> =
 export type View<T extends keyof Database['public']['Views']> =
     Database['public']['Views'][T]['Row']
 
-type WithRelation<T, K extends keyof Database['public']['Tables']> = T & {
+type WithTableRelation<T, K extends keyof Database['public']['Tables']> = T & {
     [P in K]: Database['public']['Tables'][P]['Row']
+}
+
+type WithViewRelationOneToMany<T, K extends keyof Database['public']['Views']> = T & {
+    [P in K]: Database['public']['Views'][P]['Row'][]
 }
 
 ////////////
@@ -38,4 +42,9 @@ export type SanitizedProblemReview = View<'SanitizedProblemReviews'>
 ///////////
 // JOINS //
 ///////////
-export type CommentWithUserData = WithRelation<ProblemComment, 'UserData'>
+export type CommentWithUserData = WithTableRelation<ProblemComment, 'UserData'>
+
+export type ProblemWithSanitizedProblemReviews = WithViewRelationOneToMany<
+    Problem,
+    'SanitizedProblemReviews'
+>

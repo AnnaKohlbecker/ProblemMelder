@@ -1,14 +1,17 @@
 import { FlatList, StyleSheet, View } from 'react-native'
-import { Icon, Text } from 'react-native-paper'
+import { Icon, Text, TouchableRipple } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
-import { Authority, Category } from '~/supabase/types'
+import { ProblemStatus } from '~/shared/enums/ProblemStatus'
+import getRatingIcons from '~/shared/helpers/getRatingIcons'
+import { Category } from '~/supabase/types'
 import CategoryListItem from '~/views/AuthorityDetailView/components/CategoryListItem'
 
 type Props = {
-    authority: Authority
+    averageRating: number
     categories: Category[]
+    onReviewPress: () => void
 }
 
 const styles = StyleSheet.create({
@@ -26,9 +29,15 @@ const styles = StyleSheet.create({
     limitedHeight: {
         height: 300,
     },
+    ripple: {
+        paddingHorizontal: 20,
+        borderRadius: 30,
+        height: RFValue(40),
+        justifyContent: 'center',
+    },
 })
 
-const AuthorityDetails = ({ authority, categories }: Props) => {
+const AuthorityDetails = ({ averageRating, categories, onReviewPress }: Props) => {
     return (
         <View style={[globalStyles.contentWrapper, styles.limitedHeight]}>
             <View style={styles.categories}>
@@ -50,7 +59,16 @@ const AuthorityDetails = ({ authority, categories }: Props) => {
                     persistentScrollbar={true}
                 />
             </View>
-            <Text style={globalStyles.subtitle}>TODO: Bewertung von {authority.name}</Text>
+
+            <TouchableRipple
+                borderless={true}
+                style={styles.ripple}
+                onPress={onReviewPress}
+            >
+                <Text style={globalStyles.subtitle}>
+                    {getRatingIcons(ProblemStatus.Done, averageRating)}
+                </Text>
+            </TouchableRipple>
         </View>
     )
 }
