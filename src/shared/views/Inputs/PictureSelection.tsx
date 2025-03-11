@@ -7,6 +7,7 @@ import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Button, IconButton, Text } from 'react-native-paper'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import { useSnackbar } from '~/shared/context/SnackbarContext'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 
 type Props = {
@@ -31,6 +32,8 @@ const styles = StyleSheet.create({
 })
 
 const PictureSelection = ({ name }: Props) => {
+    const showSnackbar = useSnackbar()
+
     const cameraRef = useRef<CameraView>(null)
     const [imageLoading, setImageLoading] = useState(false)
 
@@ -65,7 +68,14 @@ const PictureSelection = ({ name }: Props) => {
                 trigger()
                 setImageLoading(false)
             })
-    }, [onChange, trigger])
+            .catch((e: unknown) => {
+                setImageLoading(false)
+
+                showSnackbar('Das Bild konnte nicht aufgenommen werden. Bitte versuche es erneut.')
+
+                throw e
+            })
+    }, [onChange, showSnackbar, trigger])
 
     const retry = useCallback(() => {
         onChange(undefined)
@@ -103,7 +113,6 @@ const PictureSelection = ({ name }: Props) => {
             ) : (
                 <CameraView
                     ref={cameraRef}
-                    facing='back'
                     enableTorch={enableTorch}
                     style={[globalStyles.flexBox, styles.camera]}
                 >

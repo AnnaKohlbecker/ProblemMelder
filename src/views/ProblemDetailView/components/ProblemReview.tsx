@@ -1,3 +1,4 @@
+import { isNil } from 'lodash'
 import { useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { ScrollView, StyleSheet, View } from 'react-native'
@@ -30,12 +31,12 @@ const ProblemReview = ({ problem, categories, onClose, onSubmit: onSubmitProp }:
     const confirm = useDialog()
     const { isKeyboardVisible } = useKeyboard()
 
-    const form = useForm({
+    const form = useForm<Problem & Record<string, unknown>>({
         values: {
             ...problem,
             latitude: undefined,
             longitude: undefined,
-            reasonForDeactivation: undefined,
+            reasonForDeactivation: null,
         },
     })
     const {
@@ -46,22 +47,32 @@ const ProblemReview = ({ problem, categories, onClose, onSubmit: onSubmitProp }:
     const { mutate: updateProblem, isPending } = useUpsertProblemMutation()
 
     const onSubmit = useCallback(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (data: any) => {
+        (data: Problem) => {
+            const newAuthority = categories.find((c) => c.id === data.categoryId)
+
+            if (isNil(newAuthority))
+                throw new Error('Category change not possible because of missing Authority.')
+
             confirm({
                 title: 'Problem speichern',
                 description: 'Möchtest du die Änderungen speichern?',
                 acceptLabel: 'Speichern',
                 dismissLabel: 'Abbrechen',
                 onAccept: () => {
-                    updateProblem(data, {
-                        onSuccess: onSubmitProp,
-                        onError: onSubmitProp,
-                    })
+                    updateProblem(
+                        {
+                            ...data,
+                            authorityId: newAuthority.id,
+                        },
+                        {
+                            onSuccess: onSubmitProp,
+                            onError: onSubmitProp,
+                        },
+                    )
                 },
             })
         },
-        [confirm, onSubmitProp, updateProblem],
+        [categories, confirm, onSubmitProp, updateProblem],
     )
 
     return (

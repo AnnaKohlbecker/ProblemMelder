@@ -9,6 +9,8 @@ import { Button, ProgressBar, Text } from 'react-native-paper'
 import { v4 } from 'react-native-uuid/dist/v4'
 import { useUploadImageMutation } from '~/queries/Problems/useUploadImageMutation'
 import { useUpsertProblemMutation } from '~/queries/Problems/useUpsertProblemMutation'
+import { useUpdateUserDataMutation } from '~/queries/UserData/useUpdateUserDataMutation'
+import { useUserByIdQuery } from '~/queries/UserData/useUserByIdQuery'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
@@ -47,6 +49,11 @@ const ProblemReport = ({ route }: Props) => {
 
     const [currentStepSerial, setCurrentStepSerial] = useState(1)
 
+    const { data: userData, isLoading: userDataLoading } = useUserByIdQuery({
+        userId: session?.user.id,
+    })
+    const { mutate: updateUserData, isPending: userDataPending } = useUpdateUserDataMutation()
+
     const showDialog = useDialog()
 
     const form = useForm<Problem>({
@@ -66,7 +73,7 @@ const ProblemReport = ({ route }: Props) => {
 
         if (isNil(step)) {
             setCurrentStepSerial(1)
-             
+
             return REPORT_STEPS.find((x) => x.serial === 1)!
         }
 
@@ -141,16 +148,30 @@ const ProblemReport = ({ route }: Props) => {
                                     },
                                 },
                             )
+                            if (!isNil(userData))
+                                updateUserData({
+                                    ...userData,
+                                    points: userData.points + 10,
+                                })
                         },
                     },
                 )
             })()
         })
-    }, [currentStepSerial, handleSubmit, navigate, trigger, uploadImage, upsertProblem])
+    }, [
+        currentStepSerial,
+        handleSubmit,
+        navigate,
+        trigger,
+        updateUserData,
+        uploadImage,
+        upsertProblem,
+        userData,
+    ])
 
     const isLoading = useMemo(
-        () => isUploadingImage || isUpsertingProblem,
-        [isUploadingImage, isUpsertingProblem],
+        () => isUploadingImage || isUpsertingProblem || userDataLoading || userDataPending,
+        [isUploadingImage, isUpsertingProblem, userDataLoading, userDataPending],
     )
 
     return (
