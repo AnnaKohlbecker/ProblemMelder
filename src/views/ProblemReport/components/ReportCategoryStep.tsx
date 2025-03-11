@@ -54,22 +54,20 @@ const ReportCategoryStep = ({ isLoading }: ReportStepProps) => {
         [onPress, value],
     )
 
+    if (isLoading || categoriesLoading) return <LoadingSpinner />
+
     return (
         <View style={globalStyles.flexBox}>
             <View style={styles.header}>
                 {error && <Text style={globalStyles.error}>{error.message}</Text>}
             </View>
-            {isLoading || categoriesLoading ? (
-                <LoadingSpinner />
-            ) : (
-                <View style={styles.container}>
-                    <FlatList<Category>
-                        data={categories}
-                        renderItem={renderItem}
-                        numColumns={3}
-                    />
-                </View>
-            )}
+            <View style={styles.container}>
+                <FlatList<Category>
+                    data={categories}
+                    renderItem={renderItem}
+                    numColumns={3}
+                />
+            </View>
         </View>
     )
 }

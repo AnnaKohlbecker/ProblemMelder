@@ -19,9 +19,6 @@ type Props = {
 }
 
 const styles = StyleSheet.create({
-    loading: {
-        height: 100,
-    },
     ratingIcons: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -93,12 +90,7 @@ const ProblemRating = ({ problem, onClose }: Props) => {
         [problem.status, onSubmit],
     )
 
-    if (userReviewLoading)
-        return (
-            <View style={styles.loading}>
-                <LoadingSpinner size={50} />
-            </View>
-        )
+    if (userReviewLoading) return <LoadingSpinner />
 
     return (
         <FormProvider {...form}>

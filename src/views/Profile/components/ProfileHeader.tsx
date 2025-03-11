@@ -59,54 +59,52 @@ const ProfileHeader = () => {
         return PrestiegeInformation[3]
     }, [user?.points])
 
+    if (isNil(user) || userLoading || isNil(role)) return <LoadingSpinner />
+
     return (
         <View style={styles.view}>
-            {isNil(user) || userLoading || isNil(role) ? (
-                <LoadingSpinner />
-            ) : (
-                <Card style={[globalStyles.card, styles.card]}>
-                    <View style={styles.cardWrapper}>
-                        <View style={styles.imageWrapper}>
-                            <Image
-                                source={prestiegeInfo.image}
-                                style={styles.image}
-                            />
-                        </View>
-
-                        <Text style={[globalStyles.bold, styles.name]}>{user.name}</Text>
+            <Card style={[globalStyles.card, styles.card]}>
+                <View style={styles.cardWrapper}>
+                    <View style={styles.imageWrapper}>
+                        <Image
+                            source={prestiegeInfo.image}
+                            style={styles.image}
+                        />
                     </View>
 
-                    <View style={styles.infoWrapper}>
-                        <Text style={styles.infoText}>
-                            <Text style={styles.infoText}>{role.displayName}</Text>
-                        </Text>
-                        {role.name !== 'admin' && role.name !== 'manager' && (
-                            <>
-                                <Text style={styles.infoText}>
-                                    Rolle:{' '}
-                                    <Text style={[globalStyles.bold, styles.infoText]}>
-                                        {prestiegeInfo.role}
-                                    </Text>
+                    <Text style={[globalStyles.bold, styles.name]}>{user.name}</Text>
+                </View>
+
+                <View style={styles.infoWrapper}>
+                    <Text style={styles.infoText}>
+                        <Text style={styles.infoText}>{role.displayName}</Text>
+                    </Text>
+                    {role.name !== 'admin' && role.name !== 'manager' && (
+                        <>
+                            <Text style={styles.infoText}>
+                                Rolle:{' '}
+                                <Text style={[globalStyles.bold, styles.infoText]}>
+                                    {prestiegeInfo.role}
                                 </Text>
-                                <Text style={styles.infoText}>
-                                    Punkte:{' '}
-                                    <Text style={[globalStyles.bold, styles.infoText]}>
-                                        {user.points}
-                                    </Text>
+                            </Text>
+                            <Text style={styles.infoText}>
+                                Punkte:{' '}
+                                <Text style={[globalStyles.bold, styles.infoText]}>
+                                    {user.points}
                                 </Text>
-                                {isNil(prestiegeInfo.nextRolePoints) ? (
-                                    <Text style={styles.infoTextBlue}>Höchste Rolle erreicht!</Text>
-                                ) : (
-                                    <Text style={styles.infoTextBlue}>
-                                        {prestiegeInfo.nextRole} ab {prestiegeInfo.nextRolePoints}{' '}
-                                        Punkten!
-                                    </Text>
-                                )}
-                            </>
-                        )}
-                    </View>
-                </Card>
-            )}
+                            </Text>
+                            {isNil(prestiegeInfo.nextRolePoints) ? (
+                                <Text style={styles.infoTextBlue}>Höchste Rolle erreicht!</Text>
+                            ) : (
+                                <Text style={styles.infoTextBlue}>
+                                    {prestiegeInfo.nextRole} ab {prestiegeInfo.nextRolePoints}{' '}
+                                    Punkten!
+                                </Text>
+                            )}
+                        </>
+                    )}
+                </View>
+            </Card>
         </View>
     )
 }

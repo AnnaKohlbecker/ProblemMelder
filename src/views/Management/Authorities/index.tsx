@@ -71,6 +71,8 @@ const AuthoritiesManagement = ({ route }: Props) => {
         [deleteAuthority, refetchAuthorities, showDialog, showSnackbar],
     )
 
+    if (authoritiesLoading) return <LoadingSpinner />
+
     return (
         <View style={globalStyles.flexBoxWithColor}>
             <Header
@@ -78,30 +80,26 @@ const AuthoritiesManagement = ({ route }: Props) => {
                 onClose={onClose}
             />
             <View style={globalStyles.flexBox}>
-                {authoritiesLoading ? (
-                    <LoadingSpinner />
-                ) : (
-                    <>
-                        <View style={[globalStyles.flexBox, styles.list]}>
-                            <FlatList
-                                data={authorities}
-                                keyExtractor={(item) => item.id.toString()}
-                                renderItem={({ item }) => (
-                                    <AuthorityManagementListItem
-                                        item={item}
-                                        onEdit={onEdit}
-                                        onDelete={onDelete}
-                                    />
-                                )}
-                            />
-                        </View>
-                        <FAB
-                            icon='plus'
-                            onPress={onAdd}
-                            style={globalStyles.fab}
+                <>
+                    <View style={[globalStyles.flexBox, styles.list]}>
+                        <FlatList
+                            data={authorities}
+                            keyExtractor={(item) => item.id.toString()}
+                            renderItem={({ item }) => (
+                                <AuthorityManagementListItem
+                                    item={item}
+                                    onEdit={onEdit}
+                                    onDelete={onDelete}
+                                />
+                            )}
                         />
-                    </>
-                )}
+                    </View>
+                    <FAB
+                        icon='plus'
+                        onPress={onAdd}
+                        style={globalStyles.fab}
+                    />
+                </>
             </View>
             {editInfo && (
                 <AddOrEditAuthorityModal

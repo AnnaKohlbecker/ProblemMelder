@@ -106,7 +106,9 @@ const Problems = ({ route }: Props) => {
         })
     }, [problemsLoading, problemsRefetching, refetchProblems])
 
-    if (userLoading || problemsLoading) return <LoadingSpinner />
+    if (userLoading || problemsLoading) {
+        return <LoadingSpinner />
+    }
 
     return (
         <View style={globalStyles.flexBoxWithColor}>

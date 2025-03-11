@@ -70,6 +70,8 @@ const AddOrEditCategoryModal = ({ editInfo, onClose }: Props) => {
         [authorities],
     )
 
+    if (authoritiesLoading) return <LoadingSpinner />
+
     return (
         <Portal>
             <Dialog
@@ -103,19 +105,15 @@ const AddOrEditCategoryModal = ({ editInfo, onClose }: Props) => {
                             }}
                             helperText='Kategoriebeschreibung für unentschlossene Bürgerinnen und Bürger.'
                         />
-                        {authoritiesLoading ? (
-                            <LoadingSpinner />
-                        ) : (
-                            <SelectMenu
-                                label='Zuständige Behörde'
-                                name='authorityId'
-                                options={authorityOptions}
-                                disabled={authoritiesLoading}
-                                rules={{
-                                    required: 'Bitte wähle eine Behörde aus.',
-                                }}
-                            />
-                        )}
+                        <SelectMenu
+                            label='Zuständige Behörde'
+                            name='authorityId'
+                            options={authorityOptions}
+                            disabled={authoritiesLoading}
+                            rules={{
+                                required: 'Bitte wähle eine Behörde aus.',
+                            }}
+                        />
                     </Dialog.Content>
                     <Dialog.Actions>
                         <Button onPress={onClose}>Abbrechen</Button>

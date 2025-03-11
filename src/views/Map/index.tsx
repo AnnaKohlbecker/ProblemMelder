@@ -49,21 +49,19 @@ const Map = ({ route }: Props) => {
             })
     }, [problems])
 
+    if (problemsLoading) return <LoadingSpinner />
+
     return (
         <>
             <Header route={route} />
             <View style={globalStyles.flexBox}>
-                {problemsLoading ? (
-                    <LoadingSpinner />
-                ) : (
-                    <BaseMap<Marker>
-                        markers={markers}
-                        showFab={!isNil(session)}
-                        MarkerComponent={MapMarker}
-                        onMarkerPressed={setMarkerDetails}
-                        onFabPress={onReportProblem}
-                    />
-                )}
+                <BaseMap<Marker>
+                    markers={markers}
+                    showFab={!isNil(session)}
+                    MarkerComponent={MapMarker}
+                    onMarkerPressed={setMarkerDetails}
+                    onFabPress={onReportProblem}
+                />
             </View>
             {markerDetails && (
                 <ProblemDetailView

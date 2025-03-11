@@ -92,62 +92,60 @@ const Archive = ({ route }: Props) => {
         refetchProblems()
     }, [problemsLoading, problemsRefetching, refetchProblems])
 
+    if (problemsLoading) return <LoadingSpinner />
+
     return (
         <View style={globalStyles.flexBoxWithColor}>
             <Header
                 route={route}
                 onClose={onClose}
             />
-            {problemsLoading ? (
-                <LoadingSpinner />
-            ) : (
-                <>
-                    <View style={styles.filterWrapper}>
-                        <Searchbar
-                            style={globalStyles.searchBar}
-                            value={search}
-                            onChangeText={setSearch}
-                            placeholder='Suche'
-                        />
+            <>
+                <View style={styles.filterWrapper}>
+                    <Searchbar
+                        style={globalStyles.searchBar}
+                        value={search}
+                        onChangeText={setSearch}
+                        placeholder='Suche'
+                    />
+                </View>
+                {searchedProblems.length === 0 ? (
+                    <View style={styles.container}>
+                        <Text style={globalStyles.noDataText}>
+                            {problems?.length === 0
+                                ? 'Keine Probleme vorhanden.'
+                                : 'Kein Problem gefunden.'}
+                        </Text>
                     </View>
-                    {searchedProblems.length === 0 ? (
-                        <View style={styles.container}>
-                            <Text style={globalStyles.noDataText}>
-                                {problems?.length === 0
-                                    ? 'Keine Probleme vorhanden.'
-                                    : 'Kein Problem gefunden.'}
-                            </Text>
-                        </View>
-                    ) : (
-                        <FlatList
-                            data={searchedProblems}
-                            style={styles.list}
-                            renderItem={({ item: problem, index }) => (
-                                <ProblemCard
-                                    key={index}
-                                    problem={problem}
-                                    onCardPress={() => {
-                                        onShowProblemDetails(problem)
-                                    }}
-                                />
-                            )}
-                            ListFooterComponent={<View style={styles.listFooter} />}
-                            refreshControl={
-                                <RefreshControl
-                                    refreshing={problemsRefetching}
-                                    onRefresh={onRefresh}
-                                />
-                            }
-                        />
-                    )}
-                    {selectedProblemDetails && (
-                        <ProblemDetailView
-                            problem={selectedProblemDetails}
-                            onClose={onCloseProblemDetails}
-                        />
-                    )}
-                </>
-            )}
+                ) : (
+                    <FlatList
+                        data={searchedProblems}
+                        style={styles.list}
+                        renderItem={({ item: problem, index }) => (
+                            <ProblemCard
+                                key={index}
+                                problem={problem}
+                                onCardPress={() => {
+                                    onShowProblemDetails(problem)
+                                }}
+                            />
+                        )}
+                        ListFooterComponent={<View style={styles.listFooter} />}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={problemsRefetching}
+                                onRefresh={onRefresh}
+                            />
+                        }
+                    />
+                )}
+                {selectedProblemDetails && (
+                    <ProblemDetailView
+                        problem={selectedProblemDetails}
+                        onClose={onCloseProblemDetails}
+                    />
+                )}
+            </>
         </View>
     )
 }

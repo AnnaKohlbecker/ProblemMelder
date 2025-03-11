@@ -20,9 +20,6 @@ const styles = StyleSheet.create({
     domain: {
         gap: 4,
     },
-    loadingSpinner: {
-        padding: 14,
-    },
     wrapper: {
         alignItems: 'center',
         flexDirection: 'row',
@@ -49,6 +46,8 @@ const AuthorityManagementListItem = ({
     }, [item, onDeleteProp])
 
     const { data: staffMembers, isLoading: staffLoading } = useUsersByAuthorityQuery(item.id)
+
+    if (staffLoading) return <LoadingSpinner />
 
     return (
         <Card style={[globalStyles.card, styles.card]}>
@@ -77,19 +76,13 @@ const AuthorityManagementListItem = ({
                         icon='pencil'
                         onPress={onEdit}
                     />
-                    {staffLoading ? (
-                        <View style={styles.loadingSpinner}>
-                            <LoadingSpinner size={16} />
-                        </View>
-                    ) : (
-                        <IconButton
-                            size={16}
-                            disabled={!isNil(staffMembers) && staffMembers.length > 0}
-                            mode='contained'
-                            icon='trash-can'
-                            onPress={onDelete}
-                        />
-                    )}
+                    <IconButton
+                        size={16}
+                        disabled={!isNil(staffMembers) && staffMembers.length > 0}
+                        mode='contained'
+                        icon='trash-can'
+                        onPress={onDelete}
+                    />
                 </View>
             </View>
         </Card>

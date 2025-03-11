@@ -43,29 +43,25 @@ const ProfileCard = ({ route }: Props) => {
         navigate(route)
     }, [navigate, route])
 
+    if (isNil(routeInfo)) return <LoadingSpinner />
+
     return (
         <View style={styles.view}>
             <Card style={styles.card}>
-                {isNil(routeInfo) ? (
+                <TouchableRipple
+                    borderless={true}
+                    style={styles.ripple}
+                    onPress={onPress}
+                >
                     <View style={styles.wrapper}>
-                        <LoadingSpinner />
+                        <Icon
+                            color={colors.primary}
+                            source={routeInfo.focusedIcon}
+                            size={50}
+                        />
+                        <Text style={globalStyles.subtitle}>{routeInfo.title}</Text>
                     </View>
-                ) : (
-                    <TouchableRipple
-                        borderless={true}
-                        style={styles.ripple}
-                        onPress={onPress}
-                    >
-                        <View style={styles.wrapper}>
-                            <Icon
-                                color={colors.primary}
-                                source={routeInfo.focusedIcon}
-                                size={50}
-                            />
-                            <Text style={globalStyles.subtitle}>{routeInfo.title}</Text>
-                        </View>
-                    </TouchableRipple>
-                )}
+                </TouchableRipple>
             </Card>
         </View>
     )
