@@ -144,15 +144,21 @@ const ProblemReport = ({ route }: Props) => {
                                 },
                                 {
                                     onSuccess: () => {
-                                        navigate(RouteEnum.MAIN)
+                                        if (!isNil(userData))
+                                            updateUserData(
+                                                {
+                                                    ...userData,
+                                                    points: userData.points + 10,
+                                                },
+                                                {
+                                                    onSuccess: () => {
+                                                        navigate(RouteEnum.MAIN)
+                                                    },
+                                                },
+                                            )
                                     },
                                 },
                             )
-                            if (!isNil(userData))
-                                updateUserData({
-                                    ...userData,
-                                    points: userData.points + 10,
-                                })
                         },
                     },
                 )

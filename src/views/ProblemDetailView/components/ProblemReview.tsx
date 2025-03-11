@@ -48,7 +48,7 @@ const ProblemReview = ({ problem, categories, onClose, onSubmit: onSubmitProp }:
 
     const onSubmit = useCallback(
         (data: Problem) => {
-            const newAuthority = categories.find((c) => c.id === data.categoryId)
+            const newAuthority = categories.find((c) => c.id === data.categoryId)?.authorityId
 
             if (isNil(newAuthority))
                 throw new Error('Category change not possible because of missing Authority.')
@@ -62,7 +62,7 @@ const ProblemReview = ({ problem, categories, onClose, onSubmit: onSubmitProp }:
                     updateProblem(
                         {
                             ...data,
-                            authorityId: newAuthority.id,
+                            authorityId: newAuthority,
                         },
                         {
                             onSuccess: onSubmitProp,
