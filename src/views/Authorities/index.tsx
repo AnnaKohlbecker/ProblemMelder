@@ -53,10 +53,6 @@ const Authorities = ({ route }: Props) => {
         authorities: authorities ?? [],
     })
 
-    const onShowAuthorityDetails = useCallback((authority: Authority) => {
-        setSelectedAuthorityDetails(authority)
-    }, [])
-
     const onCloseAuthorityDetails = useCallback(() => {
         refetchAuthorities()
         setSelectedAuthorityDetails(undefined)
@@ -102,7 +98,7 @@ const Authorities = ({ route }: Props) => {
                             key={index}
                             authority={authority}
                             onCardPress={() => {
-                                onShowAuthorityDetails(authority)
+                                setSelectedAuthorityDetails(authority)
                             }}
                         />
                     )}
