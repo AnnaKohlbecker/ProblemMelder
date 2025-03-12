@@ -6,6 +6,8 @@
 
 Für die Entwicklung sollte VSCode genutzt werden. Einige grundlegende Einstellungen werden durch das `.vscode`-Verzeichnis automatisch angewandt. Zudem sollten die empfohlenen Erweiterungen installiert werden.
 
+Zudem ist es notwendig, die `.env.example` Datei zu kopieren und als `.env` mit befüllten Umgebungsvariablen abzulegen, bevor die App gestartet wird.
+
 ## Voraussetzungen:
 
 - Node.js
@@ -14,13 +16,17 @@ Für die Entwicklung sollte VSCode genutzt werden. Einige grundlegende Einstellu
 ## Schritte:
 
 1. Repository klonen:
+
     ```bash
     git clone https://github.com/AnnaKohlbecker/ProblemMelder
     ```
+
 2. Navigiere in das Projektverzeichnis:
+
     ```bash
     cd ProblemMelder
     ```
+
 3. Abhängigkeiten installieren:
 
     ```bash
@@ -33,6 +39,7 @@ Für die Entwicklung sollte VSCode genutzt werden. Einige grundlegende Einstellu
     - (Um einen Build zu ermöglichen müssen diese auch als Secret in EAS gesetzt werden. Führe dafür `eas env:create` aus und folge den Anweisungen.)
 
 5. App starten:
+
     ```bash
     npx expo
     ```

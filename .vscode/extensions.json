@@ -4,8 +4,6 @@
         "visualstudioexptteam.vscodeintellicode",
         "visualstudioexptteam.vscodeintellicode-completions",
         "esbenp.prettier-vscode",
-        "jtr.vscode-position",
-        "expo.vscode-expo-tools",
-        "ms-vscode.vscode-typescript-next"
+        "expo.vscode-expo-tools"
     ]
 }
