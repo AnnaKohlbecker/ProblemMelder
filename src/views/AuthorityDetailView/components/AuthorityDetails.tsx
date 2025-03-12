@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 import { Icon, Text, TouchableRipple } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
@@ -40,12 +41,20 @@ const styles = StyleSheet.create({
 })
 
 const AuthorityDetails = ({ averageRating, categories, problems, onReviewPress }: Props) => {
-    const doneProblemsCount = problems.filter(
-        (problem) => problem.status === ProblemStatus.Done,
-    ).length
-    const undoneProblemsCount = problems.filter(
-        (problem) => problem.status !== ProblemStatus.Done,
-    ).length
+    const doneProblemsCount = useMemo(
+        () => problems.filter((problem) => problem.status === ProblemStatus.Done).length,
+        [problems],
+    )
+
+    const openProblemsCount = useMemo(
+        () =>
+            problems.filter(
+                (problem) =>
+                    problem.status !== ProblemStatus.Done &&
+                    problem.status !== ProblemStatus.Cancelled,
+            ).length,
+        [problems],
+    )
 
     return (
         <View style={[globalStyles.contentWrapper, styles.limitedHeight]}>
@@ -83,7 +92,7 @@ const AuthorityDetails = ({ averageRating, categories, problems, onReviewPress }
                 </Text>
             </TouchableRipple>
             <Text style={globalStyles.subtitle}>Gelöste Probleme: {doneProblemsCount}</Text>
-            <Text style={globalStyles.subtitle}>Ungelöste Probleme: {undoneProblemsCount}</Text>
+            <Text style={globalStyles.subtitle}>Ungelöste Probleme: {openProblemsCount}</Text>
         </View>
     )
 }

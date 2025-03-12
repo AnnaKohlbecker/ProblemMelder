@@ -87,8 +87,8 @@ const LocationSelection = ({ name }: Props) => {
 
         if (!showInfo) {
             showDialog({
-                title: 'Aktuell ist dein Standort ausgewählt. Klicke auf die Karte, um den Standort zu wechseln.',
-                description: '',
+                title: 'Aktuell ist dein Standort ausgewählt.',
+                description: 'Klicke auf die Karte, um den Standort zu wechseln.',
                 onAccept: () => {
                     setShowInfo(true)
                 },

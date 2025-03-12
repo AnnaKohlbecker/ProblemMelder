@@ -7,7 +7,6 @@ import { useCallback, useMemo, useState } from 'react'
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native'
 import { FAB, IconButton, Searchbar, Text } from 'react-native-paper'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
-import { useUserByIdQuery } from '~/queries/UserData/useUserByIdQuery'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
@@ -59,10 +58,6 @@ const Problems = ({ route }: Props) => {
         refetch: refetchProblems,
     } = useProblemsQuery()
 
-    const { isLoading: userLoading } = useUserByIdQuery({
-        userId: session?.user.id,
-    })
-
     const [isUserTriggeredRefetch, setIsUserTriggeredRefetch] = useState(false)
 
     // Hide old closed and solved problems which are older than 2 weekss
@@ -110,7 +105,7 @@ const Problems = ({ route }: Props) => {
         })
     }, [problemsLoading, problemsRefetching, refetchProblems])
 
-    if (userLoading || problemsLoading) {
+    if (problemsLoading) {
         return <LoadingSpinner />
     }
 

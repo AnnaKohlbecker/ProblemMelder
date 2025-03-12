@@ -1,7 +1,7 @@
 import { ParamListBase, Route, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { isNil } from 'lodash'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { IconButton } from 'react-native-paper'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
@@ -55,6 +55,10 @@ const Map = ({ route }: Props) => {
         setShowFilterDialog(false)
     }, [])
 
+    useEffect(() => {
+        setFilteredProblems(problems ?? [])
+    }, [problems])
+
     const markers = useMemo(() => {
         return filteredProblems
             .filter((prob) => prob.status !== ProblemStatus.Cancelled)
@@ -105,7 +109,10 @@ const Map = ({ route }: Props) => {
             {showFilterDialog && (
                 <FilterDialog
                     problems={problems ?? []}
-                    onClose={onCloseFilterDialog}
+                    onClose={() => {
+                        refetchProblems()
+                        onCloseFilterDialog()
+                    }}
                     setFilteredProblems={setFilteredProblems}
                 />
             )}

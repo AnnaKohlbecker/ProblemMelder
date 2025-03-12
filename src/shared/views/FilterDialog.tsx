@@ -1,5 +1,5 @@
 import { isNil } from 'lodash'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { StyleSheet } from 'react-native'
 import { Button, Dialog, Portal } from 'react-native-paper'
@@ -33,7 +33,7 @@ const FilterDialog = ({ problems, onClose, setFilteredProblems }: Props) => {
     const location = useLocation()
     const { isInRadius } = useInRadiusLogic()
     const { data: categories, isLoading: categoriesLoading } = useCategoriesQuery()
-    const [locationUndefined, setLocationUndefined] = useState(false)
+    const hasLocation = useMemo(() => !isNil(location), [location])
 
     const statusOptions = [
         { label: '/', value: -2 },
@@ -85,10 +85,6 @@ const FilterDialog = ({ problems, onClose, setFilteredProblems }: Props) => {
         [problems, setFilteredProblems, onClose, isInRadius],
     )
 
-    useEffect(() => {
-        if (isNil(location)) setLocationUndefined(true)
-    }, [location])
-
     if (categoriesLoading) return <LoadingSpinner />
 
     return (
@@ -112,9 +108,9 @@ const FilterDialog = ({ problems, onClose, setFilteredProblems }: Props) => {
                             options={categoriesOptions}
                         />
                         <SelectMenu
-                            label={locationUndefined ? 'Standort nicht gefunden' : 'Umkreis'}
+                            label={isNil(hasLocation) ? 'Standort nicht gefunden' : 'Umkreis'}
                             name='radius'
-                            disabled={locationUndefined}
+                            disabled={isNil(hasLocation)}
                             options={radiusOptions}
                         />
                     </Dialog.Content>
