@@ -7,6 +7,7 @@ import { MapPressEvent } from 'react-native-maps'
 import { Text } from 'react-native-paper'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import { useDialog } from '~/shared/context/DialogContext'
 import { useLocation } from '~/shared/context/LocationContext'
 import BaseMap from '~/shared/views/BaseMap'
 
@@ -34,6 +35,8 @@ type Marker = {
 
 const LocationSelection = ({ name }: Props) => {
     const [currentAddress, setCurrentAddress] = useState<string>()
+    const [showInfo, setShowInfo] = useState(false)
+    const showDialog = useDialog()
 
     const { trigger } = useForm()
 
@@ -67,6 +70,7 @@ const LocationSelection = ({ name }: Props) => {
      */
     const onMapPress = useCallback(
         (event: MapPressEvent) => {
+            setShowInfo(true)
             const { latitude, longitude } = event.nativeEvent.coordinate
 
             onChange(`${latitude},${longitude}`)
@@ -81,8 +85,20 @@ const LocationSelection = ({ name }: Props) => {
     useEffect(() => {
         if (isNil(currentLocation) || !isNil(location)) return undefined
 
+        if (!showInfo) {
+            showDialog({
+                title: 'Aktuell ist dein Standort ausgewählt. Klicke auf die Karte, um den Standort zu wechseln.',
+                description: '',
+                onAccept: () => {
+                    setShowInfo(true)
+                },
+                dismissHidden: true,
+                acceptLabel: 'Okay',
+            })
+        }
+
         onChange(`${currentLocation.coords.latitude},${currentLocation.coords.longitude}`)
-    }, [currentLocation, location, onChange])
+    }, [currentLocation, location, onChange, showDialog, showInfo])
 
     /**
      * On location change update the address
