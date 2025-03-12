@@ -5,20 +5,20 @@ import { subWeeks } from 'date-fns/subWeeks'
 import isNil from 'lodash/isNil'
 import { useCallback, useMemo, useState } from 'react'
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native'
-import { FAB, Searchbar, Text } from 'react-native-paper'
+import { FAB, IconButton, Searchbar, Text } from 'react-native-paper'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { useUserByIdQuery } from '~/queries/UserData/useUserByIdQuery'
+import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { Route as RouteEnum } from '~/shared/enums/Route'
-import Filter from '~/shared/views/Filter'
+import FilterDialog from '~/shared/views/FilterDialog'
 import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import { Problem } from '~/supabase/types'
 import ProblemDetailView from '~/views/ProblemDetailView'
 import ProblemCard from '~/views/Problems/components/ProblemCard'
-import { useProblemsFilterLogic } from '~/views/Problems/hooks/useProblemFilterLogic'
 import { useProblemsSearchLogic } from '~/views/Problems/hooks/useProblemsSearchLogic'
 
 type Props = {
@@ -50,16 +50,18 @@ const Problems = ({ route }: Props) => {
     const { session } = useAuth()
     const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
     const [selectedProblemDetails, setSelectedProblemDetails] = useState<Problem>()
+    const [showFilterDialog, setShowFilterDialog] = useState(false)
 
-    const { isLoading: userLoading } = useUserByIdQuery({
-        userId: session?.user.id,
-    })
     const {
         data: problems,
         isLoading: problemsLoading,
         isRefetching: problemsRefetching,
         refetch: refetchProblems,
     } = useProblemsQuery()
+
+    const { isLoading: userLoading } = useUserByIdQuery({
+        userId: session?.user.id,
+    })
 
     const [isUserTriggeredRefetch, setIsUserTriggeredRefetch] = useState(false)
 
@@ -80,9 +82,7 @@ const Problems = ({ route }: Props) => {
         problems: preFilteredProblems ?? [],
     })
 
-    const { filteredProblems, filter, setFilter } = useProblemsFilterLogic({
-        problems: searchedProblems,
-    })
+    const [filteredProblems, setFilteredProblems] = useState<Problem[]>(searchedProblems)
 
     const onReportProblem = useCallback(() => {
         navigate(RouteEnum.PROBLEM_REPORT)
@@ -96,6 +96,10 @@ const Problems = ({ route }: Props) => {
         refetchProblems()
         setSelectedProblemDetails(undefined)
     }, [refetchProblems])
+
+    const onCloseFilterDialog = useCallback(() => {
+        setShowFilterDialog(false)
+    }, [])
 
     const onRefresh = useCallback(() => {
         if (problemsLoading || problemsRefetching) return
@@ -120,9 +124,13 @@ const Problems = ({ route }: Props) => {
                     onChangeText={setSearch}
                     placeholder='Suche'
                 />
-                <Filter
-                    value={filter}
-                    onChangeFilter={setFilter}
+                <IconButton
+                    icon='filter'
+                    onPress={() => {
+                        setShowFilterDialog(true)
+                    }}
+                    style={globalStyles.filterButton}
+                    iconColor={colors.white}
                 />
             </View>
             {filteredProblems.length === 0 ? (
@@ -166,6 +174,13 @@ const Problems = ({ route }: Props) => {
                 <ProblemDetailView
                     problem={selectedProblemDetails}
                     onClose={onCloseProblemDetails}
+                />
+            )}
+            {showFilterDialog && (
+                <FilterDialog
+                    problems={searchedProblems}
+                    onClose={onCloseFilterDialog}
+                    setFilteredProblems={setFilteredProblems}
                 />
             )}
         </View>

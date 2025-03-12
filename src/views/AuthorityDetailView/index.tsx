@@ -21,15 +21,16 @@ const AuthorityDetailView = ({ authority, onClose }: Props) => {
         AuthorityDetailViewContent.Details,
     )
 
-    const { data: problems, isLoading: problemsLoading } = useProblemsWithReviewByAuthorityQuery({
-        authorityId: authority.id,
-    })
+    const { data: problemsWithReview, isLoading: problemsWithReviewLoading } =
+        useProblemsWithReviewByAuthorityQuery({
+            authorityId: authority.id,
+        })
 
     const averageRating = useMemo(() => {
         let ratingSum = 0
         let ratingCount = 0
 
-        problems?.forEach((problem) => {
+        problemsWithReview?.forEach((problem) => {
             problem.SanitizedProblemReviews.forEach((review) => {
                 if (isNil(review.stars)) return
 
@@ -39,7 +40,7 @@ const AuthorityDetailView = ({ authority, onClose }: Props) => {
         })
 
         return ratingSum / ratingCount
-    }, [problems])
+    }, [problemsWithReview])
 
     const { data: categories, isLoading: categoriesLoading } = useCategoriesByAuthorityQuery({
         authorityId: authority.id,
@@ -63,7 +64,7 @@ const AuthorityDetailView = ({ authority, onClose }: Props) => {
         [],
     )
 
-    if (categoriesLoading || problemsLoading) return <LoadingSpinner />
+    if (categoriesLoading || problemsWithReviewLoading) return <LoadingSpinner />
 
     return (
         <View style={[StyleSheet.absoluteFillObject, globalStyles.dialogWrapper]}>
@@ -94,7 +95,7 @@ const AuthorityDetailView = ({ authority, onClose }: Props) => {
                 )}
                 {currentContent === AuthorityDetailViewContent.Review && (
                     <AuthorityReview
-                        problems={problems ?? []}
+                        problems={problemsWithReview ?? []}
                         categories={categories ?? []}
                         onClose={goTo(AuthorityDetailViewContent.Details)}
                     />

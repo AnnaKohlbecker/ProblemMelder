@@ -14,7 +14,7 @@ export const theme = {
         background: colors.white,
         surface: colors.secondary,
         surfaceVariant: colors.secondary,
-        onSurfaceVariant: colors.secondary,
+        onSurfaceVariant: colors.primary,
         outline: colors.secondary,
         primaryContainer: colors.primary,
         onPrimaryContainer: colors.white,
@@ -24,6 +24,8 @@ export const theme = {
         surfaceDisabled: colors.tertiary,
         onSurfaceDisabled: colors.secondary,
         onSurface: colors.primary,
+        backdrop: colors.backdrop,
+        onPrimary: colors.white,
     },
     roundness: 5,
 }

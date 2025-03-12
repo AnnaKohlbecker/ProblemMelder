@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     categories: {
-        maxHeight: 220,
+        maxHeight: 200,
     },
     categoriesList: {
         backgroundColor: colors.secondary,
@@ -27,13 +27,14 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     limitedHeight: {
-        height: 300,
+        height: 400,
     },
     ripple: {
         paddingHorizontal: 20,
-        borderRadius: 30,
+        borderRadius: 100,
         height: RFValue(40),
         justifyContent: 'center',
+        backgroundColor: colors.secondary,
     },
 })
 
@@ -59,16 +60,22 @@ const AuthorityDetails = ({ averageRating, categories, onReviewPress }: Props) =
                     persistentScrollbar={true}
                 />
             </View>
-
             <TouchableRipple
                 borderless={true}
                 style={styles.ripple}
                 onPress={onReviewPress}
             >
                 <Text style={globalStyles.subtitle}>
-                    {getRatingIcons(ProblemStatus.Done, averageRating)}
+                    {getRatingIcons({
+                        status: ProblemStatus.Done,
+                        rating: averageRating,
+                        size: RFValue(25),
+                        primaryColor: true,
+                    })}
                 </Text>
             </TouchableRipple>
+            <Text style={globalStyles.subtitle}>Gelöste Probleme: {}</Text>
+            <Text style={globalStyles.subtitle}>Ungelöste Probleme: {}</Text>
         </View>
     )
 }

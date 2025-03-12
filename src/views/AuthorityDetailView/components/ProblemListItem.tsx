@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Card, Icon, Text } from 'react-native-paper'
+import { RFValue } from 'react-native-responsive-fontsize'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
@@ -67,7 +68,12 @@ const ProblemListItem = ({ categories, item }: Props) => {
                         </Text>
                     </View>
                     <Text style={globalStyles.subtitle}>
-                        {getRatingIcons(ProblemStatus.Done, averageRating)}
+                        {getRatingIcons({
+                            status: ProblemStatus.Done,
+                            rating: averageRating,
+                            size: RFValue(20),
+                            primaryColor: true,
+                        })}
                     </Text>
                 </View>
             </View>
