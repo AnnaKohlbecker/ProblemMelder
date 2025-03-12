@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Card, Icon, Text } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
-import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import getRatingIcons from '~/shared/helpers/getRatingIcons'
@@ -13,7 +12,6 @@ const styles = StyleSheet.create({
         margin: 10,
         paddingHorizontal: 20,
         paddingVertical: 10,
-        backgroundColor: colors.tertiary,
     },
     gap: {
         gap: 4,
@@ -62,7 +60,7 @@ const ProblemListItem = ({ categories, item }: Props) => {
                         <Text
                             style={globalStyles.subtitle}
                             numberOfLines={1}
-                            ellipsizeMode='clip'
+                            ellipsizeMode='tail'
                         >
                             {item.title}
                         </Text>

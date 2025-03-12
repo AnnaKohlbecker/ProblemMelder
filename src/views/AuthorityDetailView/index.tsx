@@ -4,6 +4,7 @@ import { BackHandler, StyleSheet, View } from 'react-native'
 import { Card, IconButton, Text } from 'react-native-paper'
 import { useProblemsWithReviewByAuthorityQuery } from '~/queries/Authorities/useProblemsWithReviewByAuthorityQuery'
 import { useCategoriesByAuthorityQuery } from '~/queries/Categories/useCategoriesByAuthorityQuery'
+import { useProblemsByAuthorityQuery } from '~/queries/Problems/useProblemsByAuthorityQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import { Authority } from '~/supabase/types'
@@ -20,6 +21,10 @@ const AuthorityDetailView = ({ authority, onClose }: Props) => {
     const [currentContent, setCurrentContent] = useState<AuthorityDetailViewContent>(
         AuthorityDetailViewContent.Details,
     )
+
+    const { data: problems, isLoading: problemsLoading } = useProblemsByAuthorityQuery({
+        authorityId: authority.id,
+    })
 
     const { data: problemsWithReview, isLoading: problemsWithReviewLoading } =
         useProblemsWithReviewByAuthorityQuery({
@@ -64,7 +69,7 @@ const AuthorityDetailView = ({ authority, onClose }: Props) => {
         [],
     )
 
-    if (categoriesLoading || problemsWithReviewLoading) return <LoadingSpinner />
+    if (categoriesLoading || problemsWithReviewLoading || problemsLoading) return <LoadingSpinner />
 
     return (
         <View style={[StyleSheet.absoluteFillObject, globalStyles.dialogWrapper]}>
@@ -90,6 +95,7 @@ const AuthorityDetailView = ({ authority, onClose }: Props) => {
                     <AuthorityDetails
                         averageRating={averageRating}
                         categories={categories ?? []}
+                        problems={problems ?? []}
                         onReviewPress={goTo(AuthorityDetailViewContent.Review)}
                     />
                 )}

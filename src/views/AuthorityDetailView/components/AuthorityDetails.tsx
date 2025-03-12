@@ -5,12 +5,13 @@ import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import getRatingIcons from '~/shared/helpers/getRatingIcons'
-import { Category } from '~/supabase/types'
+import { Category, Problem } from '~/supabase/types'
 import CategoryListItem from '~/views/AuthorityDetailView/components/CategoryListItem'
 
 type Props = {
     averageRating: number
     categories: Category[]
+    problems: Problem[]
     onReviewPress: () => void
 }
 
@@ -38,7 +39,14 @@ const styles = StyleSheet.create({
     },
 })
 
-const AuthorityDetails = ({ averageRating, categories, onReviewPress }: Props) => {
+const AuthorityDetails = ({ averageRating, categories, problems, onReviewPress }: Props) => {
+    const doneProblemsCount = problems.filter(
+        (problem) => problem.status === ProblemStatus.Done,
+    ).length
+    const undoneProblemsCount = problems.filter(
+        (problem) => problem.status !== ProblemStatus.Done,
+    ).length
+
     return (
         <View style={[globalStyles.contentWrapper, styles.limitedHeight]}>
             <View style={styles.categories}>
@@ -74,8 +82,8 @@ const AuthorityDetails = ({ averageRating, categories, onReviewPress }: Props) =
                     })}
                 </Text>
             </TouchableRipple>
-            <Text style={globalStyles.subtitle}>Gelöste Probleme: {}</Text>
-            <Text style={globalStyles.subtitle}>Ungelöste Probleme: {}</Text>
+            <Text style={globalStyles.subtitle}>Gelöste Probleme: {doneProblemsCount}</Text>
+            <Text style={globalStyles.subtitle}>Ungelöste Probleme: {undoneProblemsCount}</Text>
         </View>
     )
 }

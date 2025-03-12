@@ -255,9 +255,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
             {isDisabled ? (
                 <View style={styles.footer}>
                     <Text style={globalStyles.subtitle}>
-                        {problem.status === ProblemStatus.Done
-                            ? 'Problem gelöst:'
-                            : 'Problem belöscht:'}
+                        {problem.status === ProblemStatus.Done ? 'Lösung:' : 'Deaktivierungsgrund:'}
                     </Text>
                     <Text style={styles.text}>{problem.reasonForDeactivation}</Text>
                 </View>
