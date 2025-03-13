@@ -15,11 +15,13 @@ import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { useDialog } from '~/shared/context/DialogContext'
+import { useLocation } from '~/shared/context/LocationContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { Route as RouteEnum } from '~/shared/enums/Route'
 import Header from '~/shared/views/Header'
 import { Problem } from '~/supabase/types'
 import { REPORT_STEPS } from '~/views/ProblemReport/constants/reportSteps'
+import { ReportStep } from '~/views/ProblemReport/enums/ReportStep'
 
 type Props = {
     route: Route<RouteEnum>
@@ -45,7 +47,10 @@ const styles = StyleSheet.create({
 
 const ProblemReport = ({ route }: Props) => {
     const { session } = useAuth()
+    const showDialog = useDialog()
     const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
+
+    const userLocation = useLocation()
 
     const [currentStepSerial, setCurrentStepSerial] = useState(1)
 
@@ -54,27 +59,25 @@ const ProblemReport = ({ route }: Props) => {
     })
     const { mutate: updateUserData, isPending: userDataPending } = useUpdateUserDataMutation()
 
-    const showDialog = useDialog()
-
     const form = useForm<Problem>({
         defaultValues: {
             status: ProblemStatus.ToDo,
             userId: session?.user.id,
         },
     })
-    const { handleSubmit, reset, trigger } = form
+    const { handleSubmit, reset, trigger, watch } = form
 
     const {
         component: CurrentStep,
-        serial,
+        reportStep: serial,
         title,
     } = useMemo(() => {
-        const step = REPORT_STEPS.find((x) => x.serial === currentStepSerial)
+        const step = REPORT_STEPS.find((x) => x.reportStep === currentStepSerial)
 
         if (isNil(step)) {
-            setCurrentStepSerial(1)
+            setCurrentStepSerial(ReportStep.Location)
 
-            return REPORT_STEPS.find((x) => x.serial === 1)!
+            return REPORT_STEPS.find((x) => x.reportStep === ReportStep.Location)!
         }
 
         return step
@@ -111,10 +114,78 @@ const ProblemReport = ({ route }: Props) => {
     const { mutate: uploadImage, isPending: isUploadingImage } = useUploadImageMutation()
     const { mutate: upsertProblem, isPending: isUpsertingProblem } = useUpsertProblemMutation()
 
+    const onSubmit = useCallback(() => {
+        handleSubmit(async (data) => {
+            const imageId = v4()
+
+            const image = await FileSystem.readAsStringAsync(data.image, {
+                encoding: FileSystem.EncodingType.Base64,
+            })
+
+            uploadImage(
+                {
+                    file: image,
+                    path: imageId,
+                },
+                {
+                    onSuccess: () => {
+                        upsertProblem(
+                            {
+                                ...data,
+                                image: imageId,
+                            },
+                            {
+                                onSuccess: () => {
+                                    if (!isNil(userData))
+                                        updateUserData(
+                                            {
+                                                ...userData,
+                                                points: userData.points + 10,
+                                            },
+                                            {
+                                                onSuccess: () => {
+                                                    navigate(RouteEnum.MAIN)
+                                                },
+                                            },
+                                        )
+                                },
+                            },
+                        )
+                    },
+                },
+            )
+        })()
+    }, [handleSubmit, navigate, updateUserData, uploadImage, upsertProblem, userData])
+
     const onNext = useCallback(() => {
         if (currentStepSerial !== REPORT_STEPS.length) {
             trigger().then((isValid) => {
                 if (!isValid) return
+
+                if (currentStepSerial === ReportStep.Location) {
+                    const location = watch('location')
+
+                    const userLocationValue = `${userLocation?.coords.latitude},${userLocation?.coords.longitude}`
+
+                    if (location !== userLocationValue) {
+                        setCurrentStepSerial((cur) => cur + 1)
+                        return
+                    }
+
+                    showDialog({
+                        title: 'Standort bestätigen',
+                        description:
+                            'Möchtest du wirklich deinen aktuellen Standort melden?\n\nKlicke auf die Karte, um einen anderen Standort zu wählen.',
+                        onAccept: () => {
+                            setCurrentStepSerial((cur) => cur + 1)
+                        },
+                        dismissLabel: 'Ändern',
+                        acceptLabel: 'Weiter',
+                    })
+
+                    return
+                }
+
                 setCurrentStepSerial((cur) => cur + 1)
             })
             return
@@ -123,56 +194,16 @@ const ProblemReport = ({ route }: Props) => {
         trigger().then((isValid) => {
             if (!isValid) return
 
-            handleSubmit(async (data) => {
-                const imageId = v4()
-
-                const image = await FileSystem.readAsStringAsync(data.image, {
-                    encoding: FileSystem.EncodingType.Base64,
-                })
-
-                uploadImage(
-                    {
-                        file: image,
-                        path: imageId,
-                    },
-                    {
-                        onSuccess: () => {
-                            upsertProblem(
-                                {
-                                    ...data,
-                                    image: imageId,
-                                },
-                                {
-                                    onSuccess: () => {
-                                        if (!isNil(userData))
-                                            updateUserData(
-                                                {
-                                                    ...userData,
-                                                    points: userData.points + 10,
-                                                },
-                                                {
-                                                    onSuccess: () => {
-                                                        navigate(RouteEnum.MAIN)
-                                                    },
-                                                },
-                                            )
-                                    },
-                                },
-                            )
-                        },
-                    },
-                )
-            })()
+            onSubmit()
         })
     }, [
         currentStepSerial,
-        handleSubmit,
-        navigate,
+        onSubmit,
+        showDialog,
         trigger,
-        updateUserData,
-        uploadImage,
-        upsertProblem,
-        userData,
+        userLocation?.coords.latitude,
+        userLocation?.coords.longitude,
+        watch,
     ])
 
     const isLoading = useMemo(
@@ -207,7 +238,7 @@ const ProblemReport = ({ route }: Props) => {
                     <Button
                         mode='contained'
                         onPress={onPrev}
-                        disabled={currentStepSerial === 1 || isUpsertingProblem}
+                        disabled={currentStepSerial === ReportStep.Location || isUpsertingProblem}
                     >
                         Zurück
                     </Button>
