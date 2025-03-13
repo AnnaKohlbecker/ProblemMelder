@@ -5,7 +5,7 @@ import { subWeeks } from 'date-fns/subWeeks'
 import isNil from 'lodash/isNil'
 import { useCallback, useMemo, useState } from 'react'
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native'
-import { FAB, IconButton, Searchbar, Text } from 'react-native-paper'
+import { Badge, FAB, IconButton, Searchbar, Text } from 'react-native-paper'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
@@ -44,6 +44,11 @@ const styles = StyleSheet.create({
     listFooter: {
         padding: 35,
     },
+    badge: {
+        position: 'absolute',
+        top: 15,
+        right: 20,
+    },
 })
 
 const Problems = ({ route }: Props) => {
@@ -56,6 +61,14 @@ const Problems = ({ route }: Props) => {
         categoryId: -2,
         radius: -2,
     })
+
+    const hasActiveFilters = useMemo(() => {
+        return (
+            filterValues.status !== -2 ||
+            filterValues.categoryId !== -2 ||
+            filterValues.radius !== -2
+        )
+    }, [filterValues])
 
     const {
         data: problems,
@@ -137,6 +150,7 @@ const Problems = ({ route }: Props) => {
                     style={globalStyles.filterButton}
                     iconColor={colors.white}
                 />
+                {hasActiveFilters && <Badge style={styles.badge} />}
             </View>
             {shownProblems.length === 0 ? (
                 <View style={styles.container}>

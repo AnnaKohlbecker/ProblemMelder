@@ -121,9 +121,7 @@ const Map = ({ route }: Props) => {
                         style={globalStyles.filterButton}
                         iconColor={colors.white}
                     />
-                    {hasActiveFilters && (
-                        <Badge style={styles.badge}>!</Badge> // Du kannst auch eine Zahl oder anderes reinpacken
-                    )}
+                    {hasActiveFilters && <Badge style={styles.badge} />}
                 </View>
                 <BaseMap<Marker>
                     markers={markers}

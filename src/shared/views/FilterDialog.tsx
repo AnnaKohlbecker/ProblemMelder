@@ -5,8 +5,9 @@ import { StyleSheet, View } from 'react-native'
 import { Button, Dialog, IconButton, Portal, Text } from 'react-native-paper'
 import { useCategoriesQuery } from '~/queries/Categories/useCategoriesQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import { radiusOptions } from '~/shared/constants/radiusOptions'
+import { statusOptions } from '~/shared/constants/statusOptions'
 import { useLocation } from '~/shared/context/LocationContext'
-import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { useInRadiusLogic } from '~/shared/hooks/useInRadiusLogic'
 import { ProblemFilterFormData } from '~/shared/types/Filter'
 import SelectMenu from '~/shared/views/Inputs/SelectMenu'
@@ -40,30 +41,17 @@ const FilterDialog = ({
     const { data: categories, isLoading: categoriesLoading } = useCategoriesQuery()
     const hasLocation = useMemo(() => !isNil(location), [location])
 
-    const statusOptions = [
-        { label: 'Kein Filter', value: -2 },
-        { label: 'Deaktiviert', value: ProblemStatus.Cancelled },
-        { label: 'Zu Erledigen', value: ProblemStatus.ToDo },
-        { label: 'In Bearbeitung', value: ProblemStatus.InProgress },
-        { label: 'Erledigt', value: ProblemStatus.Done },
-    ]
-
-    const categoriesOptions = isNil(categories)
-        ? [{ label: 'Kein Filter', value: -2 }]
-        : [
-              { label: 'Kein Filter', value: -2 },
-              ...categories.map((c) => ({
-                  label: c.title,
-                  value: c.id,
-              })),
-          ]
-
-    const radiusOptions = [
-        { label: 'Kein Filter', value: -2 },
-        { label: '1 km', value: 1 },
-        { label: '5 km', value: 5 },
-        { label: '10 km', value: 10 },
-    ]
+    const categoriesOptions = useMemo(() => {
+        return isNil(categories)
+            ? [{ label: 'Kein Filter', value: -2 }]
+            : [
+                  { label: 'Kein Filter', value: -2 },
+                  ...categories.map((c) => ({
+                      label: c.title,
+                      value: c.id,
+                  })),
+              ]
+    }, [categories])
 
     const form = useForm<ProblemFilterFormData>({
         defaultValues: filterValues,

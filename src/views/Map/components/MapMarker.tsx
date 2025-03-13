@@ -9,7 +9,7 @@ type Props = {
 }
 
 const MapMarker = ({ marker, onPress }: Props) => {
-    const { markerImage } = useMemo(
+    const { markerColor } = useMemo(
         () => problemStatusToIconAndColor(marker.status),
         [marker.status],
     )
@@ -17,7 +17,7 @@ const MapMarker = ({ marker, onPress }: Props) => {
     return (
         <Marker
             coordinate={marker}
-            image={markerImage}
+            pinColor={markerColor}
             onPress={onPress}
         />
     )
