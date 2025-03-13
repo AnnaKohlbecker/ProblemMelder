@@ -7,7 +7,6 @@ import { MapPressEvent } from 'react-native-maps'
 import { Text } from 'react-native-paper'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
-import { useDialog } from '~/shared/context/DialogContext'
 import { useLocation } from '~/shared/context/LocationContext'
 import BaseMap from '~/shared/views/BaseMap'
 
@@ -35,8 +34,6 @@ type Marker = {
 
 const LocationSelection = ({ name }: Props) => {
     const [markerAddress, setMarkerAddress] = useState<string>()
-    const [mapPressed, setMapPressed] = useState(false)
-    const showDialog = useDialog()
     const userLocation = useLocation()
 
     const { trigger } = useForm()
@@ -48,21 +45,6 @@ const LocationSelection = ({ name }: Props) => {
         name,
         rules: {
             required: 'Bitte wähle einen Standort.',
-            validate: () => {
-                if (!mapPressed) {
-                    showDialog({
-                        title: 'Aktueller Standort:',
-                        description: `${markerAddress}\n\nKlicke auf die Karte, um den Standort zu wechseln.`,
-                        onAccept: () => {
-                            setMapPressed(true)
-                        },
-                        dismissHidden: true,
-                        acceptLabel: 'Okay',
-                    })
-                    return false
-                }
-                return true
-            },
         },
     })
 
@@ -86,7 +68,6 @@ const LocationSelection = ({ name }: Props) => {
      */
     const onMapPress = useCallback(
         (event: MapPressEvent) => {
-            setMapPressed(true)
             const { latitude, longitude } = event.nativeEvent.coordinate
 
             onChange(`${latitude},${longitude}`)

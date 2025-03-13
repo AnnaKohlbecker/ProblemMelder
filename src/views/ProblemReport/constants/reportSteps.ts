@@ -3,31 +3,32 @@ import ReportLocationStep from '~/views/ProblemReport/components/ReportLocationS
 import ReportPictureStep from '~/views/ProblemReport/components/ReportPictureStep'
 import ReportProblemStep from '~/views/ProblemReport/components/ReportProblemStep'
 import ReportReviewStep from '~/views/ProblemReport/components/ReportReviewStep'
-import { ReportStep } from '~/views/ProblemReport/types/ReportStep'
+import { ReportStep } from '~/views/ProblemReport/enums/ReportStep'
+import { ReportStepInfo } from '~/views/ProblemReport/types/ReportStep'
 
-export const REPORT_STEPS: ReportStep[] = [
+export const REPORT_STEPS: ReportStepInfo[] = [
     {
-        serial: 1,
+        reportStep: ReportStep.Location,
         title: 'Standort des Problems',
         component: ReportLocationStep,
     },
     {
-        serial: 2,
+        reportStep: ReportStep.Picture,
         title: 'Bild des Problems',
         component: ReportPictureStep,
     },
     {
-        serial: 3,
+        reportStep: ReportStep.Description,
         title: 'Beschreibung des Problems',
         component: ReportProblemStep,
     },
     {
-        serial: 4,
+        reportStep: ReportStep.Category,
         title: 'Zuständige Stelle',
         component: ReportCategoryStep,
     },
     {
-        serial: 5,
+        reportStep: ReportStep.Review,
         title: 'Überprüfen',
         component: ReportReviewStep,
     },
