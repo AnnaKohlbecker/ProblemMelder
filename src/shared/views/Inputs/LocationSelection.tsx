@@ -51,8 +51,8 @@ const LocationSelection = ({ name }: Props) => {
             validate: () => {
                 if (!mapPressed) {
                     showDialog({
-                        title: `Aktueller Standort:\n\n${markerAddress}`,
-                        description: 'Klicke auf die Karte, um den Standort zu wechseln.',
+                        title: 'Aktueller Standort:',
+                        description: `${markerAddress}\n\nKlicke auf die Karte, um den Standort zu wechseln.`,
                         onAccept: () => {
                             setMapPressed(true)
                         },
