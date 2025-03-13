@@ -12,6 +12,7 @@ import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { Route as RouteEnum } from '~/shared/enums/Route'
+import { ProblemFilterFormData } from '~/shared/types/Filter'
 import FilterDialog from '~/shared/views/FilterDialog'
 import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
@@ -50,6 +51,11 @@ const Problems = ({ route }: Props) => {
     const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
     const [selectedProblemDetails, setSelectedProblemDetails] = useState<Problem>()
     const [showFilterDialog, setShowFilterDialog] = useState(false)
+    const [filterValues, setFilterValues] = useState<ProblemFilterFormData>({
+        status: -2,
+        categoryId: -2,
+        radius: -2,
+    })
 
     const {
         data: problems,
@@ -77,7 +83,11 @@ const Problems = ({ route }: Props) => {
         problems: preFilteredProblems ?? [],
     })
 
-    const [filteredProblems, setFilteredProblems] = useState<Problem[]>(searchedProblems)
+    const [filteredProblems, setFilteredProblems] = useState<Problem[]>(preFilteredProblems ?? [])
+
+    const shownProblems = useMemo(() => {
+        return filteredProblems.filter((problem) => searchedProblems.includes(problem))
+    }, [searchedProblems, filteredProblems])
 
     const onReportProblem = useCallback(() => {
         navigate(RouteEnum.PROBLEM_REPORT)
@@ -128,7 +138,7 @@ const Problems = ({ route }: Props) => {
                     iconColor={colors.white}
                 />
             </View>
-            {filteredProblems.length === 0 ? (
+            {shownProblems.length === 0 ? (
                 <View style={styles.container}>
                     <Text style={globalStyles.noDataText}>
                         {problems?.length === 0
@@ -138,7 +148,7 @@ const Problems = ({ route }: Props) => {
                 </View>
             ) : (
                 <FlatList
-                    data={filteredProblems}
+                    data={shownProblems}
                     style={styles.list}
                     renderItem={({ item: problem, index }) => (
                         <ProblemCard
@@ -173,9 +183,14 @@ const Problems = ({ route }: Props) => {
             )}
             {showFilterDialog && (
                 <FilterDialog
-                    problems={searchedProblems}
-                    onClose={onCloseFilterDialog}
+                    problems={problems ?? []}
+                    onClose={() => {
+                        refetchProblems()
+                        onCloseFilterDialog()
+                    }}
                     setFilteredProblems={setFilteredProblems}
+                    filterValues={filterValues}
+                    setFilterValues={setFilterValues}
                 />
             )}
         </View>

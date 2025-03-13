@@ -1,15 +1,18 @@
 import { ParamListBase, Route, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { isAfter } from 'date-fns/isAfter'
+import { subWeeks } from 'date-fns/subWeeks'
 import { isNil } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { IconButton } from 'react-native-paper'
+import { Badge, IconButton } from 'react-native-paper'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { Route as RouteEnum } from '~/shared/enums/Route'
+import { ProblemFilterFormData } from '~/shared/types/Filter'
 import { Marker } from '~/shared/types/Marker'
 import BaseMap from '~/shared/views/BaseMap'
 import FilterDialog from '~/shared/views/FilterDialog'
@@ -31,6 +34,11 @@ const styles = StyleSheet.create({
         left: 0,
         zIndex: 10,
     },
+    badge: {
+        position: 'absolute',
+        top: 2,
+        right: 2,
+    },
 })
 
 const Map = ({ route }: Props) => {
@@ -44,8 +52,35 @@ const Map = ({ route }: Props) => {
     } = useProblemsQuery()
 
     const [showFilterDialog, setShowFilterDialog] = useState(false)
-    const [filteredProblems, setFilteredProblems] = useState<Problem[]>(problems ?? [])
     const [markerDetails, setMarkerDetails] = useState<Marker | undefined>(undefined)
+    const [filterValues, setFilterValues] = useState<ProblemFilterFormData>({
+        status: -2,
+        categoryId: -2,
+        radius: -2,
+    })
+
+    // Hide old closed and solved problems which are older than 2 weekss
+    const preFilteredProblems = useMemo(() => {
+        const twoWeeksAgo = subWeeks(new Date(), 2)
+
+        return problems?.filter(
+            (problem) =>
+                (problem.status !== ProblemStatus.Cancelled &&
+                    problem.status !== ProblemStatus.Done) ||
+                isNil(problem.closedDate) ||
+                isAfter(problem.closedDate, twoWeeksAgo),
+        )
+    }, [problems])
+
+    const [filteredProblems, setFilteredProblems] = useState<Problem[]>(preFilteredProblems ?? [])
+
+    const hasActiveFilters = useMemo(() => {
+        return (
+            filterValues.status !== -2 ||
+            filterValues.categoryId !== -2 ||
+            filterValues.radius !== -2
+        )
+    }, [filterValues])
 
     const onReportProblem = useCallback(() => {
         navigate(RouteEnum.PROBLEM_REPORT)
@@ -56,21 +91,19 @@ const Map = ({ route }: Props) => {
     }, [])
 
     useEffect(() => {
-        setFilteredProblems(problems ?? [])
-    }, [problems])
+        setFilteredProblems(preFilteredProblems ?? [])
+    }, [preFilteredProblems])
 
     const markers = useMemo(() => {
-        return filteredProblems
-            .filter((prob) => prob.status !== ProblemStatus.Cancelled)
-            .map((problem): Marker => {
-                const [latitude, longitude] = problem.location.split(',')
+        return filteredProblems.map((problem): Marker => {
+            const [latitude, longitude] = problem.location.split(',')
 
-                return {
-                    ...problem,
-                    latitude: parseFloat(latitude),
-                    longitude: parseFloat(longitude),
-                }
-            })
+            return {
+                ...problem,
+                latitude: parseFloat(latitude),
+                longitude: parseFloat(longitude),
+            }
+        })
     }, [filteredProblems])
 
     if (problemsLoading) return <LoadingSpinner />
@@ -88,6 +121,9 @@ const Map = ({ route }: Props) => {
                         style={globalStyles.filterButton}
                         iconColor={colors.white}
                     />
+                    {hasActiveFilters && (
+                        <Badge style={styles.badge}>!</Badge> // Du kannst auch eine Zahl oder anderes reinpacken
+                    )}
                 </View>
                 <BaseMap<Marker>
                     markers={markers}
@@ -114,6 +150,8 @@ const Map = ({ route }: Props) => {
                         onCloseFilterDialog()
                     }}
                     setFilteredProblems={setFilteredProblems}
+                    filterValues={filterValues}
+                    setFilterValues={setFilterValues}
                 />
             )}
         </>

@@ -19,7 +19,7 @@ const NoConnection = () => {
                 size={48}
                 source='connection'
             />
-            <Text style={globalStyles.title}>Keine Verbindung</Text>
+            <Text style={globalStyles.titleFullWidth}>Keine Verbindung</Text>
             <Text style={globalStyles.subtitle}>
                 Es konnte keine Verbindung zum Server hergestellt werden, bitte prüfe deine
                 Netzwerkverbindung.

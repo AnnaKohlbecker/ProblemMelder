@@ -21,6 +21,7 @@ export const theme = {
         secondaryContainer: colors.secondary,
         inverseOnSurface: colors.white,
         error: colors.red,
+        onError: colors.white,
         surfaceDisabled: colors.tertiary,
         onSurfaceDisabled: colors.secondary,
         onSurface: colors.primary,
