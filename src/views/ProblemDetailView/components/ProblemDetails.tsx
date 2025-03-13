@@ -233,12 +233,18 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                     <View style={globalStyles.flexRow}>
                         {problem.status === ProblemStatus.Done ? (
                             <>
-                                {getRatingIcons(problem.status, stars)}
+                                {getRatingIcons({
+                                    status: ProblemStatus.Done,
+                                    rating: stars,
+                                })}
                                 <Text style={styles.text}>{amountOfStars}</Text>
                             </>
                         ) : (
                             <>
-                                {getRatingIcons(problem.status, importance)}
+                                {getRatingIcons({
+                                    status: ProblemStatus.Done,
+                                    rating: importance,
+                                })}
                                 <Text style={styles.text}>{amountOfImportance}</Text>
                             </>
                         )}
@@ -249,9 +255,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
             {isDisabled ? (
                 <View style={styles.footer}>
                     <Text style={globalStyles.subtitle}>
-                        {problem.status === ProblemStatus.Done
-                            ? 'Problem gelöst:'
-                            : 'Problem belöscht:'}
+                        {problem.status === ProblemStatus.Done ? 'Lösung:' : 'Deaktivierungsgrund:'}
                     </Text>
                     <Text style={styles.text}>{problem.reasonForDeactivation}</Text>
                 </View>

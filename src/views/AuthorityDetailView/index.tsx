@@ -4,6 +4,7 @@ import { BackHandler, StyleSheet, View } from 'react-native'
 import { Card, IconButton, Text } from 'react-native-paper'
 import { useProblemsWithReviewByAuthorityQuery } from '~/queries/Authorities/useProblemsWithReviewByAuthorityQuery'
 import { useCategoriesByAuthorityQuery } from '~/queries/Categories/useCategoriesByAuthorityQuery'
+import { useProblemsByAuthorityQuery } from '~/queries/Problems/useProblemsByAuthorityQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import { Authority } from '~/supabase/types'
@@ -21,15 +22,20 @@ const AuthorityDetailView = ({ authority, onClose }: Props) => {
         AuthorityDetailViewContent.Details,
     )
 
-    const { data: problems, isLoading: problemsLoading } = useProblemsWithReviewByAuthorityQuery({
+    const { data: problems, isLoading: problemsLoading } = useProblemsByAuthorityQuery({
         authorityId: authority.id,
     })
+
+    const { data: problemsWithReview, isLoading: problemsWithReviewLoading } =
+        useProblemsWithReviewByAuthorityQuery({
+            authorityId: authority.id,
+        })
 
     const averageRating = useMemo(() => {
         let ratingSum = 0
         let ratingCount = 0
 
-        problems?.forEach((problem) => {
+        problemsWithReview?.forEach((problem) => {
             problem.SanitizedProblemReviews.forEach((review) => {
                 if (isNil(review.stars)) return
 
@@ -39,7 +45,7 @@ const AuthorityDetailView = ({ authority, onClose }: Props) => {
         })
 
         return ratingSum / ratingCount
-    }, [problems])
+    }, [problemsWithReview])
 
     const { data: categories, isLoading: categoriesLoading } = useCategoriesByAuthorityQuery({
         authorityId: authority.id,
@@ -63,7 +69,7 @@ const AuthorityDetailView = ({ authority, onClose }: Props) => {
         [],
     )
 
-    if (categoriesLoading || problemsLoading) return <LoadingSpinner />
+    if (categoriesLoading || problemsWithReviewLoading || problemsLoading) return <LoadingSpinner />
 
     return (
         <View style={[StyleSheet.absoluteFillObject, globalStyles.dialogWrapper]}>
@@ -89,12 +95,13 @@ const AuthorityDetailView = ({ authority, onClose }: Props) => {
                     <AuthorityDetails
                         averageRating={averageRating}
                         categories={categories ?? []}
+                        problems={problems ?? []}
                         onReviewPress={goTo(AuthorityDetailViewContent.Review)}
                     />
                 )}
                 {currentContent === AuthorityDetailViewContent.Review && (
                     <AuthorityReview
-                        problems={problems ?? []}
+                        problems={problemsWithReview ?? []}
                         categories={categories ?? []}
                         onClose={goTo(AuthorityDetailViewContent.Details)}
                     />

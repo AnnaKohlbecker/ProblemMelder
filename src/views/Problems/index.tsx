@@ -5,20 +5,20 @@ import { subWeeks } from 'date-fns/subWeeks'
 import isNil from 'lodash/isNil'
 import { useCallback, useMemo, useState } from 'react'
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native'
-import { FAB, Searchbar, Text } from 'react-native-paper'
+import { Badge, FAB, IconButton, Searchbar, Text } from 'react-native-paper'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
-import { useUserByIdQuery } from '~/queries/UserData/useUserByIdQuery'
+import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { Route as RouteEnum } from '~/shared/enums/Route'
-import Filter from '~/shared/views/Filter'
+import { ProblemFilterFormData } from '~/shared/types/Filter'
+import FilterDialog from '~/shared/views/FilterDialog'
 import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
 import { Problem } from '~/supabase/types'
 import ProblemDetailView from '~/views/ProblemDetailView'
 import ProblemCard from '~/views/Problems/components/ProblemCard'
-import { useProblemsFilterLogic } from '~/views/Problems/hooks/useProblemFilterLogic'
 import { useProblemsSearchLogic } from '~/views/Problems/hooks/useProblemsSearchLogic'
 
 type Props = {
@@ -44,16 +44,32 @@ const styles = StyleSheet.create({
     listFooter: {
         padding: 35,
     },
+    badge: {
+        position: 'absolute',
+        top: 15,
+        right: 20,
+    },
 })
 
 const Problems = ({ route }: Props) => {
     const { session } = useAuth()
     const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
     const [selectedProblemDetails, setSelectedProblemDetails] = useState<Problem>()
-
-    const { isLoading: userLoading } = useUserByIdQuery({
-        userId: session?.user.id,
+    const [showFilterDialog, setShowFilterDialog] = useState(false)
+    const [filterValues, setFilterValues] = useState<ProblemFilterFormData>({
+        status: -2,
+        categoryId: -2,
+        radius: -2,
     })
+
+    const hasActiveFilters = useMemo(() => {
+        return (
+            filterValues.status !== -2 ||
+            filterValues.categoryId !== -2 ||
+            filterValues.radius !== -2
+        )
+    }, [filterValues])
+
     const {
         data: problems,
         isLoading: problemsLoading,
@@ -80,9 +96,11 @@ const Problems = ({ route }: Props) => {
         problems: preFilteredProblems ?? [],
     })
 
-    const { filteredProblems, filter, setFilter } = useProblemsFilterLogic({
-        problems: searchedProblems,
-    })
+    const [filteredProblems, setFilteredProblems] = useState<Problem[]>(preFilteredProblems ?? [])
+
+    const shownProblems = useMemo(() => {
+        return filteredProblems.filter((problem) => searchedProblems.includes(problem))
+    }, [searchedProblems, filteredProblems])
 
     const onReportProblem = useCallback(() => {
         navigate(RouteEnum.PROBLEM_REPORT)
@@ -97,6 +115,10 @@ const Problems = ({ route }: Props) => {
         setSelectedProblemDetails(undefined)
     }, [refetchProblems])
 
+    const onCloseFilterDialog = useCallback(() => {
+        setShowFilterDialog(false)
+    }, [])
+
     const onRefresh = useCallback(() => {
         if (problemsLoading || problemsRefetching) return
 
@@ -106,7 +128,7 @@ const Problems = ({ route }: Props) => {
         })
     }, [problemsLoading, problemsRefetching, refetchProblems])
 
-    if (userLoading || problemsLoading) {
+    if (problemsLoading) {
         return <LoadingSpinner />
     }
 
@@ -120,12 +142,17 @@ const Problems = ({ route }: Props) => {
                     onChangeText={setSearch}
                     placeholder='Suche'
                 />
-                <Filter
-                    value={filter}
-                    onChangeFilter={setFilter}
+                <IconButton
+                    icon='filter'
+                    onPress={() => {
+                        setShowFilterDialog(true)
+                    }}
+                    style={globalStyles.filterButton}
+                    iconColor={colors.white}
                 />
+                {hasActiveFilters && <Badge style={styles.badge} />}
             </View>
-            {filteredProblems.length === 0 ? (
+            {shownProblems.length === 0 ? (
                 <View style={styles.container}>
                     <Text style={globalStyles.noDataText}>
                         {problems?.length === 0
@@ -135,7 +162,7 @@ const Problems = ({ route }: Props) => {
                 </View>
             ) : (
                 <FlatList
-                    data={filteredProblems}
+                    data={shownProblems}
                     style={styles.list}
                     renderItem={({ item: problem, index }) => (
                         <ProblemCard
@@ -166,6 +193,18 @@ const Problems = ({ route }: Props) => {
                 <ProblemDetailView
                     problem={selectedProblemDetails}
                     onClose={onCloseProblemDetails}
+                />
+            )}
+            {showFilterDialog && (
+                <FilterDialog
+                    problems={problems ?? []}
+                    onClose={() => {
+                        refetchProblems()
+                        onCloseFilterDialog()
+                    }}
+                    setFilteredProblems={setFilteredProblems}
+                    filterValues={filterValues}
+                    setFilterValues={setFilterValues}
                 />
             )}
         </View>

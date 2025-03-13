@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 import { Icon, Text, TouchableRipple } from 'react-native-paper'
 import { RFValue } from 'react-native-responsive-fontsize'
@@ -5,12 +6,13 @@ import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import getRatingIcons from '~/shared/helpers/getRatingIcons'
-import { Category } from '~/supabase/types'
+import { Category, Problem } from '~/supabase/types'
 import CategoryListItem from '~/views/AuthorityDetailView/components/CategoryListItem'
 
 type Props = {
     averageRating: number
     categories: Category[]
+    problems: Problem[]
     onReviewPress: () => void
 }
 
@@ -19,7 +21,7 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     categories: {
-        maxHeight: 220,
+        maxHeight: 200,
     },
     categoriesList: {
         backgroundColor: colors.secondary,
@@ -27,17 +29,33 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     limitedHeight: {
-        height: 300,
+        height: 400,
     },
     ripple: {
         paddingHorizontal: 20,
-        borderRadius: 30,
+        borderRadius: 100,
         height: RFValue(40),
         justifyContent: 'center',
+        backgroundColor: colors.secondary,
     },
 })
 
-const AuthorityDetails = ({ averageRating, categories, onReviewPress }: Props) => {
+const AuthorityDetails = ({ averageRating, categories, problems, onReviewPress }: Props) => {
+    const doneProblemsCount = useMemo(
+        () => problems.filter((problem) => problem.status === ProblemStatus.Done).length,
+        [problems],
+    )
+
+    const openProblemsCount = useMemo(
+        () =>
+            problems.filter(
+                (problem) =>
+                    problem.status !== ProblemStatus.Done &&
+                    problem.status !== ProblemStatus.Cancelled,
+            ).length,
+        [problems],
+    )
+
     return (
         <View style={[globalStyles.contentWrapper, styles.limitedHeight]}>
             <View style={styles.categories}>
@@ -59,16 +77,22 @@ const AuthorityDetails = ({ averageRating, categories, onReviewPress }: Props) =
                     persistentScrollbar={true}
                 />
             </View>
-
             <TouchableRipple
                 borderless={true}
                 style={styles.ripple}
                 onPress={onReviewPress}
             >
                 <Text style={globalStyles.subtitle}>
-                    {getRatingIcons(ProblemStatus.Done, averageRating)}
+                    {getRatingIcons({
+                        status: ProblemStatus.Done,
+                        rating: averageRating,
+                        size: RFValue(25),
+                        primaryColor: true,
+                    })}
                 </Text>
             </TouchableRipple>
+            <Text style={globalStyles.subtitle}>Gelöste Probleme: {doneProblemsCount}</Text>
+            <Text style={globalStyles.subtitle}>Ungelöste Probleme: {openProblemsCount}</Text>
         </View>
     )
 }

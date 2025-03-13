@@ -33,6 +33,7 @@ export const globalStyles = StyleSheet.create({
         margin: 16,
         position: 'absolute',
         right: 0,
+        borderRadius: 100,
     },
     flexBox: {
         flex: 1,
@@ -75,11 +76,16 @@ export const globalStyles = StyleSheet.create({
     searchBar: {
         backgroundColor: colors.white,
         flex: 1,
+        height: RFValue(45),
     },
     title: {
         fontSize: RFValue(16),
         fontWeight: 'bold',
         width: '80%',
+    },
+    titleFullWidth: {
+        fontSize: RFValue(16),
+        fontWeight: 'bold',
     },
     subtitle: {
         fontSize: RFValue(14),
@@ -147,5 +153,11 @@ export const globalStyles = StyleSheet.create({
         backgroundColor: colors.white,
         width: '90%',
         maxHeight: '90%',
+    },
+    filterButton: {
+        backgroundColor: colors.primary,
+        height: RFValue(45),
+        width: RFValue(45),
+        borderRadius: 100,
     },
 })

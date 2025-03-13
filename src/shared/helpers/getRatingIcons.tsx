@@ -11,7 +11,14 @@ const styles = StyleSheet.create({
     },
 })
 
-const getRating = (status: number, rating: number) => {
+type Props = {
+    status: ProblemStatus
+    rating: number
+    size?: number
+    primaryColor?: boolean
+}
+
+const getRating = ({ status, rating, size = RFValue(18), primaryColor = false }: Props) => {
     const maxRating = status === ProblemStatus.Done ? 5 : 3
     const filledCount = Math.floor(rating)
 
@@ -30,8 +37,14 @@ const getRating = (status: number, rating: number) => {
             <IconButton
                 key={i}
                 icon={iconName}
-                size={RFValue(18)}
-                iconColor={status === ProblemStatus.Done ? colors.yellow : colors.red}
+                size={size}
+                iconColor={
+                    primaryColor
+                        ? colors.primary
+                        : status === ProblemStatus.Done
+                          ? colors.yellow
+                          : colors.red
+                }
                 style={styles.ratingIcon}
             />
         )
