@@ -1,6 +1,6 @@
 {
     "expo": {
-        "name": "problemmelder",
+        "name": "Problemmelder",
         "slug": "problemmelder",
         "version": "1.0.0",
         "orientation": "portrait",
@@ -13,12 +13,27 @@
             "backgroundColor": "#ffffff"
         },
         "ios": {
-            "supportsTablet": true
+            "supportsTablet": true,
+            "config": {
+                "googleMapsApiKey": "AIzaSyB8QR-gLHRv-EUgdorlYQb0_Glg4fi4sYc"
+            }
         },
         "android": {
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#ffffff"
+            },
+            "permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION",
+                "android.permission.ACCESS_FINE_LOCATION",
+                "android.permission.CAMERA",
+                "android.permission.RECORD_AUDIO"
+            ],
+            "package": "dev.schmieders.problemmelder",
+            "config": {
+                "googleMaps": {
+                    "apiKey": "AIzaSyB8QR-gLHRv-EUgdorlYQb0_Glg4fi4sYc"
+                }
             }
         },
         "web": {
@@ -39,6 +54,11 @@
                     "recordAudioAndroid": true
                 }
             ]
-        ]
+        ],
+        "extra": {
+            "eas": {
+                "projectId": "edfe8752-11dd-4c29-8953-2e891b9c0e8f"
+            }
+        }
     }
 }
