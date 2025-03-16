@@ -36,7 +36,7 @@ const ProblemReview = ({ problem, categories, onClose, onSubmit: onSubmitProp }:
             ...problem,
             latitude: undefined,
             longitude: undefined,
-            reasonForDeactivation: null,
+            reason: null,
         },
     })
     const {
@@ -117,7 +117,7 @@ const ProblemReview = ({ problem, categories, onClose, onSubmit: onSubmitProp }:
                         />
 
                         <TextInput
-                            name='reasonForDeactivation'
+                            name='reason'
                             label='Begründung'
                             multiline={true}
                             disabled={!isDirty}

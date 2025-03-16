@@ -83,11 +83,8 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
     )
 
     const isDisabled = useMemo(
-        () =>
-            isNil(session) ||
-            problem.status === ProblemStatus.Done ||
-            problem.status === ProblemStatus.Cancelled,
-        [problem.status, session],
+        () => problem.status === ProblemStatus.Done || problem.status === ProblemStatus.Cancelled,
+        [problem.status],
     )
 
     const {
@@ -234,7 +231,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                         {problem.status === ProblemStatus.Done ? (
                             <>
                                 {getRatingIcons({
-                                    status: ProblemStatus.Done,
+                                    status: problem.status,
                                     rating: stars,
                                 })}
                                 <Text style={styles.text}>{amountOfStars}</Text>
@@ -242,7 +239,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                         ) : (
                             <>
                                 {getRatingIcons({
-                                    status: ProblemStatus.Done,
+                                    status: problem.status,
                                     rating: importance,
                                 })}
                                 <Text style={styles.text}>{amountOfImportance}</Text>
@@ -257,7 +254,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                     <Text style={globalStyles.subtitle}>
                         {problem.status === ProblemStatus.Done ? 'Lösung:' : 'Deaktivierungsgrund:'}
                     </Text>
-                    <Text style={styles.text}>{problem.reasonForDeactivation}</Text>
+                    <Text style={styles.text}>{problem.reason}</Text>
                 </View>
             ) : (
                 <View style={globalStyles.flexRowWithSpace}>
@@ -267,7 +264,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                         onPress={() => {
                             onHelpful(userReview?.helpful ? null : true)
                         }}
-                        disabled={isDisabled}
+                        disabled={isNil(session)}
                         icon={() => (
                             <Icon
                                 source='thumb-up'
@@ -289,7 +286,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                         onPress={() => {
                             onHelpful(userReview?.helpful === false ? null : false)
                         }}
-                        disabled={isDisabled}
+                        disabled={isNil(session)}
                         icon={() => (
                             <Icon
                                 source='thumb-down'
