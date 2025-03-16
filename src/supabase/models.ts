@@ -140,8 +140,7 @@ export type Database = {
                     id: number
                     image: string
                     location: string
-                    reasonForDeactivation: string | null
-                    reasonForReactivation: string | null
+                    reason: string | null
                     status: number
                     title: string
                     userId: string
@@ -155,8 +154,7 @@ export type Database = {
                     id?: number
                     image: string
                     location: string
-                    reasonForDeactivation?: string | null
-                    reasonForReactivation?: string | null
+                    reason?: string | null
                     status?: number
                     title: string
                     userId: string
@@ -170,8 +168,7 @@ export type Database = {
                     id?: number
                     image?: string
                     location?: string
-                    reasonForDeactivation?: string | null
-                    reasonForReactivation?: string | null
+                    reason?: string | null
                     status?: number
                     title?: string
                     userId?: string
