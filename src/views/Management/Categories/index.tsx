@@ -63,7 +63,7 @@ const CategoriesManagement = ({ route }: Props) => {
             showDialog({
                 title: 'Kategorie löschen?',
                 description:
-                    'Möchtest du diese Kategorie wirklich löschen? Diese Änderung kann nicht Rückgängig gemacht werden.',
+                    'Möchtest du diese Kategorie wirklich löschen? Diese Änderung kann nicht rückgängig gemacht werden.',
                 onAccept: () => {
                     deleteCategory(category.id)
                     refetchCategories()

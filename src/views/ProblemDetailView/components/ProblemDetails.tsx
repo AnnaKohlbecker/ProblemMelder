@@ -322,7 +322,7 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                                 : styles.buttonContent
                         }
                     >
-                        <Text style={styles.text}>Irrtum {unhelpful}</Text>
+                        <Text style={styles.text}>Fake {unhelpful}</Text>
                     </Button>
                 </View>
             )}

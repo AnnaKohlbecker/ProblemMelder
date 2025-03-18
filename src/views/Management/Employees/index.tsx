@@ -1,11 +1,15 @@
 import { ParamListBase, Route, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { isNil } from 'lodash'
 import { useCallback } from 'react'
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { Searchbar, Text } from 'react-native-paper'
 import { useAuthoritiesQuery } from '~/queries/Authorities/useAuthoritiesQuery'
+import { useDeleteEmployeeMutation } from '~/queries/UserData/useDeleteEmployeeMutation'
 import { useEmployeeQuery } from '~/queries/UserData/useEmployeeQuery'
 import { globalStyles } from '~/shared/constants/globalStyles'
+import { useDialog } from '~/shared/context/DialogContext'
+import { useSnackbar } from '~/shared/context/SnackbarContext'
 import { Route as RouteEnum } from '~/shared/enums/Route'
 import Header from '~/shared/views/Header'
 import LoadingSpinner from '~/shared/views/LoadingSpinner'
@@ -32,6 +36,8 @@ const styles = StyleSheet.create({
 
 const EmployeeManagement = ({ route }: Props) => {
     const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
+    const showDialog = useDialog()
+    const showSnackbar = useSnackbar()
 
     const onClose = useCallback(() => {
         navigate(RouteEnum.MANAGEMENT)
@@ -48,9 +54,25 @@ const EmployeeManagement = ({ route }: Props) => {
         employees: employees ?? [],
     })
 
-    const onDelete = useCallback(() => {
-        refetchEmployees()
-    }, [refetchEmployees])
+    const { mutate: deleteEmployee } = useDeleteEmployeeMutation()
+
+    const onDelete = useCallback(
+        (userData: { userId: string; id: number }) => {
+            if (isNil(userData.userId)) return
+
+            showDialog({
+                title: 'Mitarbeiter löschen?',
+                description:
+                    'Möchtest du diesen Mitarbeiter wirklich löschen? Diese Änderung kann nicht rückgängig gemacht werden.',
+                onAccept: () => {
+                    deleteEmployee({ userId: userData.userId })
+                    refetchEmployees()
+                    showSnackbar('Der Mitarbeiter wurde erfolgreich gelöscht.')
+                },
+            })
+        },
+        [deleteEmployee, refetchEmployees, showDialog, showSnackbar],
+    )
 
     const renderItem = useCallback<ListRenderItem<Authority>>(
         ({ item }) => {
