@@ -16,8 +16,8 @@ const styles = StyleSheet.create({
     cardContent: {
         aspectRatio: 1,
         borderRadius: 10,
-        height: RFValue(80),
-        width: RFValue(80),
+        height: RFValue(90),
+        width: RFValue(90),
     },
     cardWrapper: {
         alignItems: 'center',
@@ -58,11 +58,17 @@ const ReportCategoryCard = ({ item, onPress, selected }: Props) => {
                         source={item.icon}
                         color={colors.primary}
                     />
-                    <Text style={globalStyles.subtitle}>{item.title}</Text>
+                    <Text
+                        style={globalStyles.subtitle}
+                        numberOfLines={1}
+                        ellipsizeMode='tail'
+                    >
+                        {item.title}
+                    </Text>
                     <IconButton
                         style={styles.infoButton}
                         icon='information'
-                        size={16}
+                        size={22}
                         onPress={() => {
                             showDialog({
                                 title: item.title,

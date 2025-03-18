@@ -3,7 +3,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { isAfter } from 'date-fns/isAfter'
 import { subWeeks } from 'date-fns/subWeeks'
 import isNil from 'lodash/isNil'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native'
 import { Badge, FAB, IconButton, Searchbar, Text } from 'react-native-paper'
 import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
@@ -127,6 +127,16 @@ const Problems = ({ route }: Props) => {
             setIsUserTriggeredRefetch(false)
         })
     }, [problemsLoading, problemsRefetching, refetchProblems])
+
+    useEffect(() => {
+        setSearch('')
+        setFilteredProblems(preFilteredProblems ?? [])
+        setFilterValues({
+            status: -2,
+            categoryId: -2,
+            radius: -2,
+        })
+    }, [preFilteredProblems, setSearch])
 
     if (problemsLoading) {
         return <LoadingSpinner />

@@ -47,6 +47,10 @@ const styles = StyleSheet.create({
     text: {
         fontSize: RFValue(14),
     },
+    shortText: {
+        fontSize: RFValue(14),
+        maxWidth: '80%',
+    },
     ripple: {
         paddingHorizontal: 20,
         borderRadius: 30,
@@ -146,7 +150,13 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                                     size={RFValue(23)}
                                 />
                             </View>
-                            <Text style={styles.text}>{category.title}</Text>
+                            <Text
+                                style={styles.shortText}
+                                numberOfLines={1}
+                                ellipsizeMode='tail'
+                            >
+                                {category.title}
+                            </Text>
                         </View>
                         <View style={globalStyles.flexRowWithGap}>
                             <View style={styles.icon}>
@@ -156,7 +166,13 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                                     color={colors.primary}
                                 />
                             </View>
-                            <Text style={styles.text}>{formattedDate}</Text>
+                            <Text
+                                style={styles.shortText}
+                                numberOfLines={1}
+                                ellipsizeMode='tail'
+                            >
+                                {formattedDate}
+                            </Text>
                         </View>
                         <View style={globalStyles.flexRowWithGap}>
                             <View style={styles.icon}>
@@ -166,7 +182,13 @@ const ProblemDetails = ({ problem, category, comments, goTo }: Props) => {
                                     color={colors.primary}
                                 />
                             </View>
-                            <Text style={styles.text}>{author?.name}</Text>
+                            <Text
+                                style={styles.shortText}
+                                numberOfLines={1}
+                                ellipsizeMode='tail'
+                            >
+                                {author?.name}
+                            </Text>
                         </View>
                     </View>
                 </View>

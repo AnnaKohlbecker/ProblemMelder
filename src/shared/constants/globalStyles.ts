@@ -159,5 +159,6 @@ export const globalStyles = StyleSheet.create({
         height: RFValue(45),
         width: RFValue(45),
         borderRadius: 100,
+        margin: 0,
     },
 })

@@ -106,6 +106,15 @@ const Map = ({ route }: Props) => {
         })
     }, [filteredProblems])
 
+    useEffect(() => {
+        setFilteredProblems(preFilteredProblems ?? [])
+        setFilterValues({
+            status: -2,
+            categoryId: -2,
+            radius: -2,
+        })
+    }, [preFilteredProblems])
+
     if (problemsLoading) return <LoadingSpinner />
 
     return (
