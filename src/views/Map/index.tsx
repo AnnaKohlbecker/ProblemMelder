@@ -10,6 +10,7 @@ import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
+import { FilterStatus } from '~/shared/enums/FilterStatus'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { Route as RouteEnum } from '~/shared/enums/Route'
 import { ProblemFilterFormData } from '~/shared/types/Filter'
@@ -54,9 +55,9 @@ const Map = ({ route }: Props) => {
     const [showFilterDialog, setShowFilterDialog] = useState(false)
     const [markerDetails, setMarkerDetails] = useState<Marker | undefined>(undefined)
     const [filterValues, setFilterValues] = useState<ProblemFilterFormData>({
-        status: -2,
-        categoryId: -2,
-        radius: -2,
+        status: FilterStatus.Inactive,
+        categoryId: FilterStatus.Inactive,
+        radius: FilterStatus.Inactive,
     })
 
     // Hide old closed and solved problems which are older than 2 weekss
@@ -76,9 +77,9 @@ const Map = ({ route }: Props) => {
 
     const hasActiveFilters = useMemo(() => {
         return (
-            filterValues.status !== -2 ||
-            filterValues.categoryId !== -2 ||
-            filterValues.radius !== -2
+            filterValues.status !== FilterStatus.Inactive ||
+            filterValues.categoryId !== FilterStatus.Inactive ||
+            filterValues.radius !== FilterStatus.Inactive
         )
     }, [filterValues])
 
@@ -107,11 +108,13 @@ const Map = ({ route }: Props) => {
     }, [filteredProblems])
 
     useEffect(() => {
+        // Set the filtered problems when the problems change
         setFilteredProblems(preFilteredProblems ?? [])
+        // Reset the filter values to no filter
         setFilterValues({
-            status: -2,
-            categoryId: -2,
-            radius: -2,
+            status: FilterStatus.Inactive,
+            categoryId: FilterStatus.Inactive,
+            radius: FilterStatus.Inactive,
         })
     }, [preFilteredProblems])
 

@@ -10,6 +10,7 @@ import { useProblemsQuery } from '~/queries/Problems/useProblemsQuery'
 import { colors } from '~/shared/constants/colors'
 import { globalStyles } from '~/shared/constants/globalStyles'
 import { useAuth } from '~/shared/context/AuthContext'
+import { FilterStatus } from '~/shared/enums/FilterStatus'
 import { ProblemStatus } from '~/shared/enums/ProblemStatus'
 import { Route as RouteEnum } from '~/shared/enums/Route'
 import { ProblemFilterFormData } from '~/shared/types/Filter'
@@ -57,16 +58,16 @@ const Problems = ({ route }: Props) => {
     const [selectedProblemDetails, setSelectedProblemDetails] = useState<Problem>()
     const [showFilterDialog, setShowFilterDialog] = useState(false)
     const [filterValues, setFilterValues] = useState<ProblemFilterFormData>({
-        status: -2,
-        categoryId: -2,
-        radius: -2,
+        status: FilterStatus.Inactive,
+        categoryId: FilterStatus.Inactive,
+        radius: FilterStatus.Inactive,
     })
 
     const hasActiveFilters = useMemo(() => {
         return (
-            filterValues.status !== -2 ||
-            filterValues.categoryId !== -2 ||
-            filterValues.radius !== -2
+            filterValues.status !== FilterStatus.Inactive ||
+            filterValues.categoryId !== FilterStatus.Inactive ||
+            filterValues.radius !== FilterStatus.Inactive
         )
     }, [filterValues])
 
@@ -130,11 +131,13 @@ const Problems = ({ route }: Props) => {
 
     useEffect(() => {
         setSearch('')
+        // Set the filtered problems when the problems change
         setFilteredProblems(preFilteredProblems ?? [])
+        // Reset the filter values to no filter
         setFilterValues({
-            status: -2,
-            categoryId: -2,
-            radius: -2,
+            status: FilterStatus.Inactive,
+            categoryId: FilterStatus.Inactive,
+            radius: FilterStatus.Inactive,
         })
     }, [preFilteredProblems, setSearch])
 

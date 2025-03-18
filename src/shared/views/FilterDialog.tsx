@@ -8,6 +8,7 @@ import { globalStyles } from '~/shared/constants/globalStyles'
 import { radiusOptions } from '~/shared/constants/radiusOptions'
 import { statusOptions } from '~/shared/constants/statusOptions'
 import { useLocation } from '~/shared/context/LocationContext'
+import { FilterStatus } from '~/shared/enums/FilterStatus'
 import { useInRadiusLogic } from '~/shared/hooks/useInRadiusLogic'
 import { ProblemFilterFormData } from '~/shared/types/Filter'
 import SelectMenu from '~/shared/views/Inputs/SelectMenu'
@@ -43,9 +44,9 @@ const FilterDialog = ({
 
     const categoriesOptions = useMemo(() => {
         return isNil(categories)
-            ? [{ label: 'Kein Filter', value: -2 }]
+            ? [{ label: 'Kein Filter', value: FilterStatus.Inactive }]
             : [
-                  { label: 'Kein Filter', value: -2 },
+                  { label: 'Kein Filter', value: FilterStatus.Inactive },
                   ...categories.map((c) => ({
                       label: c.title,
                       value: c.id,
@@ -63,12 +64,14 @@ const FilterDialog = ({
         (data: ProblemFilterFormData) => {
             const filtered = problems.filter((problem) => {
                 const statusMatch =
-                    isNil(data.status) || data.status === -2 || problem.status === data.status
+                    isNil(data.status) ||
+                    data.status === FilterStatus.Inactive ||
+                    problem.status === data.status
                 const categoryMatch =
                     isNil(data.categoryId) ||
-                    data.categoryId === -2 ||
+                    data.categoryId === FilterStatus.Inactive ||
                     problem.categoryId === data.categoryId
-                const noRadiusSet = isNil(data.radius) || data.radius === -2
+                const noRadiusSet = isNil(data.radius) || data.radius === FilterStatus.Inactive
                 const [problemLatitude, problemLongitude] = problem.location.split(',').map(Number)
                 const radiusMatch =
                     noRadiusSet || isInRadius(problemLatitude, problemLongitude, data.radius)
@@ -84,9 +87,9 @@ const FilterDialog = ({
 
     const onReset = useCallback(() => {
         const defaultValues: ProblemFilterFormData = {
-            status: -2,
-            categoryId: -2,
-            radius: -2,
+            status: FilterStatus.Inactive,
+            categoryId: FilterStatus.Inactive,
+            radius: FilterStatus.Inactive,
         }
         reset(defaultValues)
         setFilterValues(defaultValues)
