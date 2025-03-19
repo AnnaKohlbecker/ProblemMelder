@@ -62,7 +62,7 @@ const Register = () => {
             if (!isNil(authority) && !authority.allowSignup) {
                 Alert.alert(
                     'Registrierung verboten',
-                    'Die Registrierung für diese Domain ist nicht erlaubt. Bitte kontaktieren Sie Ihren Administrator.',
+                    'Die Registrierung für diese Behördendomain ist nicht erlaubt. Bitte kontaktieren Sie Ihren Administrator.',
                 )
                 setRegistering(false)
                 return
@@ -130,14 +130,14 @@ const Register = () => {
                         name='name'
                         label='Name'
                         rules={{
-                            required: 'Bitte gebe einen Namen ein',
+                            required: 'Bitte gebe einen Namen ein.',
                         }}
                     />
                     <TextInput
                         name='email'
                         label='E-Mail Adresse'
                         rules={{
-                            required: 'Bitte gebe eine E-Mail Adresse ein',
+                            required: 'Bitte gebe eine E-Mail Adresse ein.',
                             validate,
                         }}
                     />

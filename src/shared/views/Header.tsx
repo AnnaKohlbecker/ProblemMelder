@@ -26,9 +26,10 @@ export const HeaderStyles = StyleSheet.create({
 type Props = {
     route: Route<RouteEnum>
     onClose?: () => void
+    showLogout?: boolean
 }
 
-const Header = ({ route, onClose }: Props) => {
+const Header = ({ route, onClose, showLogout = true }: Props) => {
     const showDialog = useDialog()
     const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>()
     const { session, signOut } = useAuth()
@@ -63,11 +64,13 @@ const Header = ({ route, onClose }: Props) => {
                     title={title}
                     titleStyle={HeaderStyles.title}
                 />
-                <Appbar.Action
-                    icon={session ? 'logout' : 'login'}
-                    onPress={onLoginLogout}
-                    color={colors.primary}
-                />
+                {showLogout && (
+                    <Appbar.Action
+                        icon={session ? 'logout' : 'login'}
+                        onPress={onLoginLogout}
+                        color={colors.primary}
+                    />
+                )}
             </Appbar.Header>
         </View>
     )

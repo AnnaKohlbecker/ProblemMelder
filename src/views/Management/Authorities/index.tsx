@@ -60,7 +60,7 @@ const AuthoritiesManagement = ({ route }: Props) => {
             showDialog({
                 title: 'Behörde löschen?',
                 description:
-                    'Möchtest du diese Behörde wirklich löschen? Diese Änderung kann nicht Rückgängig gemacht werden.',
+                    'Möchtest du diese Behörde wirklich löschen? Diese Änderung kann nicht rückgängig gemacht werden.',
                 onAccept: () => {
                     deleteAuthority(authority.id)
                     refetchAuthorities()

@@ -218,6 +218,7 @@ const ProblemReport = ({ route }: Props) => {
                     <Header
                         route={route}
                         onClose={onClose}
+                        showLogout={false}
                     />
                     <ProgressBar
                         progress={progress}

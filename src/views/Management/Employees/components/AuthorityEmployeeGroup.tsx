@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native'
 import { Icon, Text, TouchableRipple } from 'react-native-paper'
 import { Authority, UserData } from '~/supabase/types'
@@ -17,13 +17,12 @@ const styles = StyleSheet.create({
 })
 
 type Props = {
-    onDelete: (item: UserData) => void
     authority: Authority
     employees: UserData[]
     searching: boolean
 }
 
-const AuthorityEmployeeGroup = ({ onDelete, authority, employees, searching }: Props) => {
+const AuthorityEmployeeGroup = ({ authority, employees, searching }: Props) => {
     const [expanded, setExpanded] = useState(false)
 
     const authorityEmployees = useMemo(
@@ -31,17 +30,7 @@ const AuthorityEmployeeGroup = ({ onDelete, authority, employees, searching }: P
         [authority.id, employees],
     )
 
-    const renderItem = useCallback<ListRenderItem<UserData>>(
-        ({ item }) => {
-            return (
-                <EmployeeListItem
-                    item={item}
-                    onDelete={onDelete}
-                />
-            )
-        },
-        [onDelete],
-    )
+    const renderItem: ListRenderItem<UserData> = ({ item }) => <EmployeeListItem item={item} />
 
     // Don't show anything if no employees are found
     if (authorityEmployees.length === 0) return null

@@ -37,20 +37,12 @@ const EmployeeManagement = ({ route }: Props) => {
         navigate(RouteEnum.MANAGEMENT)
     }, [navigate])
 
-    const {
-        data: employees,
-        isLoading: employeesLoading,
-        refetch: refetchEmployees,
-    } = useEmployeeQuery()
+    const { data: employees, isLoading: employeesLoading } = useEmployeeQuery()
     const { data: authorities, isLoading: authoritiesLoading } = useAuthoritiesQuery()
 
     const { filteredEmployees, search, setSearch } = useEmployeeSearchLogic({
         employees: employees ?? [],
     })
-
-    const onDelete = useCallback(() => {
-        refetchEmployees()
-    }, [refetchEmployees])
 
     const renderItem = useCallback<ListRenderItem<Authority>>(
         ({ item }) => {
@@ -58,12 +50,11 @@ const EmployeeManagement = ({ route }: Props) => {
                 <AuthorityEmployeeGroup
                     authority={item}
                     employees={filteredEmployees}
-                    onDelete={onDelete}
                     searching={search !== ''}
                 />
             )
         },
-        [filteredEmployees, onDelete, search],
+        [filteredEmployees, search],
     )
 
     if (employeesLoading || authoritiesLoading) return <LoadingSpinner />
